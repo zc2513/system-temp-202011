@@ -1,0 +1,201 @@
+<template>
+  <div class="login-Module">
+    <div class="bg-base">
+      <div class="bg-top">
+        <div class="login-main">
+          <div class="title">用户登录</div>
+          <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+            <el-form-item prop="userName">
+              <el-input
+                ref="userName"
+                v-model="loginForm.userName"
+                placeholder="请输入用户名"
+                name="userName"
+                type="text"
+                tabindex="1"
+                auto-complete="on"
+              >
+                <span slot="prefix" class="svg-container flcc">
+                  <svg-icon icon-class="user" />
+                </span>
+              </el-input>
+            </el-form-item>
+
+            <el-form-item prop="password">
+              <el-input
+                :key="passwordType"
+                ref="password"
+                v-model="loginForm.password"
+                :type="passwordType"
+                placeholder="请输入密码"
+                name="password"
+                tabindex="2"
+                auto-complete="on"
+                @keyup.enter.native="handleLogin"
+              >
+                <span slot="prefix" class="svg-container flcc">
+                  <svg-icon icon-class="password" />
+                </span>
+                <span slot="suffix" class="show-pwd" @click="showPwd">
+                  <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+                </span>
+              </el-input>
+
+            </el-form-item>
+            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+          </el-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { validUsername } from '@/utils/validate'
+export default {
+    name: 'Login',
+    data() {
+        const validateUsername = (rule, value, callback) => {
+            if (!validUsername(value)) {
+                callback(new Error('请输入正确的用户名'))
+            } else {
+                callback()
+            }
+        }
+        const validatePassword = (rule, value, callback) => {
+            if (value.length < 6) {
+                callback(new Error('密码不能少于6位'))
+            } else {
+                callback()
+            }
+        }
+        return {
+            labelPosition: 'right',
+            isRemember: false,
+            loginForm: {
+                userName: '',
+                password: ''
+            },
+            loginRules: {
+                userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+            },
+            loading: false,
+            passwordType: 'password',
+            redirect: undefined
+        }
+    },
+    watch: {
+        $route: {
+            handler: function(route) {
+                this.redirect = route.query && route.query.redirect
+            },
+            immediate: true
+        }
+    },
+    methods: {
+        showPwd() {
+            if (this.passwordType === 'password') {
+                this.passwordType = ''
+            } else {
+                this.passwordType = 'password'
+            }
+            this.$nextTick(() => {
+                this.$refs.password.focus()
+            })
+        },
+        handleLogin() {
+            this.$refs.loginForm.validate(valid => {
+                if (valid) {
+                    this.loading = true
+                    this.$store.dispatch('user/login', this.loginForm).then(() => {
+                        this.$router.push({ path: this.redirect || '/' })
+                        this.loading = false
+                    }).catch(() => {
+                        this.loading = false
+                    })
+                } else {
+                    return false
+                }
+            })
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+$bg:#2d3a4b;
+$dark_gray:#889aa4;
+$light_gray:#eee;
+.login-Module{
+    width: 480px;
+    height: 500px;
+    .bg-base{
+        width: 480px;
+        height: 380px;
+        border-radius: 16px;
+        background-color: rgba(255,255,255,.2);
+        position: relative;
+    }
+    .bg-top{
+        position: absolute;
+        width: 440px;
+        left: 20px;
+        top:-30px;
+        height: 440px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 13px 0px rgba(26, 25, 206, 0.69);
+        border-radius: 16px;
+        background-color: rgba(255,255,255,.2);
+        z-index: 100;
+    }
+    .login-main{
+        position: absolute;
+        width: 400px;
+        height: 500px;
+        left: 20px;
+        top:-30px;
+        background-color: #fff;
+        padding: 56px 24px 0;
+        z-index: 1000;
+        box-shadow: 0px 4px 10px 0px rgba(26, 25, 206, 0.73);
+        .title{
+            color: #6666FF;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 32px;
+        }
+        .login-form{
+            .svg-container {
+                width: 43px;
+                height: 100%;
+                font-size: 20px;
+                position: relative;
+                &::before{
+                    content: '';
+                    position: absolute;
+                    width: 1px;
+                    height: 20px;
+                    right: 0;
+                    background: #E0E4EB;
+                }
+            }
+            ::v-deep{
+                .el-input input{
+                    height: 48px;
+                    line-height: 48px;
+                    border-color: #E0E4EB;
+                }
+                .el-input--prefix .el-input__inner{ //输入框样式
+                    padding-left: 64px;
+                }
+                .el-form-item {//每一列间隙
+                    margin-bottom: 24px;
+                }
+            }
+
+        }
+    }
+
+}
+</style>

@@ -1,0 +1,39 @@
+// 涵盖  element-ui 样式
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+  
+
+// 修复 Dialog内select tree等组件在点击箭头时有虚晃
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+} 
+
+// 修复el-date选择器css样式
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-dialog__header{ //弹出层标题为棕色
+    background: #304156;
+    .el-dialog__title{
+        color: #fff;
+    }
+}
+
+// 修复textarea位置
+.el-textarea .el-input__count{
+    background-color: transparent;
+    height: 24px;
+    line-height: 24px;
+    bottom: 0;
+}
+
+//table表格样式修改
+.el-table--scrollable-y .el-table__body-wrapper{
+    @include scrollBar;
+}
