@@ -7,7 +7,7 @@ import Layout from '@/layout'
 const system = {
     path: '/system',
     component: Layout,
-    hidden: true,
+    hidden: false,
     redirect: '/system/company',
     meta: { title: '系统管理', icon: 'system' },
     children: [
