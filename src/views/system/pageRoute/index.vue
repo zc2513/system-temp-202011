@@ -19,69 +19,20 @@
         default-expand-all
         :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       >
-        <el-table-column
-          prop="meta.title"
-          label="菜单名称"
-          width="130px"
-        />
-        <el-table-column
-          prop="component"
-          label="前端组件"
-        />
-        <el-table-column
-          prop="path"
-          label="菜单路径"
-        />
-        <el-table-column
-          prop="name"
-          label="缓存名称"
-        />
-        <el-table-column
-          prop="hidden"
-          label="是否隐藏"
-          :formatter="formatter"
-        />
-        <el-table-column
-          prop="alwaysShow"
-          label="是否始终显示"
-          :formatter="formatter"
-        />
-        <el-table-column
-          prop="redirect"
-          label="重定向"
-        />
-        <el-table-column
-          prop="meta.icon"
-          label="菜单图标"
-        />
-        <el-table-column
-          prop="meta.roles"
-          label="按钮权限"
-        />
-        <el-table-column
-          prop="meta.noCache"
-          label="是否缓存"
-          :formatter="formatter"
-        />
-        <el-table-column
-          prop="meta.breadcrumb"
-          label="是否在面包屑中显示"
-          :formatter="formatter"
-        />
-        <el-table-column
-          prop="meta.activeMenu"
-          label="高亮显示项"
-        />
-        <el-table-column
-          prop="meta.affix"
-          label="固定标签"
-          :formatter="formatter"
-        />
-        <el-table-column
-          align="right"
-          label="操作"
-          width="150px"
-        >
+        <el-table-column prop="meta.title" label="菜单名称" width="130px" />
+        <el-table-column prop="component" label="前端组件" />
+        <el-table-column prop="path" label="菜单路径" />
+        <el-table-column prop="name" label="缓存名称" />
+        <el-table-column prop="hidden" label="是否隐藏" :formatter="formatter" />
+        <el-table-column prop="alwaysShow" label="是否始终显示" :formatter="formatter" />
+        <el-table-column prop="redirect" label="重定向" />
+        <el-table-column prop="meta.icon" label="菜单图标" />
+        <el-table-column prop="meta.roles" label="按钮权限" />
+        <el-table-column prop="meta.noCache" label="是否缓存" :formatter="formatter" />
+        <el-table-column prop="meta.breadcrumb" label="是否在面包屑中显示" :formatter="formatter" />
+        <el-table-column prop="meta.activeMenu" label="高亮显示项" />
+        <el-table-column prop="meta.affix" label="固定标签" :formatter="formatter" />
+        <el-table-column align="right" label="操作" width="150px">
           <template slot-scope="scope">
             <el-button
               size="mini"
