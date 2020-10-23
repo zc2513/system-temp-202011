@@ -22,7 +22,7 @@
         <el-table-column v-if="item.type==='selection'" :key="index" type="selection" width="55" :align="align" />
         <slot v-else-if="item.type==='slot'" />
         <el-table-column v-else-if="item.type==='index'" :key="index" type="index" :label="item.name" :align="align" />
-        <el-table-column v-else :key="index" :align="align" :label="item.name">
+        <el-table-column v-else :key="index" :align="align" :label="item.name" :width="item.width || ''">
           <template v-if="item.des" slot="header">
             <div>{{ item.name }}</div>
             <div style="color:#F00;">{{ item.des }}</div>
@@ -37,7 +37,11 @@
             <template v-else-if="item.type==='percent'">
               <span class="war">{{ row[item.data].nums }}</span> / <span class="f14">{{ row[item.data].nume }}</span>
             </template>
-            <template v-else>{{ row[item.data] }}</template>
+            <template v-else>
+              <el-tooltip class="item" effect="dark" :disabled="!item.tip" :content="row[item.data]+''" placement="top">
+                <div :class="{'elps':item.tip}">{{ row[item.data] }}</div>
+              </el-tooltip>
+            </template>
           </template>
         </el-table-column>
       </template>
@@ -86,6 +90,9 @@
  *  @titles 标题部分，与遍历数组有展示数据关系
  *          {type 参数} 备注:switch->则显示switch开关 light->则显示红绿灯 selection->显示多选框 index->序号 slot->支持任意位置插入元素
  *          {des}   描述字段（默认标红，暂不支持设置颜色）
+ *          {percent} 内容分号处理
+ *          {tip} 是否显示省略号 默认两行
+ *          {width} 当前列的宽度 Number类型
  *  @lists  遍历数组
  *  @btns   操作按钮 不传则不显示 传入则按照props下规则使用
  *  @loading 是否开启加载动画
@@ -133,7 +140,7 @@ export default {
             default: function() {
                 return [
                     { type: 'index' },
-                    { name: '姓名', data: 'producer' },
+                    { name: '姓名', data: 'consName', tip: true, width: 300 },
                     { name: '订单状态', data: 'state', type: 'switch' },
                     { name: '单位编号', data: 'cNumber' },
                     { name: '预警情况', data: 'warns', type: 'light' },
@@ -293,7 +300,18 @@ export default {
             justify-content: center;
             align-items: center;
         }
-
+        .el-table .cell{
+            padding: 0;
+        }
+    }
+    .elps{
+        word-break: break-all;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        cursor: pointer;
     }
     .war{
         font-size: 14px;
