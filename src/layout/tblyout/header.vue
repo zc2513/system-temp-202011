@@ -9,7 +9,7 @@
         <div class="mr33">应届生管理系统</div>
         <svg-icon icon-class="cUser" class="mr33 cursor f24" />
         <svg-icon icon-class="cMsg" class="mr33 cursor f24" />
-        <svg-icon icon-class="cBack" class="mr33 cursor f24" />
+        <svg-icon icon-class="cBack" class="mr33 cursor f24" @click="logout" />
       </div>
     </div>
   </div>
@@ -18,7 +18,13 @@
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
-    components: { Breadcrumb }
+    components: { Breadcrumb },
+    methods: {
+        async logout() {
+            await this.$store.dispatch('user/logout')
+            this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+        }
+    }
 }
 </script>
 
