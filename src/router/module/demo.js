@@ -5,7 +5,7 @@ const demo = {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',
-    hidden: true,
+    hidden: false,
     name: 'Nested',
     meta: { title: '嵌套路由', icon: 'nested', noCache: true },
     children: [

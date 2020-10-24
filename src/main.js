@@ -9,8 +9,8 @@ import '@/styles/index.scss'
 import App from './App'
 import store from './store'
 import router from './router'
+import './directive'
 
-console.log('测试提交')
 import '@/utils'
 console.log('fjdklajfl')
 
