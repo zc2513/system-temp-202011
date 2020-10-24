@@ -1,7 +1,7 @@
 {
   "name": "hydraulicengineering",
   "version": "1.0.0",
-  "description": "水利监督",
+  "description": "人才培养管理系统",
   "author": "yyzc2513@163.com",
   "scripts": {
     "build": "vue-cli-service build",
