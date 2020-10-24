@@ -1,5 +1,5 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
+  <el-breadcrumb class="app-breadcrumb" separator="/" :separator-class="separatorClass">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item,index) in levelList" :key="item.path">
         <span v-if="item.redirect==='noRedirect'||index==levelList.length-1" class="no-redirect">{{ item.meta.title }}</span>
@@ -13,6 +13,12 @@
 import pathToRegexp from 'path-to-regexp'
 
 export default {
+    props: {
+        separatorClass: {
+            type: String,
+            default: ''
+        }
+    },
     data() {
         return {
             levelList: null
@@ -33,7 +39,7 @@ export default {
             const first = matched[0]
 
             if (!this.isDashboard(first)) {
-                matched = [{ path: '/Monitoring', meta: { title: '首页' }}].concat(matched)
+                matched = [{ path: '/', meta: { title: '首页' }}].concat(matched)
             }
 
             this.levelList = matched.filter(item => item.meta && item.meta.title && item.meta.breadcrumb !== false)
@@ -66,12 +72,14 @@ export default {
 <style lang="scss" scoped>
 .app-breadcrumb.el-breadcrumb {
   display: inline-block;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 50px;
   margin-left: 8px;
-
+  a{
+     color: #FFFFFF;
+  }
   .no-redirect {
-    color: #97a8be;
+    color: #FFFFFF;
     cursor: text;
   }
 }

@@ -14,7 +14,7 @@
       省市级联： <el-cascader v-model="code" :options="citys" />
     </div>
 
-    <div class="pan-btn blue-btn">发多少</div>
+    <div class="pan-btn red-btn">发多少</div>
 
     <div>
       <p class="date">当前时间：{{ date|parseTime('{y}年{m}月{d} 星期{a} {h}:{i}:{s}') }}</p>

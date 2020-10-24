@@ -1,6 +1,6 @@
 module.exports = {
 
-    title: '水利部水利工程建设电子招标投标监管系统',
+    title: '人才培养管理系统',
 
     /**
    * @type {boolean} true | false

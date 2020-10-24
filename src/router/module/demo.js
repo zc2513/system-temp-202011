@@ -1,6 +1,6 @@
 
 // demo页面
-import Layout from '@/layout'
+import Layout from '@/layout/tblyout.vue'
 const demo = {
     path: '/nested',
     component: Layout,
@@ -88,36 +88,6 @@ const demo = {
             component: () => import('@/views/nested/menu5/index'),
             name: 'Menu5',
             meta: { title: 'echars' }
-        },
-        {
-            path: 'menu6',
-            component: () => import('@/views/nested/menu6/index'),
-            name: 'Menu6',
-            meta: { title: '进度条饼图' }
-        },
-        {
-            path: 'menu7',
-            component: () => import('@/views/nested/menu7/index'),
-            name: 'Menu7',
-            meta: { title: '南丁格尔图' }
-        },
-        {
-            path: 'menuDemo',
-            component: () => import('@/views/nested/menu8/map'),
-            name: 'menuDemo',
-            meta: { title: '中国地图' }
-        },
-        {
-            path: 'menu8',
-            component: () => import('@/views/nested/menu8/bar'),
-            name: 'Menu8',
-            meta: { title: '柱状图' }
-        },
-        {
-            path: 'menu8compontent',
-            component: () => import('@/views/nested/menu8/bars'),
-            name: 'Menu8compontent',
-            meta: { title: '柱状图组件展示' }
         }
     ]
 }

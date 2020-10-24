@@ -4,8 +4,9 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
-import Layout from '@/layout'
-import { supervision, network, supwarning, statement, setting, systemSetting, system, demo } from './module/index'
+// import Layout from '@/layout'
+import Layout from '@/layout/tblyout.vue'
+import { setting, system, demo } from './module/index'
 
 /**
  * hidden: true                   如果设置为真，项目将不会显示在侧边栏中(默认为假)
@@ -42,11 +43,6 @@ export const constantRoutes = [
             }
         ]
     },
-    // {
-    //     path: '/login',
-    //     component: () => import('@/views/login/index'),
-    //     hidden: true
-    // },
     {
         path: '/login',
         component: () => import('@/views/user/index'),
@@ -72,20 +68,22 @@ export const constantRoutes = [
     },
     {
         path: '/',
-        redirect: '/monitoring'
+        redirect: '/overview'
     },
     {
-        path: '/monitoring',
-        name: 'Monitoring',
-        component: () => import('@/views/monitoring/index'),
-        meta: { title: '监督大屏', icon: 'monitoring' }
+        path: '/overview',
+        component: Layout,
+        redirect: '/overview/index',
+        children: [
+            {
+                path: 'index',
+                name: 'Overview',
+                component: () => import('@/views/overview/index'),
+                meta: { title: '培训情况概览', icon: 'overview' }
+            }
+        ]
     },
-    supervision, // 项目监督
-    network,
-    supwarning,
-    statement,
     setting,
-    systemSetting,
     system,
     demo
     // { path: '*', redirect: '/404', hidden: true }

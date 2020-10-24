@@ -1,12 +1,9 @@
 <template>
-  <section class="app-main red" :class="{'y-auto':fixedHeader}">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        内容显示区域
-        <!-- <router-view :key="key" style="padding:12px;" /> -->
-      </keep-alive>
-    </transition>
-  </section>
+  <transition name="fade-transform" mode="out-in">
+    <keep-alive :include="cachedViews">
+      <router-view :key="key" />
+    </keep-alive>
+  </transition>
 </template>
 
 <script>
@@ -33,7 +30,7 @@ export default {
 .app-main {
   height: 100%;
   /*50 = navbar  */
-  min-height: calc(100vh - 50px);
+  min-height: calc(100vh - 96px);
   width: 100%;
   position: relative;
   overflow: hidden;

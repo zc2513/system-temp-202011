@@ -283,7 +283,7 @@ export default {
         resizeHeight() {
             const { className, clientHeight, children } = this.$parent.$el
             if (className.includes('list-box')) {
-                this.tableHeight = (clientHeight - children[0].clientHeight - 110) + 'px'
+                this.tableHeight = (clientHeight - children[0].clientHeight - 130) + 'px'
             }
         }
     }
