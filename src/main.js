@@ -12,6 +12,7 @@ import router from './router'
 
 console.log('测试提交')
 import '@/utils'
+console.log('fjdklajfl')
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
 
