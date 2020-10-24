@@ -2,7 +2,7 @@
  * @description 监督设置
  */
 
-import Layout from '@/layout'
+import Layout from '@/layout/tblyout.vue'
 
 const setting = {
     path: '/setting',

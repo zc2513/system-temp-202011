@@ -2,7 +2,7 @@
  * @description 系统管理
  */
 
-import Layout from '@/layout'
+import Layout from '@/layout/tblyout.vue'
 
 const system = {
     path: '/system',

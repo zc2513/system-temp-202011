@@ -1,6 +1,6 @@
 
 // demo页面
-import Layout from '@/layout'
+import Layout from '@/layout/tblyout.vue'
 const demo = {
     path: '/nested',
     component: Layout,

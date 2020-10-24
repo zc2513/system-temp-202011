@@ -1,24 +1,31 @@
 <template>
-  <div class="app-wrapper">
-    <div>8888</div>
-    <div>4641321</div>
-    <div>
-      <AppMain />
+  <div class="education-layout">
+
+    <tbHeadre />
+
+    <div class="main flsb">
+      <div class="nav-bar">
+        <Sidebar />
+      </div>
+      <div class="main-content fl1">
+        <AppMain />
+      </div>
     </div>
+
   </div>
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+
+import tbHeadre from './tblyout/header'
+import AppMain from './tblyout/AppMain'
+import Sidebar from './tblyout/Sidebar'
 
 export default {
     name: 'Layout',
     components: {
-        Navbar,
-        Sidebar,
-        AppMain,
-        TagsView
+        tbHeadre, AppMain, Sidebar
     },
     mixins: [ResizeMixin],
     computed: {
@@ -49,43 +56,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import "~@/styles/mixin.scss";
-  @import "~@/styles/variables.scss";
-
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
+.education-layout{
     height: 100%;
-    width: 100%;
-    &.mobile.openSidebar{
-      position: fixed;
-      top: 0;
+    background: #f4f7fa;
+    overflow: hidden;
+    .main{
+        box-sizing: border-box;
+        height: calc(100% - 72px);
+        .nav-bar{
+            background: #FFF;
+            width: 240px;
+            margin: 24px 16px 24px 24px;
+        }
+        .main-content{
+            overflow-y: auto;
+            padding: 24px 24px 0 0;
+        }
+
     }
-  }
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
-  }
+}
 
-  .fixed-header {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
-    transition: width 0.28s;
-  }
-
-  .hideSidebar .fixed-header {
-    width: calc(100% - 54px)
-  }
-
-  .mobile .fixed-header {
-    width: 100%;
-  }
 </style>

@@ -68,7 +68,20 @@ export const constantRoutes = [
     },
     {
         path: '/',
-        redirect: '/setting'
+        redirect: '/overview'
+    },
+    {
+        path: '/overview',
+        component: Layout,
+        redirect: '/overview/index',
+        children: [
+            {
+                path: 'index',
+                name: 'Overview',
+                component: () => import('@/views/overview/index'),
+                meta: { title: '培训情况概览', icon: 'overview' }
+            }
+        ]
     },
     setting,
     system,

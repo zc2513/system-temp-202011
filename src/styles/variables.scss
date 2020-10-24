@@ -1,24 +1,29 @@
 $blue:#324157;
 $light-blue:#3A71A8;
 
-$globalBgColor:#E4EBF3;
+// 项目全局背景色设置--暂时未用
+$globalBgColor:#000;
 
 // 个别字体颜色
 $red:#C03639; 
 
 
 // 导航部分样式
-$menuText:#bfcbd9;
-$menuActiveText:#409EFF;
-$subMenuActiveText:#409EFF;
+$menuText:#5F6266;
 
-$menuBg:#304156;
-$menuHover:#263445;
+$menuActiveText:#6666FF; // 导航选中后文字样式
+
+$subMenuActiveText:#000;// 鼠标滑过样式
+
+$menuBg:#FFF;
+$menuHover:#F00;
 
 $subMenuBg:#1f2d3d;
 $subMenuHover:#001528;
 
-$sideBarWidth: 210px;
+$sideBarWidth: 240px;
+
+$isActiveBg:#F7F7FF;//选中背景色
  
 :export {
   menuText: $menuText;
