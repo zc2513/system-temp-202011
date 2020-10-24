@@ -11,6 +11,7 @@ import store from './store'
 import router from './router'
 import './directive'
 
+console.log('测试提交')
 import '@/utils'
 
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 })
