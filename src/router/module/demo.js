@@ -88,6 +88,18 @@ const demo = {
             component: () => import('@/views/nested/menu5/index'),
             name: 'Menu5',
             meta: { title: 'echars' }
+        },
+        {
+            path: 'echarts',
+            component: () => import('@/views/nested/echarts/xline'),
+            name: 'Echarts',
+            meta: { title: '水平柱状图' }
+        },
+        {
+            path: 'line',
+            component: () => import('@/views/nested/echarts/line'),
+            name: 'Line',
+            meta: { title: '折线图' }
         }
     ]
 }

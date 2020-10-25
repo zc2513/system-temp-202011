@@ -5,10 +5,10 @@
 
     <div class="main flsb">
       <div class="nav-bar">
-        <div class="flcc" style="height:102px;">
+        <div class="flcc navLogo">
           <img src="@/assets/imgs/layout/navLogo.png" alt="">
         </div>
-        <Sidebar />
+        <Sidebar class="nav-slide" />
       </div>
       <div class="main-content fl1">
         <AppMain />
@@ -65,12 +65,18 @@ export default {
     .main{
         box-sizing: border-box;
         height: calc(100% - 72px);
-        .nav-bar{
+        .nav-bar{//导航部分
             background: #FFF;
             width: 240px;
             margin: 24px 16px 24px 24px;
+            .navLogo{ height: 102px; }
+            .nav-slide{
+                overflow-y: auto;
+                height: calc(100% - 102px);
+                &::-webkit-scrollbar { width: 0px; }
+            }
         }
-        .main-content{
+        .main-content{//内容部分
             overflow-y: auto;
             padding: 24px 24px 0 0;
         }
