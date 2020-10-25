@@ -91,9 +91,9 @@ export default {
             labelPosition: 'right',
             isRemember: false,
             loginForm: {
-                userName: '',
-                password: '',
-                verify: ''
+                userName: 'admin',
+                password: '123456',
+                verify: '456445'
             },
             loginRules: {
                 userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
