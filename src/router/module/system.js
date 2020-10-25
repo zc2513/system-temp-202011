@@ -27,7 +27,7 @@ const system = {
             path: 'pageRoute',
             name: 'PageRoute',
             component: () => import('@/views/system/pageRoute/index'),
-            meta: { title: '路由管理', icon: 'pageRoute' }
+            meta: { title: '菜单管理', icon: 'pageRoute' }
         }
     ]
 }

@@ -30,6 +30,21 @@ export function addSuperviseNode(data) {
         data
     })
 }
+/**
+ * @description 删除节点
+ * @author yansimin
+ * @date 2020-09-17
+ * @export
+ * @returns
+ */
+
+export function delSuperviseNode(param) {
+    return request({
+        url: '/superviseBase/supervConfigSvc/addSuperviseNode',
+        method: 'get',
+        param
+    })
+}
 
 /**
  * @description 编辑监督节点详情

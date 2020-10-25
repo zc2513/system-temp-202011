@@ -7,7 +7,7 @@ function generaMenu(routers, data) {
     data.forEach((item) => {
         const menu = Object.assign({}, item)
         if (menu.component.startsWith('layout')) {
-            menu.component = lazyLoading('layout', 'index')
+            menu.component = lazyLoading('layout', 'tblyout')
         } else {
             menu.component = lazyLoading('views', menu.component)
         }
