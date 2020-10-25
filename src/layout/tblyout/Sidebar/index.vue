@@ -61,18 +61,24 @@ export default {
     .el-menu{ border: 0; background: #000;}
     .el-menu-item,.el-submenu__title{//多选一级设置与子集设置
         border-left: 3px solid transparent;
+        // span{
+        //     padding-left: 16px !important;
+        // }
         .svg-icon {
-            margin-right: 16px;
             color: #B2BFD8;
+            margin-right: 16px;
         }
         &:hover{
             background: #F7F7FF !important;
-            color: #6666FF;
+            color: #6666FF !important;
             border-left: 3px solid #6666FF;
             .svg-icon {
                 color: #6666FF;
             }
         }
+    }
+   .nest-menu .el-menu-item{//修复子集与一级菜单名称不对齐问题
+        padding-left: 50px !important;
     }
 
     .is-active>.el-submenu__title{// 选中定义--多选一级表头
