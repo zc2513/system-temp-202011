@@ -5,6 +5,9 @@
 
     <div class="main flsb">
       <div class="nav-bar">
+        <div class="flcc" style="height:102px;">
+          <img src="@/assets/imgs/layout/navLogo.png" alt="">
+        </div>
         <Sidebar />
       </div>
       <div class="main-content fl1">
@@ -17,7 +20,6 @@
 
 <script>
 import ResizeMixin from './mixin/ResizeHandler'
-
 import tbHeadre from './tblyout/header'
 import AppMain from './tblyout/AppMain'
 import Sidebar from './tblyout/Sidebar'

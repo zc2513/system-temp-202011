@@ -31,18 +31,36 @@
                 name="password"
                 tabindex="2"
                 auto-complete="on"
-                @keyup.enter.native="handleLogin"
               >
                 <span slot="prefix" class="svg-container flcc">
                   <svg-icon icon-class="password" />
                 </span>
-                <span slot="suffix" class="show-pwd" @click="showPwd">
+                <span slot="suffix" class="show-pwd flcc" @click="showPwd">
                   <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
                 </span>
               </el-input>
-
             </el-form-item>
-            <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
+            <el-form-item prop="verify">
+              <div class="flsb verify-box">
+                <div>
+                  <el-input
+                    ref="password"
+                    v-model="loginForm.verify"
+                    type="text"
+                    placeholder="请输入验证码"
+                    name="verify"
+                    tabindex="3"
+                    auto-complete="on"
+                    @keyup.enter.native="handleLogin"
+                  />
+                </div>
+                <div class="green flcc">
+                  后台接口image
+                  <!-- <img src="" alt=""> -->
+                </div>
+              </div>
+            </el-form-item>
+            <el-button :loading="loading" type="primary" style="width:100%;height:48px;border-radius: 6px;" @click.native.prevent="handleLogin">登录</el-button>
           </el-form>
         </div>
       </div>
@@ -74,11 +92,13 @@ export default {
             isRemember: false,
             loginForm: {
                 userName: '',
-                password: ''
+                password: '',
+                verify: ''
             },
             loginRules: {
                 userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
-                password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+                password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+                verify: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
             },
             loading: false,
             passwordType: 'password',
@@ -165,7 +185,7 @@ $light_gray:#eee;
             font-weight: 600;
             margin-bottom: 32px;
         }
-        .login-form{
+        .login-form{//表单设置
             .svg-container {
                 width: 43px;
                 height: 100%;
@@ -178,6 +198,21 @@ $light_gray:#eee;
                     height: 20px;
                     right: 0;
                     background: #E0E4EB;
+                }
+            }
+            .show-pwd{
+                width: 30px;
+                height: 100%;
+            }
+            .verify-box{
+                >div{
+                    &:first-of-type{
+                        width: 180px;
+                    }
+                    &:last-of-type{
+                        width: 150px;
+                        height: 48px;
+                    }
                 }
             }
             ::v-deep{
