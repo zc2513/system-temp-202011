@@ -42,58 +42,33 @@
                 <span slot="prefix" class="svg-container flcc">
                   <svg-icon icon-class="password" />
                 </span>
-                <span
-                  slot="suffix"
-                  class="show-pwd flcc"
-                  @click="showPwd"
-                >
-                  <svg-icon
-                    :icon-class="
-                      passwordType === 'password'
-                        ? 'eye'
-                        : 'eye-open'
-                    "
-                  />
+                <span slot="suffix" class="show-pwd flcc" @click="showPwd">
+                  <svg-icon :icon-class=" passwordType === 'password' ? 'eye' : 'eye-open' " />
                 </span>
               </el-input>
             </el-form-item>
-            <el-form-item prop="verify">
-              <div class="flsb verify-box">
+            <el-form-item prop="captcha">
+              <div class="flsb captcha-box">
                 <div>
                   <el-input
-                    ref="verify"
-                    v-model="loginForm.verify"
+                    ref="captcha"
+                    v-model="loginForm.captcha"
                     type="text"
                     placeholder="请输入验证码"
-                    name="verify"
+                    name="captcha"
                     tabindex="3"
                     auto-complete="on"
                     @keyup.enter.native="handleLogin"
                   />
                 </div>
-                <div class="green flcc">
-                  <img
-                    v-if="requestCodeSuccess"
-                    style="margin-top: 2px;"
-                    :src="randCodeImage"
-                    @click="handleChangeCheckCode"
-                  >
-                  <img
-                    v-else
-                    style="margin-top: 2px;"
-                    src="../../assets/404_images/checkcode.png"
-                    @click="handleChangeCheckCode"
-                  >
-                  <!-- <img src="randCodeImage" alt="" /> -->
+                <div class="flcc green verification" @click="handleChangeCheckCode">
+                  <el-image :src="randCodeImage">
+                    <img slot="error" src="@/assets/404_images/checkcode.png" alt="加载失败">
+                  </el-image>
                 </div>
               </div>
             </el-form-item>
-            <el-button
-              :loading="loading"
-              type="primary"
-              style="width:100%;height:48px;border-radius: 6px;"
-              @click.native.prevent="handleLogin"
-            >登录</el-button>
+            <el-button :loading="loading" type="primary" style="width:100%;height:48px;border-radius: 6px;" @click.native.prevent="handleLogin">登录</el-button>
           </el-form>
         </div>
       </div>
@@ -127,38 +102,19 @@ export default {
             loginForm: {
                 userName: 'admin',
                 password: '123456',
-                verify: null,
-                checkKey: null
+                captcha: null,
+                checkKey: ''
             },
             loginRules: {
-                userName: [
-                    {
-                        required: true,
-                        trigger: 'blur',
-                        validator: validateUsername
-                    }
-                ],
-                password: [
-                    {
-                        required: true,
-                        trigger: 'blur',
-                        validator: validatePassword
-                    }
-                ],
-                verify: [
-                    { required: true, message: '请输入验证码', trigger: 'blur' }
-                ]
+                userName: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                password: [{ required: true, rigger: 'blur', validator: validatePassword }],
+                captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
             },
             loading: false,
             passwordType: 'password',
             redirect: undefined,
-            verifiedCode: '',
-            inputCodeContent: '',
-            inputCodeNull: true,
-            currentUsername: '',
             currdatetime: '',
-            randCodeImage: '',
-            requestCodeSuccess: false
+            randCodeImage: ''// 验证码
 
         }
     },
@@ -171,7 +127,7 @@ export default {
         }
     },
     created() {
-        this.currdatetime = new Date().getTime()
+        this.loginForm.checkKey = Date.now() // 生成页面初始时间
         this.handleChangeCheckCode()
     },
     methods: {
@@ -189,17 +145,12 @@ export default {
             this.$refs.loginForm.validate(valid => {
                 if (valid) {
                     this.loading = true
-                    this.loginForm.checkKey = this.currdatetime
-                    console.log('页面', this.loginForm)
-                    this.$store
-                        .dispatch('user/login', this.loginForm)
-                        .then(() => {
-                            this.$router.push({ path: this.redirect || '/' })
-                            this.loading = false
-                        })
-                        .catch(() => {
-                            this.loading = false
-                        })
+                    this.$store.dispatch('user/login', this.loginForm).then(() => {
+                        this.$router.push({ path: this.redirect || '/' })
+                        this.loading = false
+                    }).catch(() => {
+                        this.loading = false
+                    })
                 } else {
                     return false
                 }
@@ -208,20 +159,13 @@ export default {
 
         // 调用后端生成验证码
         handleChangeCheckCode() {
-            handleChangeCheckCode({ data: '' })
-                .then(res => {
-                    console.log('返回验证码', res)
-                    if (res.success) {
-                        this.randCodeImage = res.result
-                        this.requestCodeSuccess = true
-                    } else {
-                        this.$message.error(res.message)
-                        this.requestCodeSuccess = false
-                    }
-                })
-                .catch(() => {
-                    this.requestCodeSuccess = false
-                })
+            handleChangeCheckCode().then(res => {
+                if (res.success) {
+                    this.randCodeImage = res.result
+                } else {
+                    this.$message.error(res.message)
+                }
+            })
         }
     }
 }
@@ -289,7 +233,7 @@ $light_gray: #eee;
                 width: 30px;
                 height: 100%;
             }
-            .verify-box {
+            .captcha-box {
                 > div {
                     &:first-of-type {
                         width: 180px;
@@ -297,6 +241,10 @@ $light_gray: #eee;
                     &:last-of-type {
                         width: 150px;
                         height: 48px;
+                        .el-image{
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
             }

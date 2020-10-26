@@ -8,9 +8,10 @@ import sysRouter from '@/api/syncRouters'
 const getDefaultState = () => {
     return {
         token: getToken(),
+        roles: [],
+        userInfo: {},
         name: '',
-        avatar: '',
-        roles: []
+        avatar: ''
     }
 }
 
@@ -40,23 +41,16 @@ const mutations = {
 const actions = {
     // 登录
     login({ commit }, userInfo) {
-        const { userName, password, verify, checkKey } = userInfo
+        const { userName, password, captcha, checkKey } = userInfo
         console.log('登录表单信息', commit)
         return new Promise((resolve, reject) => {
-            commit('SET_TOKEN', 999)
-            setToken(999)
-            resolve()
-            login({ username: userName.trim(), password: password, captcha: verify, checkKey: checkKey, remember_me: true }).then(response => {
-                console.log('登录返回结果', response)
-                if (response.success === false) {
-                    Message.error(response.message)
-                }
-                const { result } = response
-
-                console.log('登录返回结果data', result)
-                commit('SET_TOKEN', result.token)
-                commit('SET_USER_INFO', result.userInfo)
-                setToken(result.token)
+            login({ username: userName.trim(), password, captcha, checkKey, remember_me: true }).then(response => {
+                const { success, message, result } = response
+                if (!success) return Message.error(message)
+                const { token, userInfo } = result
+                commit('SET_TOKEN', token)
+                commit('SET_USER_INFO', userInfo)
+                setToken(token)
                 resolve()
             }).catch(error => {
                 reject(error)
@@ -126,7 +120,7 @@ const actions = {
     resetToken({ commit }) {
         return new Promise(resolve => {
             removeToken() // 先删除令牌***
-            resetRouter()
+            resetRouter() // 清除路由
             commit('RESET_STATE')
             resolve()
         })

@@ -611,13 +611,13 @@ export default {
             const commands = command.split(',')
             const action = commands[0]
             const param = commands[1]
-
+            let model
             switch (action) {
                 case 'new':
                     console.log('增加计划', action, param)
                     this.$refs.addDayPlan.planType = '自定义计划'
                     this.$refs.addDayPlan.planTime = param
-                    const model = {
+                    model = {
                         planType: 1,
                         createType: 1,
                         year: this.currentYear.year,
