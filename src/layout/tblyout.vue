@@ -19,7 +19,6 @@
 </template>
 
 <script>
-import ResizeMixin from './mixin/ResizeHandler'
 import tbHeadre from './tblyout/header'
 import AppMain from './tblyout/AppMain'
 import Sidebar from './tblyout/Sidebar'
@@ -29,7 +28,6 @@ export default {
     components: {
         tbHeadre, AppMain, Sidebar
     },
-    mixins: [ResizeMixin],
     computed: {
         sidebar() {
             return this.$store.state.app.sidebar

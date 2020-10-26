@@ -14,7 +14,12 @@
       省市级联： <el-cascader v-model="code" :options="citys" />
     </div>
 
-    <div class="pan-btn red-btn">发多少</div>
+    <div class="flsb flc-y">
+      <div> 本地icon下拉框：</div>
+      <selectIcon v-model="iconText" class="fl1" />
+    </div>
+
+    <div class="pan-btn blue-btn">发多少</div>
 
     <div>
       <p class="date">当前时间：{{ date|parseTime('{y}年{m}月{d} 星期{a} {h}:{i}:{s}') }}</p>
@@ -24,8 +29,9 @@
 
 <script>
 import countTo from 'vue-count-to'
+import selectIcon from '@/components/selectIcon'
 export default {
-    components: { countTo },
+    components: { countTo, selectIcon },
     data() {
         return {
             code: '',
@@ -35,7 +41,13 @@ export default {
             warns: [{ num: 0, type: 'a' },
                 { num: 1, type: 'b' },
                 { num: 8, type: 'd' }],
-            date: new Date()
+            date: new Date(),
+            iconText: ''
+        }
+    },
+    watch: {
+        iconText(v) {
+            this.$message.info(this.iconText || '取消选中')
         }
     },
     created() {
