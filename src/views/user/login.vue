@@ -63,7 +63,7 @@
                 </div>
                 <div class="flcc green verification" @click="handleChangeCheckCode">
                   <el-image :src="randCodeImage">
-                    <img slot="error" src="@/assets/404_images/checkcode.png" alt="加载失败">
+                    <img slot="error" width="100%" height="100%" src="@/assets/404_images/checkcode.png" alt="加载失败">
                   </el-image>
                 </div>
               </div>

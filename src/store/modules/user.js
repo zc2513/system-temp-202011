@@ -62,6 +62,9 @@ const actions = {
     getInfo({ commit, state, dispatch }) {
         return new Promise((resolve, reject) => {
             // dispatch('permission/generateRoutes', { roles: ['admin'], asyncRoutes: [] }, { root: true })
+            // 1.拉去用户信息
+            // 2.拉取用户路由权限
+            // 3.拉取用户角色权限
             commit('SET_NAME', '张三')
             commit('SET_AVATAR', 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3646436076,201719204&fm=26&gp=0.jpg')
             commit('SET_ROLES', ['admin'])
@@ -124,6 +127,12 @@ const actions = {
             commit('RESET_STATE')
             resolve()
         })
+    },
+    seText({ commit }, val = '') {
+        console.log('我被触发了' + val)
+        setTimeout(() => {
+            commit('SET_USER_INFO', { key: '我被更改了' + val })
+        }, 5000)
     }
 }
 

@@ -81,7 +81,7 @@ const demo = {
             path: 'menu4',
             component: () => import('@/views/nested/menu4/index'),
             name: 'Menu4',
-            meta: { title: '数字动态化' }
+            meta: { title: '组件案例' }
         },
         {
             path: 'menu5',

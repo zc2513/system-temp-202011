@@ -24,12 +24,27 @@
     <div>
       <p class="date">当前时间：{{ date|parseTime('{y}年{m}月{d} 星期{a} {h}:{i}:{s}') }}</p>
     </div>
+
+    <div>
+      <h4>vuex数据 获取方式</h4>
+      <el-button type="success" @click="getVuex">本地调用vuex异步方法</el-button>
+      <div>
+        {{ token }}
+        <br>
+        {{ userInfo }}
+        <div>
+          全局：{{ token }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import countTo from 'vue-count-to'
 import selectIcon from '@/components/selectIcon'
+
+import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
     components: { countTo, selectIcon },
     data() {
@@ -45,6 +60,10 @@ export default {
             iconText: ''
         }
     },
+    computed: {
+        ...mapState('user', ['token', 'userInfo']),
+        ...mapGetters(['token'])
+    },
     watch: {
         iconText(v) {
             this.$message.info(this.iconText || '取消选中')
@@ -54,8 +73,11 @@ export default {
         setInterval(() => { // 实时日期
             this.date = new Date()
         }, 1000)
+        this.$store.dispatch('user/seText')
     },
     methods: {
+        // 方法一定要映射到方法中
+        ...mapActions('user', ['seText']),
         getV(e) {
             for (const item of this.warns) {
                 if (e === item) {
@@ -63,6 +85,9 @@ export default {
                     e.type = 'd'
                 }
             }
+        },
+        getVuex() {
+            this.seText(4646465)
         }
     }
 }
