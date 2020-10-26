@@ -2,14 +2,14 @@
   <div>
     <el-card>
       <el-row>
-        <el-col :span="4">
-          <!-- <svg-icon icon-class="yewan" /> -->
+        <el-col :span="2">
+         <img src="@/assets/planicon.png"></img>
         </el-col>
         <el-col :span="18">
-          <el-row>
-            <svg-icon icon-class="planicon"></svg-icon> <span>标注说明</span>
+          <el-row style="margin:20px">
+             <span>标注说明</span>
           </el-row>
-          <el-row>
+          <el-row style="margin:20px" >
             <el-col :span="2">
               <span>已提交</span>
             </el-col>
