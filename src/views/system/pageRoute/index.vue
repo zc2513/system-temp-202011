@@ -64,10 +64,10 @@ export default {
         this.init()
     },
     mounted() {
-        // if (this.$s.getStorage('router')) {
-        //     console.log(this.$s.getStorage('router'))
-        //     this.tableData = this.$s.getStorage('router')
-        // }
+        if (this.$s.getStorage('router')) {
+            console.log(this.$s.getStorage('router'))
+            this.tableData = this.$s.getStorage('router')
+        }
     },
     methods: {
         init() {
@@ -86,45 +86,4 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/views/listLayout.scss";
-::v-deep .el-drawer__header {
-    border-bottom: 1px solid #e8e8e8 !important;
-    padding: 10px 20px !important;
-    margin-bottom: 0;
-}
-::v-deep .tablescope {
-    .el-switch__label--left {
-        position: relative;
-        left: 50px;
-        color: #fff;
-        z-index: -1111;
-    }
-    .el-switch__core {
-        width: 50px !important;
-    }
-    .el-switch__label--right {
-        position: relative;
-        right: 50px;
-        color: #fff;
-        z-index: -1111;
-    }
-    .el-switch__label--right.is-active {
-        z-index: 1111;
-        color: #fff !important;
-    }
-    .el-switch__label--left.is-active {
-        z-index: 1111;
-        color: #fff !important;
-    }
-}
-
-::v-deep :focus {
-    outline: 0;
-}
-.el-form-wrapper {
-    padding: 10px;
-    .el-form {
-        border: 1px solid rgb(233, 233, 233);
-        padding: 15px 15px 15px 0;
-    }
-}
 </style>
