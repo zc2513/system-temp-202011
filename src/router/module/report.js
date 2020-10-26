@@ -13,7 +13,7 @@ const report = {
     children: [
         {
             path: 'freshGraduate',
-            name: 'FreshGraduate',
+            name: 'FreshGraduateRp',
             component: () => import('@/views/report/freshGraduate'),
             meta: { title: '应届生汇报', icon: '' }
         },
