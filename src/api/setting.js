@@ -1,13 +1,17 @@
 // 监督节点设置
 import request from '@/utils/request'
-/**
- * @description 获取监督节点列表
- * @author yansimin
- * @date 2020-09-17
- * @export
- * @returns
- */
 
+
+
+ 
+/**
+ * @description 
+ * @author laozhu
+ * @date 25/10/2020
+ * @export
+ * @param {*} data
+ * @return {*}  
+ */
 export function getSuperviseNodeList(data) {
     return request({
         url: '/superviseBase/supervConfigSvc/getSuperviseNodeList',

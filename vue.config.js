@@ -28,7 +28,7 @@ module.exports = {
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
                 // target: 'http://192.168.1.220:8091',
-                target: 'http://39.106.117.247',
+                target: 'http://119.45.143.217:9090/jeecg-boot',
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''

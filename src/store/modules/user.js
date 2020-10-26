@@ -2,6 +2,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { Message } from 'element-ui'
 // eslint-disable-next-line no-unused-vars
 import sysRouter from '@/api/syncRouters'
 const getDefaultState = () => {
@@ -22,6 +23,9 @@ const mutations = {
     SET_TOKEN: (state, token) => {
         state.token = token
     },
+    SET_USER_INFO:(state, userInfo) => {
+        state.userInfo = userInfo
+    },
     SET_NAME: (state, name) => {
         state.name = name
     },
@@ -36,19 +40,28 @@ const mutations = {
 const actions = {
     // 登录
     login({ commit }, userInfo) {
-        // const { userName, password } = userInfo
+        const { userName, password,verify,checkKey } = userInfo
+        console.log("登录表单信息",commit)
         return new Promise((resolve, reject) => {
             commit('SET_TOKEN', 999)
             setToken(999)
-            resolve()
-            // login({ userName: userName.trim(), password: password }).then(response => {
-            //     const { data } = response
-            //     commit('SET_TOKEN', data.token)
-            //     setToken(data.token)
-            //     resolve()
-            // }).catch(error => {
-            //     reject(error)
-            // })
+            resolve()              
+            login({ username: userName.trim(), password: password ,captcha:verify,checkKey:checkKey,remember_me:true}).then(response => {
+                console.log("登录返回结果",response)
+                 if( response.success == false){
+                     Message.error(response.message)
+                    
+                 }
+                const { result } = response
+                
+                console.log("登录返回结果data",result)
+                commit('SET_TOKEN', result.token)
+                commit('SET_USER_INFO',result.userInfo)
+                setToken(data.token)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
         })
     },
 
