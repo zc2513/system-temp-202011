@@ -123,6 +123,7 @@ export default {
         },
         // 参数列表
         initParamsList(id) {
+            // eslint-disable-next-line no-undef
             getParamsList({ Id: id }).then((res) => {
                 if (res.Code === '200') {
                     this.paramsList = res.Data
@@ -132,6 +133,7 @@ export default {
         // 操作记录
         initOperateList(id) {
             const data = { ...this.baseParams, id }
+            // eslint-disable-next-line no-undef
             getOperateList(data).then((res) => {
                 const { Total, Data } = res.Data
                 this.operateList = Data

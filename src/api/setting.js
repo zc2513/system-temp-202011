@@ -1,16 +1,13 @@
 // 监督节点设置
 import request from '@/utils/request'
 
-
-
- 
 /**
- * @description 
+ * @description
  * @author laozhu
  * @date 25/10/2020
  * @export
  * @param {*} data
- * @return {*}  
+ * @return {*}
  */
 export function getSuperviseNodeList(data) {
     return request({

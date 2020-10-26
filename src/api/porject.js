@@ -6,7 +6,7 @@ const url = {
     add: 'com.thundersoft.studentreport/fstFreshStudentPlan/add',
     edit: '/yffmline/ykcity/edit',
     skillTypeList: 'com.thundersoft.studentreport/fstSkillType/list',
-    zdylist: 'com.thundersoft.studentreport/fstFreshStudentPlan//queryListPlanInfo',
+    zdylist: 'com.thundersoft.studentreport/fstFreshStudentPlan//queryListPlanInfo'
 }
 /**
  * @description 加载评论
@@ -14,13 +14,13 @@ const url = {
  * @date 26/10/2020
  * @export
  * @param {*} data
- * @return {*}  
+ * @return {*}
  */
 export function loadComment(data) {
     return request({
         url: url.list,
         method: 'get',
-        data,
+        data
     })
 }
 
@@ -30,13 +30,13 @@ export function loadComment(data) {
  * @date 26/10/2020
  * @export
  * @param {*} data
- * @return {*}  
+ * @return {*}
  */
 export function addPlanComment(data) {
     return request({
         url: url.addComment,
         method: 'post',
-        data,
+        data
     })
 }
 
@@ -46,13 +46,13 @@ export function addPlanComment(data) {
  * @date 26/10/2020
  * @export
  * @param {*} data
- * @return {*}  
+ * @return {*}
  */
 export function saveSelfPlan(data) {
     return request({
         url: url.add,
         method: 'post',
-        data,
+        data
     })
 }
 
@@ -61,13 +61,13 @@ export function saveSelfPlan(data) {
  * @author laozhu
  * @date 26/10/2020
  * @export
- * @return {*}  
+ * @return {*}
  */
 export function getSkillType(data) {
     return request({
         url: url.skillTypeList,
         method: 'get',
-        data,
+        data
     })
 }
 /**
@@ -76,12 +76,12 @@ export function getSkillType(data) {
  * @date 26/10/2020
  * @export
  * @param {*} data
- * @return {*}  
+ * @return {*}
  */
 export function getSelfPlan(data) {
     return request({
         url: url.zdylist,
         method: 'get',
-        data,
+        data
     })
 }

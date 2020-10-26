@@ -23,6 +23,7 @@
     <properview ref="properview" :list="{name:555}" @subPre="subPre" />
     <proviwe ref="proviwe" />
     <el-button type="text" @click="properview">点击打开 Dialog</el-button>
+
   </div>
 </template>
 

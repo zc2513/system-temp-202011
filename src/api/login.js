@@ -5,14 +5,13 @@ import request from '@/utils/request'
  * @author laozhu
  * @date 26/10/2020
  * @export
- * @return {*}  
+ * @return {*}
  */
-export function handleChangeCheckCode(){
-    var currdatetime = new Date().getTime();
+export function handleChangeCheckCode() {
+    var currdatetime = new Date().getTime()
     return request({
         url: `/sys/randomImage/${currdatetime}`,
         method: 'get',
-        data:""
-    }) 
-
-  }
+        data: ''
+    })
+}

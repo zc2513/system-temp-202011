@@ -24,11 +24,10 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
     response => {
-
         const res = response.data
-        console.log("返回结果",res,response)
-        if (response.status != 200 ) {
-            console.log("为什么",response.status)
+        console.log('返回结果', res, response)
+        if (response.status !== 200) {
+            console.log('为什么', response.status)
             Message.error(res.Msg || '返回错误状态')
             return Promise.reject(new Error(res.Msg || 'Error'))
         } else {
