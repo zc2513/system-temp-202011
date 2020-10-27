@@ -79,6 +79,15 @@ export default {
         init() {
             if (!this.chart) this.redraw()
             const option = {
+                legend: {
+                    orient: 'vertical',
+                    right: 0,
+                    icon: 'roundRect',
+                    itemHeight: '8',
+                    textStyle: {
+                        color: '#5F6266'
+                    }
+                },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
@@ -105,31 +114,46 @@ export default {
                     }
 
                 },
-                series: [{
-                    data: [70, 80, 121, 134, 129, 130, 120, 108, 112, 121, 134, 129],
-                    type: 'line',
-                    itemStyle: { // 折线拐点标志的样式。
-                        color: '#ccc'
+                series: [
+                    { //  线条一
+                        data: [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200],
+                        type: 'line',
+                        symbol: 'none',
+                        name: '应交数量',
+                        color: '#A2F07B',
+                        lineStyle: { // 线条颜色
+                            color: '#A2F07B'
+                        }
                     },
-                    lineStyle: { // 线条颜色
-                        color: '#D697FF'
-                    },
-                    areaStyle: { //
-                        color: {
-                            type: 'linear',
-                            x: 0,
-                            y: 0,
-                            x2: 0,
-                            y2: 1,
-                            colorStops: [{
-                                offset: 0, color: '#f0daff' // 0% 处的颜色
-                            }, {
-                                offset: 1, color: '#fefeff' // 100% 处的颜色
-                            }],
-                            global: false // 缺省为 false
+                    { // 线条二
+                        data: [70, 80, 121, 134, 129, 130, 120, 108, 112, 121, 134, 129],
+                        type: 'line',
+                        name: '实际提交数量',
+                        color: '#D697FF',
+                        itemStyle: { // 折线拐点标志的样式。
+                            color: '#ccc'
+                        },
+                        lineStyle: { // 线条颜色
+                            color: '#D697FF'
+                        },
+                        areaStyle: { //
+                            color: {
+                                type: 'linear',
+                                x: 0,
+                                y: 0,
+                                x2: 0,
+                                y2: 1,
+                                colorStops: [{
+                                    offset: 0, color: '#f0daff' // 0% 处的颜色
+                                }, {
+                                    offset: 1, color: '#fefeff' // 100% 处的颜色
+                                }],
+                                global: false // 缺省为 false
+                            }
                         }
                     }
-                }]
+
+                ]
             }
 
             this.chart.setOption(option, true)
