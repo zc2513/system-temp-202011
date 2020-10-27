@@ -100,6 +100,12 @@ const demo = {
             component: () => import('@/views/nested/echarts/line'),
             name: 'Line',
             meta: { title: '折线图' }
+        },
+        {
+            path: 'bar',
+            component: () => import('@/views/nested/echarts/bar'),
+            name: 'Bar',
+            meta: { title: '柱状图' }
         }
     ]
 }
