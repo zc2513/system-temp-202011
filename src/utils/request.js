@@ -4,7 +4,8 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 const service = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API
+    // baseURL: process.env.VUE_APP_BASE_API
+    baseURL: 'http://119.45.143.217:9090/jeecg-boot'
     // withCredentials: true,
     // timeout: 5000
 })
@@ -31,7 +32,8 @@ service.interceptors.response.use(response => {
         return res
     }
 }, error => {
-    Message.error(showStatus(error.response.status))
+    // Message.error(showStatus(error.response.status))
+    Message.error(showStatus(error.response))
     return Promise.reject(error)
 })
 

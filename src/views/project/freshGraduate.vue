@@ -4,7 +4,7 @@
     <el-card>
       <el-row>
         <el-col :span="2">
-          <img src="@/assets/planicon.png"></img>
+          <img src="@/assets/planicon.png">
         </el-col>
         <el-col :span="18">
           <el-row style="margin:20px">
@@ -99,7 +99,9 @@ import WeekCalendar from '../../components/tsforce/WeekCalendar.vue'
 import YearCalendar from '../../components/tsforce/YearCalendar.vue'
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
+import { getUserInfo, getCalendarInfo, getSelfCutomPlan, getWeekPlanGroup, getMonthPlanGroup } from '@/api/porject'
 import moment from 'moment'
+import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'Myplan',
     components: {
@@ -143,8 +145,9 @@ export default {
             currentMonth: {},
             currentDay: null,
             currentYear: null,
-            userInfo: null,
             tsUserInfo: null,
+            seasonNo: null,
+            weekNo: null,
             systemEnv: {
                 // currentYear,
                 // currentSeason,
@@ -153,25 +156,22 @@ export default {
                 // currentWeek,
                 // tsUserInfo,
                 // userInfo,
-            },
-            url: {
-                getuserinfo: 'com.thundersoft.system/sysGroupInfo/queryArearDeptGroupById',
-                zdylist: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupCustom',
-                calendarInfo: 'com.thundersoft.system/sysPerpetualCalendar/getDateInfo',
-                weeklist: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupWeek',
-                monthlist: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupMonth'
             }
         }
     },
-    created() {
-        this.userInfo = this.$store.getters.token
-        console.log('0000000000000000', this.userInfo)
-        this.getUserInfo()
+    computed: {
+        ...mapState('user', ['token', 'userInfo']),
+        ...mapGetters(['token'])
     },
+    created() {
+        console.log('0000000000000000', this.userInfo)
+        this.getPageUserInfo()
+    },
+
     methods: {
         moment,
         reset() {
-            this.getUserInfo()
+            this.getPageUserInfo()
             switch (this.tabPosition) {
                 case 'self':
                     break
@@ -183,120 +183,118 @@ export default {
                     break
                 default: ''
             }
-            this.getUserInfo()
         },
-        getUserInfo() {
+        getPageUserInfo() {
             this.value = new Date()
-            console.log('当前日期：', this.value)
+            console.log('当前用信息，注意是否为空：', this.userInfo)
             const params = {
-                userId: this.$store.getters.userInfo.id
+                userId: this.userInfo.id
             }
-            getAction(this.url.getuserinfo, params)
-                .then(res => {
-                    if (res.success) {
-                        this.tsUserInfo = res.result
-                        this.tsUserInfo.realName = this.$store.getters.userInfo.realname
-                        this.tsUserInfo.userId = this.$store.getters.userInfo.id
-                        this.tsUserInfo.userName = this.$store.getters.userInfo.username
-                        this.systemEnv.tsUserInfo = this.tsUserInfo
-                        this.systemEnv.userInfo = this.$store.getters.userInfo
-                    } else {
-                        this.$error({ title: '查询失败', content: res.message })
-                    }
-                })
-                .finally(() => {})
-
+            getUserInfo(params).then(res => {
+                console.log(' 返回的用户信息', res.result)
+                if (res.success) {
+                    this.tsUserInfo = res.result
+                    console.log(' 返回的用户信息', res.result)
+                    this.tsUserInfo.realName = this.userInfo.realname
+                    this.tsUserInfo.userId = this.userInfo.id
+                    this.tsUserInfo.userName = this.userInfo.username
+                    this.systemEnv.tsUserInfo = this.tsUserInfo
+                    this.systemEnv.userInfo = this.userInfo
+                } else {
+                    this.$message.error({ title: '查询失败', content: res.message })
+                }
+            })
             var params2 = { 'dateStr': moment(this.value).format('YYYY-MM-DD hh:mm:ss') }
             console.log('查询日历参数', params2)
-            getAction(this.url.calendarInfo, params2)
-                .then(res => {
-                    if (res.success) {
-                        console.log('返回的日历数据', res)
-                        this.currentDay = res.result.date
-                        this.systemEnv.currentDay = this.currentDay
+            this.getCalander(params2)
+            // getCalendarInfo(params2).then(res => {
+            //     if (res.success) {
+            //         console.log('返回的日历数据', res)
+            //         this.currentDay = res.result.date
 
-                        this.currentMonth = {
-                            month: parseInt(moment(this.currentDay).format('MM')),
-                            monthString: moment(this.currentDay).format('yyyy年MM月')
-                        }
-                        this.systemEnv.currentMonth = this.currentMonth
+            //         const weeks1 = res.result.weeks
+            //         // .forEach((val)=>{
+            //         //          val.count =0;
+            //         // })
+            //         this.weeks[0].weekPlan = weeks1.filter(val => {
+            //             return (
+            //                 val.start.split('-')[1] === 1 ||
+            //                 val.start.split('-')[1] === 2 ||
+            //     val.start.split('-')[1] === 3 ||
+            //     val.end.split('-')[1] === 1 ||
+            //     val.end.split('-')[1] === 2 ||
+            //     val.end.split('-')[1] === 3
+            //             )
+            //         })
+            //         this.weeks[1].weekPlan = weeks1.filter(val => {
+            //             return (
+            //                 val.start.split('-')[1] === 4 ||
+            //     val.start.split('-')[1] === 5 ||
+            //     val.start.split('-')[1] === 6 ||
+            //     val.end.split('-')[1] === 4 ||
+            //     val.end.split('-')[1] === 5 ||
+            //     val.end.split('-')[1] === 6
+            //             )
+            //         })
+            //         this.weeks[2].weekPlan = weeks1.filter(val => {
+            //             return (
+            //                 val.start.split('-')[1] === 7 ||
+            //     val.start.split('-')[1] === 8 ||
+            //     val.start.split('-')[1] === 9 ||
+            //     val.end.split('-')[1] === 7 ||
+            //     val.end.split('-')[1] === 9 ||
+            //     val.end.split('-')[1] === 9
+            //             )
+            //         })
+            //         this.weeks[3].weekPlan = weeks1.filter(val => {
+            //             return (
+            //                 (val.start.split('-')[1] === 10 ||
+            //       val.start.split('-')[1] === 11 ||
+            //       val.start.split('-')[1] === 12 ||
+            //       val.end.split('-')[1] === 10 ||
+            //       val.end.split('-')[1] === 11 ||
+            //       val.end.split('-')[1] === 12) &&
+            //     val.end.split('-')[0] === this.currentYear.year &&
+            //     val.start.split('-')[0] === this.currentYear.year
+            //             )
+            //         })
 
-                        this.currentYear = {
-                            year: moment(this.currentDay).format('yyyy'),
-                            desc: moment(this.currentDay).format('yyyy年')
-                        }
-                        this.systemEnv.currentYear = this.currentYear
+            //         this.seasonNo = res.result.newSeason
+            //         this.weekNo = res.result.newWeek
 
-                        const weeks1 = res.result.weeks
-                        // .forEach((val)=>{
-                        //          val.count =0;
-                        // })
-                        this.weeks[0].weekPlan = weeks1.filter(val => {
-                            return (
-                                val.start.split('-')[1] === 1 ||
-                val.start.split('-')[1] === 2 ||
-                val.start.split('-')[1] === 3 ||
-                val.end.split('-')[1] === 1 ||
-                val.end.split('-')[1] === 2 ||
-                val.end.split('-')[1] === 3
-                            )
-                        })
-                        this.weeks[1].weekPlan = weeks1.filter(val => {
-                            return (
-                                val.start.split('-')[1] === 4 ||
-                val.start.split('-')[1] === 5 ||
-                val.start.split('-')[1] === 6 ||
-                val.end.split('-')[1] === 4 ||
-                val.end.split('-')[1] === 5 ||
-                val.end.split('-')[1] === 6
-                            )
-                        })
-                        this.weeks[2].weekPlan = weeks1.filter(val => {
-                            return (
-                                val.start.split('-')[1] === 7 ||
-                val.start.split('-')[1] === 8 ||
-                val.start.split('-')[1] === 9 ||
-                val.end.split('-')[1] === 7 ||
-                val.end.split('-')[1] === 9 ||
-                val.end.split('-')[1] === 9
-                            )
-                        })
-                        this.weeks[3].weekPlan = weeks1.filter(val => {
-                            return (
-                                (val.start.split('-')[1] === 10 ||
-                  val.start.split('-')[1] === 11 ||
-                  val.start.split('-')[1] === 12 ||
-                  val.end.split('-')[1] === 10 ||
-                  val.end.split('-')[1] === 11 ||
-                  val.end.split('-')[1] === 12) &&
-                val.end.split('-')[0] === this.currentYear.year &&
-                val.start.split('-')[0] === this.currentYear.year
-                            )
-                        })
+            //         this.getCustomPlan()
+            //     } else {
+            //         console.log('res----------------------------000000000000', res)
+            //         this.$message.error({ title: '查询失败', content: res.message })
+            //     }
+            // })
 
-                        this.currentSeason = {
-                            seasonNo: res.result.newSeason,
-                            seasonString: moment(this.currentDay).format('yyyy年') + this.seasonMonth[res.result.newSeason - 1]
-                        }
-                        this.systemEnv.currentSeason = this.currentSeason
-                        this.currentWeek = res.result.newWeek
-                        this.systemEnv.currentWeek = this.currentWeek
-                        // this.currentYear.year = moment(this.currentDay).format('yyyy')
-                        //  this.currentYear.desc = moment(this.currentDay).format('yyyy年')
+            this.currentSeason = {
+                seasonNo: this.seasonNo,
+                seasonString: moment(this.currentDay).format('yyyy年') + this.seasonMonth[this.seasonNo - 1]
+            }
+            this.systemEnv.currentSeason = this.currentSeason
+            this.currentWeek = this.weekNo
+            this.systemEnv.currentWeek = this.currentWeek
+            this.systemEnv.currentDay = this.currentDay
 
-                        this.getCustomPlan()
-                    } else {
-                        console.log('res----------------------------000000000000', res)
-                        this.$error({ title: '查询失败', content: res.message })
-                    }
-                })
-                .finally(() => {})
+            this.currentMonth = {
+                month: parseInt(moment(this.currentDay).format('MM')),
+                monthString: moment(this.currentDay).format('yyyy年MM月')
+            }
+            this.systemEnv.currentMonth = this.currentMonth
+
+            this.currentYear = {
+                year: moment(this.currentDay).format('yyyy'),
+                desc: moment(this.currentDay).format('yyyy年')
+            }
+            this.systemEnv.currentYear = this.currentYear
         },
 
         getCalander(data) {
             var params2 = { 'dateStr': moment(data).format('YYYY-MM-DD hh:mm:ss') }
             console.log('查询新日历 日历函数', params2)
-            getAction(this.url.calendarInfo, params2)
+            getCalendarInfo(params2)
                 .then(res => {
                     if (res.success) {
                         const weeks1 = res.result.weeks
@@ -347,17 +345,13 @@ export default {
                             )
                         })
                     } else {
-                        this.$error({ title: '查询失败', content: res.message })
+                        this.$message.error({ title: '查询失败', content: res.message })
                     }
                 })
                 .finally(() => {})
         },
 
         getCustomPlan() {
-            if (!this.url.zdylist) {
-                this.$message.error('请设置url.list属性!')
-                return
-            }
             var params = {} // 查询条件
             params.planType = 3
             params.createType = 2
@@ -367,7 +361,7 @@ export default {
 
             this.fetching = true
 
-            getAction(this.url.zdylist, params).then(res => {
+            getSelfCutomPlan(params).then(res => {
                 if (res.success) {
                     // if (res.result.records.lenght > 0) {
                     // const data = res.result.records.map((element) => ({
@@ -386,10 +380,6 @@ export default {
         },
 
         getWeekPlan() {
-            if (!this.url.weeklist) {
-                this.$message.error('请设置url.weeklist!')
-                return
-            }
             console.log('res---周计划-------------------------------------------------------------------')
             // 加载数据 若传入参数1则加载第一页的内容
             var params = {} // 查询条件
@@ -400,7 +390,7 @@ export default {
             params.quarter = this.currentSeason.seasonNo
             this.fetching = true
 
-            getAction(this.url.weeklist, params).then(res => {
+            getWeekPlanGroup(params).then(res => {
                 if (res.success) {
                     // if (res.result.records.lenght > 0) {
                     // const data = res.result.records.map((element) => ({
@@ -438,10 +428,6 @@ export default {
             })
         },
         getMonthPlan() {
-            if (!this.url.monthlist) {
-                this.$message.error('请设置url.monthlist!')
-                return
-            }
             var params = {} // 查询条件
 
             params.planUserId = this.tsUserInfo.userId
@@ -449,8 +435,8 @@ export default {
             params.planType = 2
 
             this.fetching = true
-            console.log('0-------月季花- 参数-------', params)
-            getAction(this.url.monthlist, params).then(res => {
+            console.log('0-------月计划汇总- 参数-------', params)
+            getMonthPlanGroup(params).then(res => {
                 console.log('res---月计划结果--------', res)
                 if (res.success) {
                     if (res.result.length > 0) {
@@ -458,9 +444,7 @@ export default {
                             this.monthPlan[parseInt(val.month) - 1].count = val.count
                         })
                     }
-
-                    console.log('res--------月季花--------', this.monthPlan)
-                    // }
+                    console.log('res--------月计划汇总结果--------', this.monthPlan)
                 }
                 if (res.code === 510) {
                     this.$message.warning(res.message)
@@ -660,7 +644,7 @@ export default {
     }
 }
 </script>
-<style scss scoped>
+<style lang='scss'  scoped>
 #calendar .el-button-group > .el-button:not(:first-child):not(:last-child):after {
   content: '当月';
 }

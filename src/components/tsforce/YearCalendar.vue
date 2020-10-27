@@ -1,15 +1,13 @@
 <template>
   <div>
     <el-row>
-      <el-col v-for="(item, index) in monthPlan" :key="index" :span="8">
+      <el-col v-for="(item, index) in months" :key="index" :span="8">
         <!-- <svg-icon icon-class="yewan" /> -->
-        <div @click="open(item)" @mouseover="showPlan(item)">
+        <div @click="open(item)" @mouseover="mouseover(item)">
           <el-row style="margin: 15px">
             <span style="color: red; font-size: 24px">{{ item.month }}月</span>
           </el-row>
-          <el-row style="margin: 15px">
-            <span>{{ item.count }}</span>
-          </el-row>
+          <slot name="content" :month="{ 'month':item}" />
         </div>
       </el-col>
     </el-row>
@@ -21,7 +19,7 @@ export default {
     name: 'WeekCalendar',
     components: {},
     props: {
-        monthPlan: {
+        months: {
             type: Array,
             required: true,
             default: () => [
@@ -60,9 +58,13 @@ export default {
     },
     methods: {
         open(e) {
+            console.log('年历-----鼠标点击========----------------------------------------')
+
             this.$emit('open', e)
         },
-        showPlan(e) {
+        mouseover(e) {
+            console.log('年历-----鼠标移动过==============----------------------------------------')
+            this.$emit('mouseover', e)
             // TODO
             // 换CSS
         }

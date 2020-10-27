@@ -14,7 +14,7 @@ const report = {
         {
             path: 'freshGraduate',
             name: 'FreshGraduateRp',
-            component: () => import('@/views/report/freshGraduate'),
+            component: () => import('@/views/report/freshGraduateReport'),
             meta: { title: '应届生汇报', icon: '' }
         },
         {
