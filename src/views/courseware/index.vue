@@ -4,7 +4,7 @@
       <div :class="data.isSelected ? 'is-selected' : ''" class="fl-y-sb date-celc" style="height:100%;">
         <div class="top">{{ data.day.split('-')[2] }}</div>
         <div class="bottom">{{ countSave(data.day.split('-')[2]) }}</div>
-        <div class="date-mode fl-y-sb">
+        <div class="date-mode fl-y-sb" @click.stop="e=>e">
           <div class="flc-y">
             <span @click.stop="add(data.day.split('-')[2])">新增</span>
           </div>
@@ -84,6 +84,12 @@ export default {
             }
         }
     }
+}
+.over{ //已完成
+    color: #A2F07B;
+}
+.ing{ //ing
+    color:  #FF785F;
 }
 
 .is-selected {
