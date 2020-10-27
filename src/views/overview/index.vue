@@ -1,6 +1,5 @@
 <template>
   <div class="circle-box flcc" :style="{width:size+'px',height:size+'px',background:color,...styleObj}">
-    all
     <slot />
   </div>
 </template>
