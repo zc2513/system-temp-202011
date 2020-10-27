@@ -11,9 +11,6 @@ require('echarts/lib/chart/line')
 require('echarts/lib/component/tooltip')
 require('echarts/lib/component/legend')
 import resize from './mixins/resize'
-/**
- * @type 默认不传->空心圆  radius->时为南丁格尔图
- * */
 export default {
     mixins: [resize],
     props: {
