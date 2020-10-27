@@ -78,7 +78,7 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
-import { handleChangeCheckCode } from '@/api/login'
+// import { handleChangeCheckCode } from '@/api/login'
 export default {
     name: 'Login',
     data() {
@@ -128,7 +128,7 @@ export default {
     },
     created() {
         this.loginForm.checkKey = Date.now() // 生成页面初始时间
-        this.handleChangeCheckCode()
+        // this.handleChangeCheckCode()
     },
     methods: {
         showPwd() {
