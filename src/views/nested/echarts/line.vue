@@ -81,7 +81,7 @@ export default {
                     right: 0,
                     icon: 'roundRect',
                     itemHeight: '8',
-                    textStyle: {
+                    textStyle: { // 小图标字体颜色
                         color: '#5F6266'
                     }
                 },
@@ -119,7 +119,8 @@ export default {
                         name: '应交数量',
                         color: '#A2F07B',
                         lineStyle: { // 线条颜色
-                            color: '#A2F07B'
+                            color: '#A2F07B',
+                            width: 3
                         }
                     },
                     { // 线条二
