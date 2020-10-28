@@ -74,14 +74,13 @@
 
               <div class="date-mode fl-y-sb" @click.stop="e=>e">
                 <div class="flc-y">
-                  <span @click.stop="add(data.day.split('-')[2])">新增</span>
+                  <span @click.stop="addDay(data.day)">新增</span>
                 </div>
                 <div class="flc-y">
-                  <span @click.stop="lock(data.day.split('-')[2])">查看</span>
+                  <span @click.stop="viewday(data.day)">查看</span>
                 </div>
               </div>
             </div>
-
           </template>
         </el-calendar>
       </el-card>
@@ -232,6 +231,9 @@ export default {
                     break
                 default: ''
             }
+        },
+        addDay(e) {
+            this.$emit('addDay', e)
         },
         reset() {
             this.currentDate = new Date()

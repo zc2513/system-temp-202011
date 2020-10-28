@@ -28,7 +28,7 @@
     </el-row>
     <el-form ref="form" :model="form" label-width="80px">
       <el-row :gutter="24">
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item
             label="开始日期"
 
@@ -43,7 +43,7 @@
             />
           </el-form-item>
         </el-col>
-        <el-col :span="10">
+        <el-col :span="12">
           <el-form-item
             label="结束日期"
 
@@ -80,12 +80,12 @@
         <el-col :span="24">
           <el-form-item label="技能类型" style="margin-left: 10px">
             <!-- <j-multi-select-tag v-model="skillTypes" dictCode="skillType" placeholder="请选择"></j-multi-select-tag> -->
-            <el-select v-model="skillTypes" mode="multiple">
+            <el-select v-model="skillTypes" multiple size="large">
               <el-option
                 v-for="item in skills"
                 :key="item.id"
-                :label="itmem.skillType"
-                :value="itmem.id"
+                :label="item.skillType"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -95,10 +95,18 @@
         <el-col :span="24">
           <el-form-item
             label="计划内容"
-
-            style="min-height: 300px; margin-left: 10px"
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            style="margin-left: 10px"
           >
-            <editor-bar v-model="RTCplan" />
+            <el-input
+              v-model="form.planContent"
+              type="textarea"
+              placeholder="请输入计划内容"
+              maxlength="200"
+              rows="10"
+              show-word-limit
+            />
           </el-form-item>
         </el-col>
       </el-row>
@@ -112,12 +120,11 @@
 
 <script>
 import moment from 'moment'
-import EditorBar from '../../../components/wangEditor/WangEditor.vue'
-import { saveSelfPlan, getSkillType } from '@/api/porject'
+import { saveSelfPlan, getSkillType } from '@/api/project'
 export default {
     name: 'AddPlanModal',
     components: {
-        EditorBar
+
     },
     data() {
         return {
@@ -177,11 +184,6 @@ export default {
 
             validatorRules: {},
             skills: null,
-            url: {
-                add: 'com.thundersoft.studentreport/fstFreshStudentPlan/add',
-                edit: '/yffmline/ykcity/edit',
-                skillTypeList: 'com.thundersoft.studentreport/fstSkillType/list'
-            },
             form: {
                 planType: 1,
                 createType: 1,
@@ -219,8 +221,6 @@ export default {
             this.edit(record)
         },
         edit(record) {
-            this.form.resetFields()
-            this.form = Object.assign({}, record)
             this.visible = true
         },
         close() {
@@ -232,7 +232,7 @@ export default {
             const formData = Object.assign(this.form)
 
             formData.skillType = this.skillTypes
-            formData.planContent = this.jeditor.value
+            // formData.planContent = this.jeditor.value
             // 时间格式化
             // formData.startDate = formData.startDate ? formData.startDate.format('YYYY-MM-DD') : null
             // formData.endDate = formData.endDate ? formData.endDate.format('YYYY-MM-DD') : null

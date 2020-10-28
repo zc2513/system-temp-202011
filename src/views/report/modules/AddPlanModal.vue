@@ -113,7 +113,7 @@
 <script>
 import moment from 'moment'
 import EditorBar from '../../../components/wangEditor/WangEditor.vue'
-import { saveSelfPlan, getSkillType } from '@/api/porject'
+import { saveSelfPlan, getSkillType } from '@/api/project'
 export default {
     name: 'AddPlanModal',
     components: {

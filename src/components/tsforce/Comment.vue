@@ -53,7 +53,7 @@
 
 <script>
 import moment from 'moment'
-import { loadComment, addPlanComment } from '@/api/porject'
+import { loadComment, addPlanComment } from '@/api/project'
 export default {
     name: 'Comment',
     components: {},

@@ -114,7 +114,7 @@
 import moment from 'moment'
 import Comment from '../../../components/tsforce/Comment.vue'
 import StudentInfo from '../../../components/tsforce/StudentInfo.vue'
-import { getSelfPlan } from '@/api/porject'
+import { getSelfPlan } from '@/api/project'
 
 export default {
     name: 'ShowWeekPlanModal',

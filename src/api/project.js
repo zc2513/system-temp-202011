@@ -8,10 +8,9 @@ const url = {
     skillTypeList: 'com.thundersoft.studentreport/fstSkillType/list',
     zdylist: 'com.thundersoft.studentreport/fstFreshStudentPlan//queryListPlanInfo',
     getuserinfo: 'com.thundersoft.system/sysGroupInfo/queryArearDeptGroupById',
-    zdygroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupCustom',
-    calendarInfo: 'com.thundersoft.system/sysPerpetualCalendar/getDateInfo',
-    weeklistgroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupWeek',
-    monthlistgroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupMonth'
+    queryListGroupCustom: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupCustom',
+    queryListGroupWeek: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupWeek',
+    queryListGroupMonth: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupMonth'
 
 }
 /**
@@ -77,18 +76,18 @@ export function getSkillType(data) {
     })
 }
 /**
- * @description 获得自定义计划
+ * @description 获得自定义计划月总
  * @author laozhu
  * @date 26/10/2020
  * @export
- * @param {*} data
+ * @param {*} data planType=3&createType=2&planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10
  * @return {*}
  */
-export function getSelfPlan(data) {
+export function queryListGroupCustom(params) {
     return request({
-        url: url.zdylist,
+        url: url.queryListGroupCustom,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -147,12 +146,12 @@ export function getSelfCutomPlan(data) {
  * @author laozhu
  * @date 27/10/2020
  * @export
- * @param {*} data
+ * @param {*} data ?planType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae&year=2020&quarter=4
  * @return {*}
  */
-export function getWeekPlanGroup(data) {
+export function queryListGroupWeek(data) {
     return request({
-        url: url.weeklistgroup,
+        url: url.queryListGroupWeek,
         method: 'get',
         data
     })
@@ -163,12 +162,12 @@ export function getWeekPlanGroup(data) {
  * @author laozhu
  * @date 27/10/2020
  * @export
- * @param {*} data
+ * @param {*} data  planType=2&createType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae&planUserId&year=2020
  * @return {*}
  */
-export function getMonthPlanGroup(data) {
+export function queryListGroupMonth(data) {
     return request({
-        url: url.monthlistgroup,
+        url: url.queryListGroupMonth,
         method: 'get',
         data
     })
