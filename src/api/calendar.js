@@ -1,7 +1,8 @@
 import request from '@/utils/request'
 
 const url = {
-    calendarInfo: 'com.thundersoft.system/sysPerpetualCalendar/getDateInfo'
+    calendarInfo: 'com.thundersoft.system/sysPerpetualCalendar/getDateInfo',
+    getuserinfo: 'com.thundersoft.system/sysGroupInfo/queryArearDeptGroupById'
 
 }
 /**
@@ -12,11 +13,11 @@ const url = {
  * @param {*} data
  * @return {*}
  */
-export function getUserInfo(data) {
+export function getUserInfo(params) {
     return request({
         url: url.getuserinfo,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -28,11 +29,11 @@ export function getUserInfo(data) {
  * @param {*} data
  * @return {*}
  */
-export function getCalendarInfo(data) {
+export function getCalendarInfo(params) {
     return request({
         url: url.calendarInfo,
         method: 'get',
-        data
+        params
     })
 }
 

@@ -2,174 +2,55 @@ import request from '@/utils/request'
 
 const url = {
     addComment: 'com.thundersoft.studentreport/fstFreshStudentReportComment/add',
-    list: 'com.thundersoft.studentreport/fstFreshStudentReportComment/listByReportId',
-    add: 'com.thundersoft.studentreport/fstFreshStudentPlan/add',
-    edit: '/yffmline/ykcity/edit',
-    skillTypeList: 'com.thundersoft.studentreport/fstSkillType/list',
-    zdylist: 'com.thundersoft.studentreport/fstFreshStudentPlan//queryListPlanInfo',
-    getuserinfo: 'com.thundersoft.system/sysGroupInfo/queryArearDeptGroupById',
-    zdygroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupCustom',
-    calendarInfo: 'com.thundersoft.system/sysPerpetualCalendar/getDateInfo',
-    weeklistgroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupWeek',
-    monthlistgroup: 'com.thundersoft.studentreport/fstFreshStudentPlan/queryListGroupMonth'
-
+    queryListGroupDay: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupDay',
+    queryListGroupWeek: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupWeek',
+    queryListGroupMonth: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupMonth'
 }
+
 /**
- * @description 加载评论
+ * @description 按月应届生每天日志提交汇总
  * @author laozhu
- * @date 26/10/2020
+ * @date 28/10/2020
  * @export
- * @param {*} data
+ * @param {*} params year=2020&month=10&userGroupId=1&userId=e9ca23d68d884d4ebb19d07889727dae
  * @return {*}
  */
-export function loadComment(data) {
+export function queryListGroupDay(params) {
     return request({
-        url: url.list,
+        url: url.queryListGroupDay,
         method: 'get',
-        data
+        params
     })
 }
 
 /**
- * @description 增加评论
+ * @description 按季度统计周报
  * @author laozhu
- * @date 26/10/2020
+ * @date 28/10/2020
  * @export
- * @param {*} data
+ * @param {*} params year=2020&quarter=4&userGroupId=2&userId=e9ca23d68d884d4ebb19d07889727dae
  * @return {*}
  */
-export function addPlanComment(data) {
+export function queryListGroupWeek(params) {
     return request({
-        url: url.addComment,
-        method: 'post',
-        data
-    })
-}
-
-/**
- * @description 保存自定义计划
- * @author laozhu
- * @date 26/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function saveSelfPlan(data) {
-    return request({
-        url: url.add,
-        method: 'post',
-        data
-    })
-}
-
-/**
- * @description 获取技能类别
- * @author laozhu
- * @date 26/10/2020
- * @export
- * @return {*}
- */
-export function getSkillType(data) {
-    return request({
-        url: url.skillTypeList,
+        url: url.queryListGroupWeek,
         method: 'get',
-        data
-    })
-}
-/**
- * @description 获得自定义计划
- * @author laozhu
- * @date 26/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function getSelfPlan(data) {
-    return request({
-        url: url.zdylist,
-        method: 'get',
-        data
-    })
-}
-
-// 自定义计划模块
-
-/**
- * @description 获取应届生在系统中的区域，部门 分组等信息
- * @author laozhu
- * @date 27/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function getUserInfo(data) {
-    return request({
-        url: url.getuserinfo,
-        method: 'get',
-        data
+        params
     })
 }
 
 /**
- * @description 获得某天的日历信息,包括当前周序号及开始日期结束日期
+ * @description 按月统计月报
  * @author laozhu
- * @date 27/10/2020
+ * @date 28/10/2020
  * @export
- * @param {*} data
+ * @param {*} params year=2020&userGroupId=1&userId=e9ca23d68d884d4ebb19d07889727dae
  * @return {*}
  */
-export function getCalendarInfo(data) {
+export function queryListGroupMonth(params) {
     return request({
-        url: url.calendarInfo,
+        url: url.queryListGroupMonth,
         method: 'get',
-        data
-    })
-}
-
-/**
- * @description 按获得某月自定义计划汇总
- * @author laozhu
- * @date 27/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function getSelfCutomPlan(data) {
-    return request({
-        url: url.zdygroup,
-        method: 'get',
-        data
-    })
-}
-
-/**
- * @description 获得某个季度全部周的周计划汇总
- * @author laozhu
- * @date 27/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function getWeekPlanGroup(data) {
-    return request({
-        url: url.weeklistgroup,
-        method: 'get',
-        data
-    })
-}
-
-/**
- * @description 获得某年的月计划汇总
- * @author laozhu
- * @date 27/10/2020
- * @export
- * @param {*} data
- * @return {*}
- */
-export function getMonthPlanGroup(data) {
-    return request({
-        url: url.monthlistgroup,
-        method: 'get',
-        data
+        params
     })
 }

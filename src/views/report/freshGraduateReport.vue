@@ -1,9 +1,35 @@
 
 <template>
   <div>
-    <ts-calendar :current-day="value" day-title="日报" week-title="周报" month-title="月报">
-      <template slot="tsdateCell">
-        <div> hello </div>
+    <ts-calendar :current-day="value" day-title="日报" week-title="周报" month-title="月报" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth">
+      <template v-slot:tsdateCell="{ data }">
+
+        <!-- <div class="bottom"></div> -->
+        <div class="bottom">
+          <z-circle size="20" :color=" countSave(data.data.day)>0?'#A2F07B':'#FF785F' ">
+            <!-- {{ countSave(data.data.day) }} -->
+          </z-circle>
+        </div>
+      </template>
+      <template v-slot:weekContent="{ week }">
+
+        <!-- <div class="bottom"></div> -->
+        <div class="bottom">
+
+          <z-circle size="20" :color=" countWeekSave(week.item.week)>0?'#A2F07B':'#FF785F' ">
+            {{ countWeekSave(week.item.week) }}
+          </z-circle>
+        </div>
+      </template>
+      <template v-slot:monthContent="{ month }">
+
+        <!-- <div class="bottom"></div> -->
+        <div class="bottom">
+
+          <z-circle size="20" :color=" countMonthSave(month.item.month)>0?'#A2F07B':'#FF785F' ">
+            {{ countMonthSave(month.item) }}
+          </z-circle>
+        </div>
       </template>
     </ts-calendar>
   </div>
@@ -14,8 +40,8 @@ import TsCalendar from '../../components/tsforce/TsCalendar.vue'
 
 // import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 // import AddPlanModal from './modules/AddPlanModal.vue'
-import { getUserInfo, getCalendarInfo } from '@/api/calendar'
-// import { getSelfDayReport, getWeekReport, getMonthReport } from '@/api/report'
+import { getUserInfo } from '@/api/calendar'
+import { queryListGroupWeek, queryListGroupDay, queryListGroupMonth } from '@/api/report'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 export default {
@@ -25,58 +51,12 @@ export default {
     },
     data() {
         return {
-            tabPosition: 'self',
-            value: new Date(),
-            menuVisible: true,
 
-            customPlan: [],
-            seasonMonth: ['1月-3月', '4月-6月', '7月-9月', '10月-12月'],
-            weeks: [
-                { season: 1, weekPlan: [] },
-                { season: 2, weekPlan: [] },
-                { season: 3, weekPlan: [] },
-                { season: 4, weekPlan: [] }
-            ],
-            weekPlan: [],
-
-            monthPlan: [
-                { month: 1, count: 0 },
-                { month: 2, count: 0 },
-                { month: 3, count: 0 },
-                { month: 4, count: 0 },
-                { month: 5, count: 0 },
-                { month: 6, count: 0 },
-                { month: 7, count: 0 },
-                { month: 8, count: 0 },
-                { month: 9, count: 0 },
-                { month: 10, count: 0 },
-                { month: 11, count: 0 },
-                { month: 12, count: 0 }
-            ],
-            months: [
-                { month: 1, count: 0 },
-                { month: 2, count: 0 },
-                { month: 3, count: 0 },
-                { month: 4, count: 0 },
-                { month: 5, count: 0 },
-                { month: 6, count: 0 },
-                { month: 7, count: 0 },
-                { month: 8, count: 0 },
-                { month: 9, count: 0 },
-                { month: 10, count: 0 },
-                { month: 11, count: 0 },
-                { month: 12, count: 0 }
-            ],
-            days: [
-                { day: 3, count: 3 },
-                { day: 2, count: 2 },
-                { day: 1, count: 1 }
-            ],
             currentWeek: null,
             currentSeason: null,
-            currentMonth: {},
+            currentMonth: 10,
             currentDay: null,
-            currentYear: null,
+            currentYear: 2020,
             tsUserInfo: null,
             seasonNo: null,
             weekNo: null,
@@ -88,7 +68,10 @@ export default {
                 // currentWeek,
                 // tsUserInfo,
                 // userInfo,
-            }
+            },
+            groupDay: [],
+            groupWeek: [],
+            groupMonth: []
         }
     },
     computed: {
@@ -102,19 +85,27 @@ export default {
 
     methods: {
         moment,
-        reset() {
-            this.getPageUserInfo()
-            switch (this.tabPosition) {
-                case 'self':
-                    break
-                case 'week':
-                    this.getWeekPlan()
-                    break
-                case 'month':
-                    this.getMonthPlan()
-                    break
-                default: ''
-            }
+        countSave(day) {
+            const str = this.groupDay.filter(e => e.month === (day.split('-')[1]) && e.DAY === Number(day.split('-')[2]) && e.year === this.currentYear + '')[0]
+            return str ? str.count : 0
+        },
+        countWeekSave(week) {
+            const str = this.groupWeek.filter(e => (e.week === week + '' && e.year === this.currentYear))[0]
+            return str ? str.count : 0
+        },
+        countMonthSave(month) {
+            console.log('===============================0000000000000============', this.groupMonth, month, this.currentYear)
+
+            const str = this.groupMonth.filter(e => e.month === month && e.year === this.currentYear + '')[0]
+            console.log('===============================0000000000000===========ccccccc=', str)
+
+            return str ? str.count : 0
+        },
+        add(val) {
+            console.log(val)
+        },
+        lock(val) {
+            console.log(val)
         },
         getPageUserInfo() {
             this.value = new Date()
@@ -132,33 +123,23 @@ export default {
                     this.tsUserInfo.userName = this.userInfo.username
                     this.systemEnv.tsUserInfo = this.tsUserInfo
                     this.systemEnv.userInfo = this.userInfo
+                    var param2 = {
+                        year: this.currentYear,
+                        month: this.currentMonth,
+                        userGroupId: 1,
+                        userId: this.userInfo.id
+                    }
+                    console.log('日报汇总cansghu', param2)
+                    queryListGroupDay(param2).then(res1 => {
+                        if (res1.success === true) {
+                            console.log('日报汇总', res1)
+                            this.groupDay = res1.result
+                        }
+                    })
                 } else {
                     this.$message.error({ title: '查询失败', content: res.message })
                 }
             })
-            var params2 = { 'dateStr': moment(this.value).format('YYYY-MM-DD hh:mm:ss') }
-            console.log('查询日历参数', params2)
-            getCalendarInfo(params2)
-            this.currentSeason = {
-                seasonNo: this.seasonNo,
-                seasonString: moment(this.currentDay).format('yyyy年') + this.seasonMonth[this.seasonNo - 1]
-            }
-            this.systemEnv.currentSeason = this.currentSeason
-            this.currentWeek = this.weekNo
-            this.systemEnv.currentWeek = this.currentWeek
-            this.systemEnv.currentDay = this.currentDay
-
-            this.currentMonth = {
-                month: parseInt(moment(this.currentDay).format('MM')),
-                monthString: moment(this.currentDay).format('yyyy年MM月')
-            }
-            this.systemEnv.currentMonth = this.currentMonth
-
-            this.currentYear = {
-                year: moment(this.currentDay).format('yyyy'),
-                desc: moment(this.currentDay).format('yyyy年')
-            }
-            this.systemEnv.currentYear = this.currentYear
         },
 
         mouseover(e) {
@@ -167,6 +148,70 @@ export default {
         clickDay(e) {
             // console.log('日计划--------- 点击----------------------------', e)
         },
+        refreshDay(data) {
+            console.log('日报--------- 点击----------------------------')
+            this.currentYear = data.currentYear
+            this.currentMonth = data.currentMonth
+            var param2 = {
+                year: this.currentYear,
+                month: this.currentMonth,
+                userGroupId: 1,
+                userId: this.userInfo.id
+            }
+            console.log('日报汇总cansghu', param2)
+            queryListGroupDay(param2).then(res1 => {
+                if (res1.success === true) {
+                    console.log('日报汇带你几获得总', res1)
+                    this.groupDay = res1.result
+                }
+            })
+        },
+        refreshWeek(data) {
+            console.log('周报--------- 点击----------------------------')
+            this.currentYear = data.currentYear
+            this.currentSeason = data.currentSeason
+            this.getqueryListGroupWeek()
+        },
+        getqueryListGroupWeek() {
+            console.log('周报--------- --------------------------')
+
+            var param2 = {
+                year: this.currentYear,
+                quarter: this.currentSeason,
+                userGroupId: 1,
+                userId: this.userInfo.id
+            }
+            console.log('周报汇总cansghu', param2)
+            queryListGroupWeek(param2).then(res1 => {
+                if (res1.success === true) {
+                    console.log('周报汇带你几获得总', res1)
+                    this.groupWeek = res1.result
+                }
+            })
+        },
+
+        refreshMonth(data) {
+            console.log('月报--------- 点击----------------------------')
+            this.currentYear = data.currentYear
+            this.getListGroupMonth()
+        },
+        getListGroupMonth() {
+            console.log('月报--------- --------------------------')
+
+            var param2 = {
+                year: this.currentYear,
+                userGroupId: 1,
+                userId: this.userInfo.id
+            }
+            console.log('月报汇总cansghu', param2)
+            queryListGroupMonth(param2).then(res1 => {
+                if (res1.success === true) {
+                    console.log('月报汇带你几获得总', res1)
+                    this.monthWeek = res1.result
+                }
+            })
+        },
+
         openWeek(data) {
             console.log('data---- 周--------------', data)
             this.$refs.showWeekPlan.planType = '周计划'
