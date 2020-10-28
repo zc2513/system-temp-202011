@@ -76,8 +76,8 @@
                   </el-row>
                   <el-row :gutter="24" style="margin-top: 12px; margin-bottom: 12px">
                     <comment
+                      :reportid="item.id"
                       :comment-type="commentType"
-                      :fresh-student-report-id="item.id"
                       :realname="tsUserInfo.realName"
                       :user-id="tsUserInfo.userId"
                       :username="tsUserInfo.userName"
@@ -114,7 +114,8 @@
 import moment from 'moment'
 import Comment from '../../../components/tsforce/Comment.vue'
 import StudentInfo from '../../../components/tsforce/StudentInfo.vue'
-import { getSelfPlan } from '@/api/project'
+import { getSelfCutomPlan } from '@/api/project'
+import { parseTime } from '@/utils/filter'
 
 export default {
     name: 'ShowWeekPlanModal',
@@ -146,7 +147,8 @@ export default {
     created() {},
     methods: {
         moment,
-        loadData(planType, systemEnv, param) {
+        loadData(planType, param) {
+            console.log('查询计划的条件-----------', param)
             var params = {} // 查询条件
             if (planType === '1') {
                 // 周计划
@@ -159,15 +161,15 @@ export default {
                 params.month = param.month
             } else {
                 params.createUserId = this.tsUserInfo.userId
-                params.day = moment(param).format('DD')
+                params.day = parseTime(param.day, '{d}')
 
-                params.month = moment(param).format('MM')
+                params.month = param.currentMonth
             }
             params.planType = planType
             // params.planTime = this.planTime
             // params.planUserId = this.tsUserInfo.userId
             // params.year = moment(this.planTime).format('yyyy')
-            params.year = systemEnv.currentYear.year
+            params.year = param.currentYear
 
             // &year=2020&month=10&week=&day=22
             // com.thundersoft.studentreport/fstFreshStudentPlan/queryListPlanInfo?
@@ -185,7 +187,7 @@ export default {
             this.fetching = true
             this.myWeekPlan = []
             //  params={}
-            getSelfPlan(params).then((res) => {
+            getSelfCutomPlan(params).then((res) => {
                 console.log('返回结果', res)
                 if (res.success) {
                     console.log('正确返回结果', res)

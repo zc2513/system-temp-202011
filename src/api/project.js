@@ -21,11 +21,11 @@ const url = {
  * @param {*} data
  * @return {*}
  */
-export function loadComment(data) {
+export function loadComment(params) {
     return request({
         url: url.list,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -75,21 +75,6 @@ export function getSkillType(data) {
         data
     })
 }
-/**
- * @description 获得自定义计划月总
- * @author laozhu
- * @date 26/10/2020
- * @export
- * @param {*} data planType=3&createType=2&planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10
- * @return {*}
- */
-export function queryListGroupCustom(params) {
-    return request({
-        url: url.queryListGroupCustom,
-        method: 'get',
-        params
-    })
-}
 
 // 自定义计划模块
 
@@ -117,11 +102,11 @@ export function getUserInfo(data) {
  * @param {*} data
  * @return {*}
  */
-export function getCalendarInfo(data) {
+export function getCalendarInfo(param) {
     return request({
         url: url.calendarInfo,
         method: 'get',
-        data
+        param
     })
 }
 
@@ -130,17 +115,31 @@ export function getCalendarInfo(data) {
  * @author laozhu
  * @date 27/10/2020
  * @export
- * @param {*} data
+ * @param {*} data createType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae &planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10&day=22
  * @return {*}
  */
-export function getSelfCutomPlan(data) {
+export function getSelfCutomPlan(param) {
     return request({
-        url: url.zdygroup,
+        url: url.zdylist,
         method: 'get',
-        data
+        param
     })
 }
-
+/**
+ * @description 获得自定义计划月总
+ * @author laozhu
+ * @date 26/10/2020
+ * @export
+ * @param {*} data planType=3&createType=2&planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10
+ * @return {*}
+ */
+export function queryListGroupCustom(params) {
+    return request({
+        url: url.queryListGroupCustom,
+        method: 'get',
+        params
+    })
+}
 /**
  * @description 获得某个季度全部周的周计划汇总
  * @author laozhu

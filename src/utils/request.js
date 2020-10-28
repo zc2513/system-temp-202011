@@ -15,7 +15,6 @@ service.interceptors.request.use(
         if (store.getters.token) {
             config.headers['X-Token'] = getToken()
         }
-        console.log('请求--------------------', config)
         return config
     },
     error => {

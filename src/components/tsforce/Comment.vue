@@ -63,7 +63,7 @@ export default {
             required: true,
             default: '1'
         },
-        freshStudentReportId: {
+        reportid: {
             type: String,
             required: true,
             default: '1'
@@ -92,10 +92,7 @@ export default {
 
             createDate: moment(new Date()).format('yyyy-MM-DD hh:mm:ss'),
             comments: [],
-            url: {
-                addComment: 'com.thundersoft.studentreport/fstFreshStudentReportComment/add',
-                list: 'com.thundersoft.studentreport/fstFreshStudentReportComment/listByReportId'
-            },
+
             model: {},
             // 校验规则
             rules: {
@@ -109,8 +106,10 @@ export default {
     methods: {
         loadData() {
             // 加载数据 若传入参数1则加载第一页的内容
-            var params = {} // 查询条件
-            params.reportId = this.freshStudentReportId
+            var params = {
+                reportId: this.reportid
+            } // 查询条件
+            console.log('reoirt id 00000000000', params)
 
             this.fetching = true
             this.comments = []
@@ -121,6 +120,7 @@ export default {
                     //   text: element.carno,
                     //   value: element.carno,
                     // }))
+                    console.log('reoirt id 000000000jieguo00', this.comments)
                     this.comments = res.result
                     // }
                 }
@@ -135,7 +135,7 @@ export default {
                 commentContent: this.form.commentContent,
                 commentType: this.commentType,
                 createDate: this.createDate,
-                freshStudentReportId: this.freshStudentReportId,
+                freshStudentReportId: this.reportid,
                 realname: this.realname,
                 userId: this.userId,
                 username: this.username
@@ -145,8 +145,8 @@ export default {
                 .then(res => {
                     if (res.success) {
                         this.$message.success(res.message)
-                        this.$emit('ok')
                         this.loadData()
+                        this.$emit('ok')
                         this.form.commentContent = ''
                     } else {
                         this.$message.error(res.message)

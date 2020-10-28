@@ -35,9 +35,9 @@
       <el-row>
         <el-col :span="10">
           <el-radio-group v-model="tabPosition" style="margin-bottom: 30px" @change="changePlanType">
-            <el-radio-button label="self">{{ dayTitle }}</el-radio-button>
-            <el-radio-button label="week">{{ weekTitle }}</el-radio-button>
-            <el-radio-button label="month">{{ monthTitle }}</el-radio-button>
+            <el-radio-button v-if="showDay" label="self">{{ dayTitle }}</el-radio-button>
+            <el-radio-button v-if="showWeek" label="week">{{ weekTitle }}</el-radio-button>
+            <el-radio-button v-if="showMonth" label="month">{{ monthTitle }}</el-radio-button>
           </el-radio-group>
         </el-col>
         <el-col :span="6">
@@ -77,14 +77,14 @@
                   <span @click.stop="addDay(data.day)">新增</span>
                 </div>
                 <div class="flc-y">
-                  <span @click.stop="viewday(data.day)">查看</span>
+                  <span @click.stop="viewDay(data.day)">查看</span>
                 </div>
               </div>
             </div>
           </template>
         </el-calendar>
       </el-card>
-      <el-card v-if="tabPosition === 'week'">
+      <el-card v-if="tabPosition === 'week' && showDay">
         <div>
           <el-row>
             <el-col v-for="(item, index) in weekOneSeason" :key="index" :span="6">
@@ -108,7 +108,7 @@
           </el-row>
         </div>
       </el-card>
-      <el-card v-if="tabPosition === 'month'">
+      <el-card v-if="tabPosition === 'month' && showDay">
         <div>
           <el-row>
             <el-col v-for="(item, index) in months" :key="index" :span="8">
@@ -160,6 +160,21 @@ export default {
             type: String,
             required: true,
             default: '月报'
+        },
+        showDay: {
+            type: Boolean,
+            required: true,
+            default: true
+        },
+        showWeek: {
+            type: Boolean,
+            required: true,
+            default: true
+        },
+        showMonth: {
+            type: Boolean,
+            required: true,
+            default: true
         },
         currentDay: {
             type: Date,
@@ -234,6 +249,9 @@ export default {
         },
         addDay(e) {
             this.$emit('addDay', e)
+        },
+        viewDay(e) {
+            this.$emit('viewDay', { 'currentYear': this.currentYear, 'currentMonth': this.currentMonth, 'day': e })
         },
         reset() {
             this.currentDate = new Date()
@@ -419,10 +437,8 @@ export default {
         },
         openMonth(data) {
             console.log('data---------------------月-----------------', data)
-        },
-        openDay(param) {
-            console.log('data------------日-------------------------0000000------------', this.tsUserInfo)
         }
+
     }
 
 }

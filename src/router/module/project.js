@@ -28,26 +28,26 @@ const project = {
             path: 'tutor',
             name: 'Tutor',
             component: () => import('@/views/project/tutor'),
-            meta: { title: '导师计划', icon: '' }
-        },
-        {
-            path: 'tutorCustomization',
-            name: 'TutorCustomization',
-            component: () => import('@/views/project/tutorCustomization'),
-            meta: { title: '导师定制计划', icon: '' }
-        },
-        {
-            path: 'me',
-            name: 'Me',
-            component: () => import('@/views/project/me'),
-            meta: { title: '我的计划', icon: '' }
-        },
-        {
-            path: 'meCustomization',
-            name: 'MeCustomization',
-            component: () => import('@/views/project/meCustomization'),
-            meta: { title: '我的定制计划', icon: '' }
+            meta: { title: '基础计划', icon: '' }
         }
+        // {
+        //     path: 'tutorCustomization',
+        //     name: 'TutorCustomization',
+        //     component: () => import('@/views/project/tutorCustomization'),
+        //     meta: { title: '导师定制计划', icon: '' }
+        // },
+        // {
+        //     path: 'me',
+        //     name: 'Me',
+        //     component: () => import('@/views/project/me'),
+        //     meta: { title: '我的计划', icon: '' }
+        // },
+        // {
+        //     path: 'meCustomization',
+        //     name: 'MeCustomization',
+        //     component: () => import('@/views/project/meCustomization'),
+        //     meta: { title: '我的定制计划', icon: '' }
+        // }
     ]
 }
 

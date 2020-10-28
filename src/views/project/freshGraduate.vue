@@ -1,13 +1,13 @@
 
 <template>
   <div>
-    <ts-calendar :current-day="value" day-title="自定义" week-title="周计划" month-title="月计划" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth" @addDay="addPlan">
+    <ts-calendar :current-day="value" day-title="自定义" week-title="周计划" month-title="月计划" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth" @addDay="addPlan" @viewDay="openDay">
       <template v-slot:tsdateCell="{ data }">
 
         <!-- <div class="bottom"></div> -->
         <div class="bottom">
           <z-circle size="20" :color=" countSave(data.data.day)>0?'#A2F07B':'#FF785F' ">
-            <!-- {{ countSave(data.data.day) }} -->
+            {{ countSave(data.data.day) }}
           </z-circle>
         </div>
       </template>
@@ -32,7 +32,9 @@
         </div>
       </template>
     </ts-calendar>
-    <add-plan-modal ref="addDayPlan" />
+    <add-plan-modal ref="addDayPlan" @ok="getCustomPlan" />
+    <show-week-plan-modal ref="showWeekPlan" />
+
   </div>
 
 </template>
@@ -40,17 +42,19 @@
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
 
-// import showWeekPlanModal from './modules/showWeekPlanModal.vue'
+import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
 import { getUserInfo } from '@/api/calendar'
 import { queryListGroupCustom, queryListGroupWeek, queryListGroupMonth } from '@/api/project'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
+import { parseTime } from '@/utils/filter'
 export default {
     name: 'Myplan',
     components: {
         TsCalendar,
-        AddPlanModal
+        AddPlanModal,
+        showWeekPlanModal
     },
     data() {
         return {
@@ -89,8 +93,11 @@ export default {
     methods: {
         moment,
         countSave(day) {
-            const str = this.groupDay.filter(e => e.month === (day.split('-')[1]) && e.DAY === Number(day.split('-')[2]) && e.year === this.currentYear + '')[0]
-            return str ? str.count : 0
+            console.log('day--------', day)
+            var dayint = parseInt(parseTime(day, '{d}'))
+            const str = this.groupDay[dayint - 1]
+            console.log('day--------', str, dayint)
+            return str
         },
         countWeekSave(week) {
             const str = this.groupWeek.filter(e => (e.week === week + '' && e.year === this.currentYear))[0]
@@ -131,7 +138,8 @@ export default {
                         month: this.currentMonth,
                         createType: 2,
                         planType: 3,
-                        planUserId: this.userInfo.id
+                        createUserId: this.userInfo.id
+                        // planUserId: this.userInfo.id // TODO 有问题
                     }
                     console.log('自定义计划汇总cansghu', param2)
                     queryListGroupCustom(param2).then(res1 => {
@@ -156,12 +164,15 @@ export default {
             console.log('自定义计划--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.currentMonth = data.currentMonth
+            this.getCustomPlan()
+        },
+        getCustomPlan() {
             var param2 = {
                 year: this.currentYear,
                 month: this.currentMonth,
                 createType: 2,
                 planType: 3,
-                planUserId: this.userInfo.id
+                createUserId: this.userInfo.id
             }
             console.log('自定义计划汇总cansghu', param2)
             queryListGroupCustom(param2).then(res1 => {
@@ -224,7 +235,7 @@ export default {
             this.$refs.showWeekPlan.planType = '周计划'
             this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
             this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.week + '周'
-            this.$refs.showWeekPlan.loadData('1', this.systemEnv, data)
+            this.$refs.showWeekPlan.loadData('1', data)
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
         openMonth(data) {
@@ -232,15 +243,15 @@ export default {
             this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
             this.$refs.showWeekPlan.planType = '月计划'
             this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.month + '月'
-            this.$refs.showWeekPlan.loadData('2', this.systemEnv, data)
+            this.$refs.showWeekPlan.loadData('2', data)
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
         openDay(param) {
-            console.log('data------------日-------------------------0000000------------', this.tsUserInfo)
+            console.log('data------------日----------------00007777------------0000000------------', this.tsUserInfo, param)
             this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
             this.$refs.showWeekPlan.planType = '自定义计划'
-            this.$refs.showWeekPlan.planTime = param
-            this.$refs.showWeekPlan.loadData('3', this.systemEnv, param)
+            this.$refs.showWeekPlan.planTime = param.day
+            this.$refs.showWeekPlan.loadData('3', param)
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
         addPlan(param) {
@@ -266,7 +277,7 @@ export default {
                 groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
                 groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
                 title: '请给计划输入一个标题',
-                planContent: null,
+                planContent: '',
                 skillType: [],
                 status: 0,
                 weekStart: null,
