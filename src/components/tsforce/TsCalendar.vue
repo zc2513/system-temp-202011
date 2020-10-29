@@ -188,6 +188,10 @@ export default {
     created() {
         console.log('0000000000000000', this.userInfo)
         this.currentDate = this.currentDay
+        if (!this.showDay) {
+            this.tabPosition = 'week'
+            this.calanderChange('week')
+        }
         this.init()
     },
 
