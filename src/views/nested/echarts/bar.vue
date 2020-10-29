@@ -31,10 +31,11 @@ export default {
                 legend: { // 图例组件
                     show: true, // 是否显示图例
                     orient: 'vertical',
+                    right: 0,
                     icon: 'roundRect',
                     textStyle: { color: '#5F6266' }, // 图例文字颜色
-                    inactiveColor: '#ccc', // 图例关闭时的颜色。
-                    itemHeight: '8'
+                    inactiveColor: '#ccc' // 图例关闭时的颜色。
+                    // itemHeight: '8',
                     // data: ['中标金额', '项目数', '标段数', '哈哈哈']// data 没有被指定，会自动从当前系列中获取。注：如果指定则当前项包含系列name才显示，否则不显示
                 },
                 tooltip: { // 提示框组件
@@ -163,7 +164,7 @@ export default {
                         },
                         itemStyle: { // 折线拐点标志的样式。
                             normal: {
-                                color: '#FFF', // 填充色
+                                color: '#A2F07B', // 图例填充色
                                 borderColor: '#ffffff', // 边框色
                                 borderWidth: 1
                             }

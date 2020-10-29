@@ -2,7 +2,12 @@
   <!-- 培训情况概览 -->
   <div class="overview">
     <div class="box header flsb">
-      <div class="hfull red flc-y left">总体概览/各地概览情况</div>
+      <div class="hfull flc-y left">
+        <div class="tab-title hfull fl">
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===1}" @click="isTabActive = 1 "> 我的行程 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===2}" @click="isTabActive = 2 "> 我的行程 </div>
+        </div>
+      </div>
       <div class="hfull red flc-y right">查询条件</div>
     </div>
 
@@ -33,7 +38,12 @@
 
 <script>
 export default {
-    name: 'Overview'
+    name: 'Overview',
+    data() {
+        return {
+            isTabActive: 1
+        }
+    }
 }
 </script>
 
@@ -46,6 +56,15 @@ export default {
         }
         .right{
             padding-right: 48px;
+        }
+        .tab-title{//顶部选中项
+            >div{
+                border-bottom: 3px solid transparent ;
+                margin-right: 40px;
+                &.active{
+                    border-bottom-color: #6666FF;
+                }
+            }
         }
     }
     .all{//整体培养日程
