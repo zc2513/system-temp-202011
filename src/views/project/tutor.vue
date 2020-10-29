@@ -1,12 +1,24 @@
 
 <template>
   <div>
-    <el-card>
-      <el-row>
+    <el-card style="margin-bottom:10px">
+      <el-row style="padding:10px">
         <span>基础计划</span>
       </el-row>
 
       <el-row style="padding:10px">
+        <el-col :span="2">导师</el-col>
+        <el-col :span="4">
+          <div class="block">
+            <el-cascader
+              v-model="value"
+              :options="options"
+              size="medium"
+              :props="{ expandTrigger: 'hover' }"
+              @change="handleChange"
+            />
+          </div>
+        </el-col>
         <el-col :span="2">应届生</el-col>
         <el-col :span="4">
           <div class="block">
@@ -26,62 +38,34 @@
     <template>
       <el-row>
         <el-col :span="12">
-          <el-card>
-            <slot name="header">
-              <el-row :gutter="24">
-                <el-col :span="4">
-                  <img src="@/assets/planicon.png">
-                </el-col>
-                <el-col :span="10">
+          <el-card style="margin-right:8px">
 
-                  <el-row style="margin:20px">
-                    <el-col :span="18">
-                      <el-row>
-                        <span>所负责应届生总人数</span>
-                      </el-row>
-                      <el-row style="padding:10px">
-                        <span>4</span>
-                      </el-row>
-                    </el-col>
-
-                  </el-row>
-
-                </el-col>
-              </el-row>
-
-            </slot>
-          </el-card>
-
-        </el-col>
-        <el-col :span="12">
-          <el-card>
-
-            <el-row>
+            <el-row :gutter="24">
               <el-col :span="4">
                 <img src="@/assets/planicon.png">
               </el-col>
-              <el-col :span="18">
+              <el-col :span="10">
+
                 <el-row style="margin:20px">
-                  <span>标注说明</span>
-                </el-row>
-                <el-row style="margin:20px">
-                  <el-col :span="10">
+                  <el-col :span="18">
                     <el-row>
-                      <el-col :span="6">  <z-circle size="20" color="#A2F07B" /></el-col>
-                      <el-col :span="18"><span>已提交人数</span></el-col>
+                      <span>所负责应届生总人数</span>
+                    </el-row>
+                    <el-row style="padding:10px">
+                      <span>4</span>
                     </el-row>
                   </el-col>
-                  <el-col :span="10">
-                    <el-row>
-                      <el-col :span="6">  <z-circle size="20" color="#FF785F" /></el-col>
-                      <el-col :span="18"><span>全员提交</span></el-col>
-                    </el-row>
-                  </el-col>
+
                 </el-row>
 
               </el-col>
             </el-row>
+
           </el-card>
+
+        </el-col>
+        <el-col :span="12">
+          <TabelHeader :src="src" :symbols="symbols" style="margin-left:8px" />
         </el-col>
       </el-row>
     </template>
@@ -127,11 +111,13 @@
 
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
+import TabelHeader from '../../components/tsforce/TableHeader.vue'
 
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
 import { getUserInfo } from '@/api/calendar'
 import { queryListGroupCustom, queryListGroupWeek, queryListGroupMonth } from '@/api/project'
+import { queryArearDeptGroupById, queryUserBaseByGroupId } from '@/api/systemOrg'
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
@@ -140,11 +126,29 @@ export default {
     components: {
         TsCalendar,
         AddPlanModal,
-        showWeekPlanModal
+        showWeekPlanModal,
+        TabelHeader
     },
     data() {
         return {
+            // 标注
+            rsc: require('@/assets/planicon.png'),
+            symbols: [
 
+                {
+                    iconColor: '#A2F07B',
+                    style: {},
+                    title: '已提交人数',
+                    iconText: ''
+                },
+                {
+                    iconColor: '#FF785F',
+                    style: {},
+                    title: '全员提交',
+                    iconText: ''
+                }
+
+            ],
             currentWeek: null,
             currentSeason: null,
             currentMonth: 10,
@@ -417,6 +421,8 @@ export default {
                     this.tsUserInfo.userName = this.userInfo.username
                     this.systemEnv.tsUserInfo = this.tsUserInfo
                     this.systemEnv.userInfo = this.userInfo
+                    // 获取当前用户的组织架构信息
+
                     var param2 = {
                         year: this.currentYear,
                         month: this.currentMonth,

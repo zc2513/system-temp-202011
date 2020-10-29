@@ -2,36 +2,6 @@
 <template>
   <div>
     <el-card>
-      <slot name="header">
-        <el-row>
-          <el-col :span="2">
-            <img src="@/assets/planicon.png">
-          </el-col>
-          <el-col :span="18">
-            <el-row style="margin:20px">
-              <span>标注说明</span>
-            </el-row>
-            <el-row style="margin:20px">
-              <el-col :span="4">
-                <el-row>
-                  <el-col :span="4">  <z-circle size="20" color="#A2F07B" /></el-col>
-                  <el-col :span="10"><span>已提交</span></el-col>
-                </el-row>
-              </el-col>
-              <el-col :span="4">
-                <el-row>
-                  <el-col :span="4">  <z-circle size="20" color="#FF785F" /></el-col>
-                  <el-col :span="10"><span>未提交</span></el-col>
-                </el-row>
-              </el-col>
-            </el-row>
-
-          </el-col>
-        </el-row>
-
-      </slot>
-    </el-card>
-    <el-card>
       <el-row>
         <el-col :span="10">
           <el-radio-group v-model="tabPosition" style="margin-bottom: 30px" @change="changePlanType">
@@ -65,7 +35,7 @@
         </el-col>
       </el-row>
 
-      <el-card v-if="tabPosition === 'self'">
+      <el-card v-if="tabPosition === 'self' && showDay">
         <el-calendar id="calendar" v-model="value" class="calendar-box">
           <template slot="dateCell" slot-scope="{ date, data }">
             <div :class="data.isSelected ? 'is-selected' : ''" class="fl-y-sb date-celc" style="height:100%;">
@@ -84,7 +54,7 @@
           </template>
         </el-calendar>
       </el-card>
-      <el-card v-if="tabPosition === 'week' && showDay">
+      <el-card v-if="tabPosition === 'week' && showWeek">
         <div>
           <el-row>
             <el-col v-for="(item, index) in weekOneSeason" :key="index" :span="6">
@@ -108,7 +78,7 @@
           </el-row>
         </div>
       </el-card>
-      <el-card v-if="tabPosition === 'month' && showDay">
+      <el-card v-if="tabPosition === 'month' && showMonth">
         <div>
           <el-row>
             <el-col v-for="(item, index) in months" :key="index" :span="8">

@@ -29,13 +29,13 @@ const project = {
             name: 'Tutor',
             component: () => import('@/views/project/tutor'),
             meta: { title: '基础计划', icon: '' }
-        }
-        // {
-        //     path: 'tutorCustomization',
-        //     name: 'TutorCustomization',
-        //     component: () => import('@/views/project/tutorCustomization'),
-        //     meta: { title: '导师定制计划', icon: '' }
-        // },
+        },
+        {
+            path: 'demo',
+            name: 'demo',
+            component: () => import('@/views/project/demo'),
+            meta: { title: 'demo', icon: '' }
+        },
         // {
         //     path: 'me',
         //     name: 'Me',

@@ -1,6 +1,10 @@
 
 <template>
   <div>
+    <el-card style="margin-bottom:10px">
+      <span>应届生汇报</span>
+    </el-card>
+    <tabel-header style="margin-bottom:10px" />
     <ts-calendar :current-day="value" day-title="日报" week-title="周报" month-title="月报" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth">
       <template v-slot:tsdateCell="{ data }">
 
@@ -43,11 +47,14 @@ import TsCalendar from '../../components/tsforce/TsCalendar.vue'
 import { getUserInfo } from '@/api/calendar'
 import { queryListGroupWeek, queryListGroupDay, queryListGroupMonth } from '@/api/report'
 import moment from 'moment'
+import TabelHeader from '../../components/tsforce/TableHeader.vue'
+
 import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'Myplan',
     components: {
-        TsCalendar
+        TsCalendar,
+        TabelHeader
     },
     data() {
         return {

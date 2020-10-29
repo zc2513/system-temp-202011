@@ -1,6 +1,10 @@
 
 <template>
   <div>
+    <el-card style="margin-bottom:10px">
+      <span>自定义计划</span>
+    </el-card>
+    <tabel-header style="margin-bottom:10px" />
     <ts-calendar :current-day="value" day-title="自定义" week-title="周计划" month-title="月计划" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth" @addDay="addPlan" @viewDay="openDay">
       <template v-slot:tsdateCell="{ data }">
 
@@ -49,12 +53,14 @@ import { queryListGroupCustom, queryListGroupWeek, queryListGroupMonth } from '@
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
+import TabelHeader from '../../components/tsforce/TableHeader.vue'
 export default {
     name: 'Myplan',
     components: {
         TsCalendar,
         AddPlanModal,
-        showWeekPlanModal
+        showWeekPlanModal,
+        TabelHeader
     },
     data() {
         return {
