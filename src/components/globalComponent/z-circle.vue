@@ -6,7 +6,7 @@
 
 <script>
 export default {
-    name: 'Circle',
+    name: 'Circlec',
     props: {
         styleObj: {
             type: Object,

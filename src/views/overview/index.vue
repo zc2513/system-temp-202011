@@ -1,49 +1,54 @@
 <template>
   <!-- 培训情况概览 -->
-  <div class="overview">
+  <div class="overview pb15">
     <div class="box header flsb">
       <div class="hfull flc-y left">
         <div class="tab-title hfull fl">
-          <div class="hfull cursor flc-y" :class="{'active':isTabActive===1}" @click="isTabActive = 1 "> 我的行程 </div>
-          <div class="hfull cursor flc-y" :class="{'active':isTabActive===2}" @click="isTabActive = 2 "> 我的行程 </div>
+          <div class="hfull cursor flc-y" :class="{'active':searchData.isTabActive===1}" @click="searchData.isTabActive=1"> 总体概览 </div>
+          <div class="hfull cursor flc-y" :class="{'active':searchData.isTabActive===2}" @click="searchData.isTabActive=2 "> 各地区概览 </div>
         </div>
       </div>
-      <div class="hfull red flc-y right">查询条件</div>
-    </div>
-
-    <div class="flc-y" style="height:80px;">
-      <div>地区</div>
-      <div>地区</div>
-      <div>地区</div>
-      <div>地区</div>
-    </div>
-
-    <div class="box all">
-      <h4 class="f16">整体培养日程阶段展示图-北京</h4>
-      <div class="all-content green">
-        折线图
+      <div class="hfull f14 flc-y right">
+        <span class="mr15">TS-Force届数</span>
+        <el-select v-model="searchData.selectVal" placeholder="请选择届数">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </div>
     </div>
 
-    <div class="list-main flsb flw">
-      <div class="box">总人数折线图-北京</div>
-      <div class="box">TS-Force日报提交情况-北京</div>
-      <div class="box">TS-Force日报Review情况-北京</div>
-      <div class="box">辅导员辅导记录提交情况-北京</div>
-      <div class="box">一线经理月报提交情况-北京</div>
-      <div class="box">地区月报提交情况-北京</div>
+    <div v-if="searchData.isTabActive===1">
+      <overall />
+    </div>
+    <div v-if="searchData.isTabActive===2">
+      <district />
     </div>
   </div>
 </template>
 
 <script>
+import overall from './overall'
+import district from './district'
 export default {
     name: 'Overview',
+    components: { overall, district },
     data() {
         return {
-            isTabActive: 1
+            searchData: { // 查询条件
+                isTabActive: 1,
+                selectVal: ''
+            },
+            options: [
+                { value: '001', label: '2020届' },
+                { value: '002', label: '2019届' }
+            ]
         }
     }
+
 }
 </script>
 
@@ -51,6 +56,7 @@ export default {
 .overview{
     .header{ //顶部
         height: 70px;
+        color: #5F6266;
         .left{
             padding-left: 24px;
         }
@@ -65,29 +71,6 @@ export default {
                     border-bottom-color: #6666FF;
                 }
             }
-        }
-    }
-    .all{//整体培养日程
-        height: 415px;
-        padding: 40px 24px;
-        h4{
-            color: #303133;
-            height: 22px;
-            line-height: 22px;
-        }
-        &-content{
-            height: calc(415px - 102px);
-        }
-    }
-
-    .list-main{//
-        margin: 16px 0;
-        box-sizing: border-box;
-        >div{
-            width: calc(50% - 8px);
-            height: 381px;
-            margin-bottom: 16px;
-            &:nth-child(even){  margin-left: 16px; }
         }
     }
 }
