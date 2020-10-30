@@ -68,11 +68,11 @@ export function saveSelfPlan(data) {
  * @export
  * @return {*}
  */
-export function getSkillType(data) {
+export function getSkillType(params) {
     return request({
         url: url.skillTypeList,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -86,11 +86,11 @@ export function getSkillType(data) {
  * @param {*} data
  * @return {*}
  */
-export function getUserInfo(data) {
+export function getUserInfo(params) {
     return request({
         url: url.getuserinfo,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -102,11 +102,11 @@ export function getUserInfo(data) {
  * @param {*} data
  * @return {*}
  */
-export function getCalendarInfo(param) {
+export function getCalendarInfo(params) {
     return request({
         url: url.calendarInfo,
         method: 'get',
-        param
+        params
     })
 }
 
@@ -118,11 +118,11 @@ export function getCalendarInfo(param) {
  * @param {*} data createType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae &planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10&day=22
  * @return {*}
  */
-export function getSelfCutomPlan(param) {
+export function getSelfCutomPlan(params) {
     return request({
         url: url.zdylist,
         method: 'get',
-        param
+        params
     })
 }
 /**
@@ -148,11 +148,11 @@ export function queryListGroupCustom(params) {
  * @param {*} data ?planType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae&year=2020&quarter=4
  * @return {*}
  */
-export function queryListGroupWeek(data) {
+export function queryListGroupWeek(params) {
     return request({
         url: url.queryListGroupWeek,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -164,10 +164,10 @@ export function queryListGroupWeek(data) {
  * @param {*} data  planType=2&createType=1&createUserId=e9ca23d68d884d4ebb19d07889727dae&planUserId&year=2020
  * @return {*}
  */
-export function queryListGroupMonth(data) {
+export function queryListGroupMonth(params) {
     return request({
         url: url.queryListGroupMonth,
         method: 'get',
-        data
+        params
     })
 }

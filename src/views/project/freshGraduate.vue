@@ -5,7 +5,19 @@
       <span>自定义计划</span>
     </el-card>
     <tabel-header style="margin-bottom:10px" />
-    <ts-calendar :current-day="value" day-title="自定义" week-title="周计划" month-title="月计划" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth" @addDay="addPlan" @viewDay="openDay">
+    <ts-calendar
+      :current-day="value"
+      day-title="自定义"
+      week-title="周计划"
+      month-title="月计划"
+      :week-action="weekActions"
+      @refreshDay="refreshDay"
+      @refreshWeek="refreshWeek"
+      @refreshMonth="refreshMonth"
+      @addDay="addPlan"
+      @viewDay="openDay"
+      @clickWeekMenu="clickWeekMenu"
+    >
       <template v-slot:tsdateCell="{ data }">
 
         <!-- <div class="bottom"></div> -->
@@ -74,17 +86,19 @@ export default {
             seasonNo: null,
             weekNo: null,
             systemEnv: {
-                // currentYear,
-                // currentSeason,
-                // currentMonth,
-                // currentDay,
-                // currentWeek,
-                // tsUserInfo,
-                // userInfo,
+
             },
             groupDay: [],
             groupWeek: [],
-            groupMonth: []
+            groupMonth: [],
+            weekActions: [
+                { action: 'add',
+                    lable: '新增'
+                },
+                { action: 'view',
+                    lable: '查看'
+                }
+            ]
         }
     },
     computed: {
@@ -99,14 +113,16 @@ export default {
     methods: {
         moment,
         countSave(day) {
-            console.log('day--------', day)
             var dayint = parseInt(parseTime(day, '{d}'))
             const str = this.groupDay[dayint - 1]
-            console.log('day--------', str, dayint)
             return str
         },
         countWeekSave(week) {
+            console.log('===============================wwwwww============', this.groupWeek, week, this.currentYear)
+
             const str = this.groupWeek.filter(e => (e.week === week + '' && e.year === this.currentYear))[0]
+            console.log('===============================wwwww===========week=', str)
+
             return str ? str.count : 0
         },
         countMonthSave(month) {
@@ -130,10 +146,10 @@ export default {
                 userId: this.userInfo.id
             }
             getUserInfo(params).then(res => {
-                console.log(' 返回的用户信息', res.result)
+                console.log(' 返回的用户信息-------------------------', res.result)
                 if (res.success) {
-                    this.tsUserInfo = res.result
-                    console.log(' 返回的用户信息', res.result)
+                    this.tsUserInfo = res.result[0]
+                    console.log(' 返回的用户信息', this.tsUserInfo)
                     this.tsUserInfo.realName = this.userInfo.realname
                     this.tsUserInfo.userId = this.userInfo.id
                     this.tsUserInfo.userName = this.userInfo.username
@@ -196,14 +212,21 @@ export default {
         },
         getqueryListGroupWeek() {
             console.log('周计划-------- --------------------------')
-
+            // TODO 这才是错的
             var param2 = {
                 year: this.currentYear,
                 quarter: this.currentSeason,
-                planType: 1,
-                planUserId: this.userInfo.id
+                planType: '1',
+                creatUserId: this.userInfo.id
             }
-            console.log('周计划汇总cansghu', param2)
+            //  TODO 这才是对的，后端改正后返回
+            // var param2 = {
+            //     year: this.currentYear,
+            //     quarter: this.currentSeason,
+            //     planType: 1,
+            //     planUserId: this.userInfo.id
+            // }
+            console.log('周计划汇总参数', param2)
             queryListGroupWeek(param2).then(res1 => {
                 if (res1.success === true) {
                     console.log('周计划汇总cansghu 结果', res1)
@@ -259,6 +282,9 @@ export default {
             this.$refs.showWeekPlan.planTime = param.day
             this.$refs.showWeekPlan.loadData('3', param)
             this.$refs.showWeekPlan.dialogFormVisible = true
+        },
+        clickWeekMenu(data) {
+            console.log('menu------------', data)
         },
         addPlan(param) {
             console.log('增加计划', param)

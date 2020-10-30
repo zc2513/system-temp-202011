@@ -24,6 +24,7 @@ service.interceptors.request.use(
 )
 
 service.interceptors.response.use(response => {
+    console.log('返回数据--------------', response)
     const res = response.data
     if (!res.success) {
         Message.error(res.message || '错误信息不详（接口未返回）')
