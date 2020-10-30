@@ -44,6 +44,11 @@ export const constantRoutes = [
         ]
     },
     {
+        path: '/demo',
+        component: () => import('@/views/nested/demo/index'),
+        hidden: true
+    },
+    {
         path: '/login',
         component: () => import('@/views/user/index'),
         hidden: true,
