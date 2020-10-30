@@ -13,8 +13,8 @@ const port = process.env.port || process.env.npm_config_port || 9528
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
-    publicPath: isDev ? '/' : '/water',
-    outputDir: 'water',
+    publicPath: '/',
+    outputDir: 'dist',
     assetsDir: 'static',
     lintOnSave: isDev,
     productionSourceMap: false,

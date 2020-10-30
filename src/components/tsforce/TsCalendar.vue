@@ -1,108 +1,112 @@
 
 <template>
-  <div>
-    <el-card>
+  <div class="calendar pb25">
+    <div class="flc-y flsb c-56" style="height:96px;">
+      <div>
+        <el-radio-group v-model="tabPosition" @change="changePlanType">
+          <el-radio-button v-if="showDay" label="self">{{ dayTitle }}</el-radio-button>
+          <el-radio-button v-if="showWeek" label="week">{{ weekTitle }}</el-radio-button>
+          <el-radio-button v-if="showMonth" label="month">{{ monthTitle }}</el-radio-button>
+        </el-radio-group>
+      </div>
+      <div class="flc-y" style="margin-right:20%;">
+        <div>
+          <i class="cursor el-icon-arrow-left" @click="pre" />
+        </div>
+        <div class="pl30 pr30 f18">
+          <span v-if="tabPosition === 'self'">{{ currentYear }} 年 {{ currentMonth }} 月</span>
+          <span v-if="tabPosition === 'week'">{{ currentYear }} 年 {{ seasonMonth[currentSeason -1] }}</span>
+          <span v-if="tabPosition === 'month'">{{ currentYear }} 年</span>
+        </div>
+        <div>
+          <i class="cursor el-icon-arrow-right" @click="next" />
+        </div>
+        <div class="flc-y ml30 f18">
+          <div v-if="tabPosition === 'self'" @click="reset">今天</div>
+          <div v-if="tabPosition === 'week'" @click="reset">本周</div>
+          <div v-if="tabPosition === 'month'" @click="reset">本月</div>
+        </div>
+      </div>
+      <div title="占位盒子" />
+    </div>
+    <el-calendar v-if="tabPosition === 'self' && showDay" v-model="value" class="calendar-box">
+      <template slot="dateCell" slot-scope="{ date, data }">
+        <div :class="data.isSelected ? 'is-selected' : ''" class="fl-y-sb date-celc" style="height:100%;">
+          <div class="top">{{ data.day.split('-')[2] }}</div>
+          <slot name="tsdateCell" :data="{date,data}" />
+
+          <div class="date-mode fl-y-sb" @click.stop="e=>e">
+            <div class="flc-y">
+              <span @click.stop="addDay(data.day)">新增</span>
+            </div>
+            <div class="flc-y">
+              <span @click.stop="viewDay(data.day)">查看</span>
+            </div>
+          </div>
+        </div>
+      </template>
+    </el-calendar>
+
+    <div v-if="tabPosition === 'week' && showWeek" class="box">
       <el-row>
-        <el-col :span="10">
-          <el-radio-group v-model="tabPosition" style="margin-bottom: 30px" @change="changePlanType">
-            <el-radio-button v-if="showDay" label="self">{{ dayTitle }}</el-radio-button>
-            <el-radio-button v-if="showWeek" label="week">{{ weekTitle }}</el-radio-button>
-            <el-radio-button v-if="showMonth" label="month">{{ monthTitle }}</el-radio-button>
-          </el-radio-group>
-        </el-col>
-        <el-col :span="6">
-          <el-row>
-            <el-col :span="4">
-              <el-button @click="pre"><</el-button>
-            </el-col>
-            <el-col style="margin-top:6px" :span="12">
-              <span v-if="tabPosition === 'self'" style="width: 200px">{{ currentYear }} 年 {{ currentMonth }} 月</span>
-              <span v-if="tabPosition === 'week'" style="width: 200px">{{ currentYear }} 年 {{ seasonMonth[currentSeason -1] }}</span>
-              <span v-if="tabPosition === 'month'" style="width: 200px">{{ currentYear }} 年</span>
-            </el-col>
-            <el-col :span="4">
-              <el-button @click="next">></el-button>
-            </el-col>
-            <el-col :span="4">
-
-              <el-button v-if="tabPosition === 'self'" style="width: 80px" @click="reset">今天</el-button>
-              <el-button v-if="tabPosition === 'week'" style="width: 80px" @click="reset">本周</el-button>
-              <el-button v-if="tabPosition === 'month'" style="width: 80px" @click="reset">本月</el-button>
-            </el-col>
-
-          </el-row>
-
+        <el-col
+          v-for="(item, index) in weekOneSeason"
+          :key="index"
+          :span="6"
+          :class="{active: 44 === item.week }"
+          class="date-item-box fl-y-sb cursor"
+        >
+          <!-- <svg-icon icon-class="yewan" /> -->
+          <div class="f18" style="color:#5F6266;">
+            <span>第{{ item.week }}周</span>
+            <span class="f12" style="color:#909398;">
+              ({{ item.start.substring(5) }} ~ {{ item.end.substring(5) }})
+            </span>
+          </div>
+          <div>
+            <z-circle size="22" />
+          </div>
+          <!-- <slot name="weekContent" :week="{ item}" /> -->
+          <div class="date-mode fl-y-sb" @click.stop="e=>e">
+            <div class="flc-y">
+              <span @click.stop="addWeek(item)">新增</span>
+            </div>
+            <div class="flc-y">
+              <span @click.stop="viewWeek(item)">查看</span>
+            </div>
+          </div>
         </el-col>
       </el-row>
+    </div>
 
-      <el-card v-if="tabPosition === 'self' && showDay">
-        <el-calendar id="calendar" v-model="value" class="calendar-box">
-          <template slot="dateCell" slot-scope="{ date, data }">
-            <div :class="data.isSelected ? 'is-selected' : ''" class="fl-y-sb date-celc" style="height:100%;">
-              <div class="top">{{ data.day.split('-')[2] }}</div>
-              <slot name="tsdateCell" :data="{date,data}" />
+    <div v-if="tabPosition === 'month' && showMonth" class="box">
+      <el-row>
+        <el-col
+          v-for="(item, index) in months"
+          :key="index"
+          :span="6"
+          :class="{active:new Date().getMonth()+1 === item.month }"
+          class="date-item-box fl-y-sb cursor"
+        >
+          <!-- <svg-icon icon-class="yewan" /> -->
+          <div class="f18" style="color:#5F6266;">{{ item.month }}月</div>
+          <div>
+            <!-- <slot name="monthContent" :month="{ item }" /> -->
+            <z-circle size="22" />
+          </div>
+          <!-- <span style="color: black"> {{ item.start }} ~ {{ item.end }} </span> -->
 
-              <div class="date-mode fl-y-sb" @click.stop="e=>e">
-                <div class="flc-y">
-                  <span @click.stop="addDay(data.day)">新增</span>
-                </div>
-                <div class="flc-y">
-                  <span @click.stop="viewDay(data.day)">查看</span>
-                </div>
-              </div>
+          <div class="date-mode fl-y-sb" @click.stop="e=>e">
+            <div class="flc-y">
+              <span @click.stop="addWeek(item)">新增</span>
             </div>
-          </template>
-        </el-calendar>
-      </el-card>
-      <el-card v-if="tabPosition === 'week' && showWeek">
-        <div>
-          <el-row>
-            <el-col v-for="(item, index) in weekOneSeason" :key="index" :span="6">
-              <!-- <svg-icon icon-class="yewan" /> -->
-              <div class="calendar-box" style="height:100px">
-                <el-row style="margin: 15px">
-                  <span style="color: red; font-size: 24px">第{{ item.week }}周</span>
-                  <span style="color: black"> {{ item.start }} ~ {{ item.end }} </span>
-                </el-row>
-                <slot name="weekContent" :week="{ item}" />
-                <div class="date-mode fl-y-sb" @click.stop="e=>e">
-                  <div class="flc-y">
-                    <span @click.stop="addWeek(item)">新增</span>
-                  </div>
-                  <div class="flc-y">
-                    <span @click.stop="viewWeek(item)">查看</span>
-                  </div>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-      <el-card v-if="tabPosition === 'month' && showMonth">
-        <div>
-          <el-row>
-            <el-col v-for="(item, index) in months" :key="index" :span="8">
-              <!-- <svg-icon icon-class="yewan" /> -->
-              <div>
-                <el-row style="margin: 15px">
-                  <span style="color: red; font-size: 24px">{{ item.month }}月</span>
-                  <span style="color: black"> {{ item.start }} ~ {{ item.end }} </span>
-                </el-row>
-                <slot name="monthContent" :month="{ item }" />
-                <div class="date-mode fl-y-sb" @click.stop="e=>e">
-                  <div class="flc-y">
-                    <span @click.stop="addWeek(item)">新增</span>
-                  </div>
-                  <div class="flc-y">
-                    <span @click.stop="viewWeek(item)">查看</span>
-                  </div>
-                </div>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-      </el-card>
-    </el-card>
+            <div class="flc-y">
+              <span @click.stop="viewWeek(item)">查看</span>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+    </div>
   </div>
 </template>
 
@@ -419,53 +423,63 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.calendar-box{
-    ::v-deep{
-        .el-calendar__header{
-            display: none;
-        }
+.calendar{
+    .c-56{color: #5F6266;}
+    @mixin dateActive{//选中样式
+        border-top: 4px solid #6666FF;
+        background: #F7F7FF;
+    }
+    .calendar-box{//日历插件原生样式修改（elment）
         .date-celc{
-            position: relative;
-            .date-mode{
-                display: none;
-                height: 100%;
-                >div{
-                    height: 50%;
-                    justify-content: flex-end;
-                    color: #ccc;
-                    span{
-                        display: inline-block;
-                        padding: 0 15px;
-                        &:hover{
-                            color: #FFF;
-                        }
-                    }
-                }
-            }
-            &:hover{
-                .date-mode{
-                    display: block;
-                    position: absolute;
-                    right: 0;
-                    left:0;
-                    top: 0;
-                    bottom: 0;
-                    border-radius: 10px;
-                    background-image: linear-gradient( to right,rgba(255,255,255,.2), #9198e5);
-
+            &:hover .date-mode{  display: block; }
+        }
+        ::v-deep{
+            .el-calendar__header{ display: none;}
+            .el-calendar-day{ position: relative;}
+            .is-selected {//日选中
+                .el-calendar-day{
+                    @include dateActive;
                 }
             }
         }
     }
-}
-.over{ //已完成
-    color: #A2F07B;
-}
-.ing{ //ing
-    color:  #FF785F;
-}
 
-.is-selected {
-    color: #000;
+    .date-item-box{//日历布局盒子
+        position: relative;
+        color: #5F6266;
+        height: 140px;
+        padding: 24px 24px 16px;
+        border-right: 1px solid #F4F7FA;
+        &:nth-child(n+4){
+            border-top: 1px solid #F4F7FA;
+        }
+        &:hover .date-mode{
+            display: block;
+        }
+        &.active{
+            @include dateActive;
+        }
+    }
+    .date-mode{//日历浮层
+        display: none;
+        position: absolute;
+        right: 0;
+        left:0;
+        top: 0;
+        bottom: 0;
+        background-image: linear-gradient( to right,rgba(255,255,255,.2),#9198e5);
+        >div{
+            height: 50%;
+            justify-content: flex-end;
+            color: #ccc;
+            span{
+                display: inline-block;
+                padding: 0 15px;
+                &:hover{
+                    color: #FFF;
+                }
+            }
+        }
+    }
 }
 </style>

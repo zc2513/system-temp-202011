@@ -22,9 +22,11 @@
     </div>
 
     <div v-if="searchData.isTabActive===1">
+      <!-- 总体概览 -->
       <overall />
     </div>
     <div v-if="searchData.isTabActive===2">
+      <!-- 各地区概览 -->
       <district />
     </div>
   </div>
