@@ -7,6 +7,16 @@
       <Breadcrumb separator-class="el-icon-arrow-right" />
       <div class="flc-y">
         <div class="mr33">应届生管理系统</div>
+        <div class="mr3">届：</div>
+        <div class="mr33">
+          <el-select v-model="period" placeholder="请选择">
+            <el-option
+              v-for="item in periods"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select></div>
         <svg-icon icon-class="cUser" class="mr33 cursor f24" />
         <svg-icon icon-class="cMsg" class="mr33 cursor f24" />
         <svg-icon icon-class="cBack" class="mr33 cursor f24" @click="logout" />
@@ -19,6 +29,23 @@
 import Breadcrumb from '@/components/Breadcrumb'
 export default {
     components: { Breadcrumb },
+    data() {
+        return {
+            periods: [
+                {
+                    value: '2020',
+                    label: '2020届'
+                }, {
+                    value: '2019',
+                    label: '2019届'
+                }, {
+                    value: '2018',
+                    label: '2018届'
+                }
+            ],
+            period: '2020'
+        }
+    },
     methods: {
         async logout() {
             await this.$store.dispatch('user/logout')
