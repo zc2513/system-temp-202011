@@ -2,7 +2,7 @@
 <template>
   <div>
 
-    <z-header title="基础计划">
+    <z-header title="基础计划" class="mb15">
       <select-student :user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
     </z-header>
 

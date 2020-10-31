@@ -12,21 +12,6 @@
         />
       </el-select>
     </el-card>
-
-    <el-button type="text" @click="dialogVisible = true">点击打开 Dialog</el-button>
-
-    <el-dialog
-      title="提示"
-      fullscreen
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
-      <span>这是一段信息</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -36,12 +21,9 @@ import SelectStudent from '@/components/tsforce/SelectStudent.vue'
 import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'MyDemo',
-    components: {
-        SelectStudent
-    },
+    components: { SelectStudent },
     data() {
         return {
-            dialogVisible: false,
             // 标注
             rsc: require('@/assets/planicon.png'),
             symbols: [
@@ -121,4 +103,5 @@ export default {
 #calendar .el-button-group > .el-button:not(:first-child):not(:last-child):after {
   content: '当月';
 }
+
 </style>
