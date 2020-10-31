@@ -34,11 +34,7 @@
         <div :class="data.isSelected ? 'is-selected' : ''" class="fl-y-sb date-celc" style="height:100%;">
           <div class="top">{{ data.day.split('-')[2] }}</div>
           <slot name="tsdateCell" :data="{date,data}" />
-
           <div class="date-mode fl-y-sb" @click.stop="e=>e">
-            <!-- <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
-              <span @click.stop="clickDayMenu(menu,data.day)">{{ menu.lable }}</span>
-            </div> -->
             <div class="flc-y">
               <span @click.stop="addDay(data.day)">新增</span>
             </div>
@@ -59,16 +55,12 @@
           :class="{active: 44 === item.week }"
           class="date-item-box fl-y-sb cursor"
         >
-          <!-- <svg-icon icon-class="yewan" /> -->
           <div class="f18" style="color:#5F6266;">
             <span>第{{ item.week }}周</span>
             <span class="f12" style="color:#909398;">
               ({{ item.start.substring(5) }} ~ {{ item.end.substring(5) }})
             </span>
           </div>
-          <!-- <div>
-            <z-circle size="22" />
-          </div> -->
           <slot name="weekContent" :week="{ item}" />
           <div class="date-mode fl-y-sb" @click.stop="e=>e">
             <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
@@ -89,14 +81,10 @@
           :class="{active:new Date().getMonth()+1 === item.month }"
           class="date-item-box fl-y-sb cursor"
         >
-          <!-- <svg-icon icon-class="yewan" /> -->
           <div class="f18" style="color:#5F6266;">{{ item.month }}月</div>
           <div>
             <slot name="monthContent" :month="{ item }" />
-            <!-- <z-circle size="22" /> -->
           </div>
-          <!-- <span style="color: black"> {{ item.start }} ~ {{ item.end }} </span> -->
-
           <div class="date-mode fl-y-sb" @click.stop="e=>e">
             <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
               <span @click.stop="clickMonthMenu(menu,item)">{{ menu.lable }}</span>
@@ -163,19 +151,6 @@ export default {
                     }]
             }
         },
-        // dayAction: {
-        //     type: Array,
-        //     required: true,
-        //     default: () => {
-        //         [
-        //             { 'action': 'add',
-        //                 lable: '新增'
-        //             },
-        //             { 'action': 'view',
-        //                 lable: '查看'
-        //             }]
-        //     }
-        // },
         monthAction: {
             type: Array,
             required: true,
@@ -194,15 +169,12 @@ export default {
         return {
             tabPosition: 'self',
             value: new Date(),
-            menuVisible: true,
             currentDate: null,
-            customPlan: [],
             seasonMonth: ['1月-3月', '4月-6月', '7月-9月', '10月-12月'],
             currentWeek: null,
             currentSeason: null,
             currentMonth: {},
             currentYear: null,
-            tsUserInfo: null,
             seasonNo: null,
             weekNo: null,
             weekOneSeason: null,

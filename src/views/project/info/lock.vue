@@ -97,7 +97,12 @@ export default {
         }
     },
     methods: {
-        show(data) {
+        async init(data) {
+            console.log(data, 9999)
+            // 发送请求拿到用户数据
+        },
+        async show(data) {
+            await this.init(data)
             this.dialogVisible = true
         }
     }

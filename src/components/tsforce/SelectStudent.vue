@@ -1,6 +1,6 @@
 
 <template>
-  <div class="header-search flc-y">
+  <div class="header-search flc-y flw">
     <div class="flc-y">
       <div class="f14" style="width:30px;">组别</div>
       <div class="ml20 mr30 ">
@@ -17,17 +17,17 @@
     <div class="flc-y">
       <div class="f14" style="min-width:30px;">导师</div>
       <div class="ml20 mr30 group">
-        请选择导师
-        <el-select v-model="selectUser" placeholder="请选择导师">
+        666
+        <!-- <el-select v-model="selectUser" placeholder="请选择导师">
           <el-option
             v-for="item in users"
             :key="item.id"
             :label="item.realname"
             :value="item.id"
           />
-        </el-select>
+        </el-select> -->
       </div>
-    </div> -->
+    </div>
     <div class="flc-y">
       <div class="f14" style="width:70px;">应届生姓名</div>
       <div class="ml20 mr30">
@@ -41,40 +41,10 @@
         </el-select>
       </div>
     </div>
-    <div v-if="showButton" class="f14">
+    <div v-if="showButton" class="f14 flc-y">
       <el-button size="mini" type="primary" @click="seache">查询</el-button>
       <el-button size="mini" type="primary" @click="reset">重置</el-button>
     </div>
-    <!-- <el-row>
-      <el-col :span="2">导师</el-col>
-      <el-col :span="4">
-        <el-cascader
-          ref="tree"
-          v-model="selectorg"
-          :options="areas"
-          size="medium"
-          :props="{ expandTrigger: 'hover' }"
-          @change="handleChange"
-        />
-      </el-col>
-      <el-col :span="8">
-        <span>选择的区域/部门/小组：{{ selectOrgName }}</span>
-      </el-col>
-      <el-col :span="1">应届生</el-col>
-      <el-col :span="4">
-
-        <el-select v-model="selectUser" multiple placeholder="请选择">
-          <el-option
-            v-for="item in users"
-            :key="item.id"
-            :label="item.realname"
-            :value="item.id"
-          />
-        </el-select>
-
-      </el-col>
-      <el-col :span="1"> <el-button @click="seache">查询</el-button></el-col>
-    </el-row> -->
   </div>
 </template>
 
@@ -87,7 +57,8 @@ export default {
     props: {
         userId: {
             type: String,
-            required: true
+            required: true,
+            default: ''
         },
         showButton: {
             type: Boolean,
@@ -223,8 +194,11 @@ export default {
 </script>
 <style lang='scss'  scoped>
 .header-search{
-    height: 80px;
     color: #5F6266;
+    padding: 15px 0;
+    >div{
+        height: 50px;
+    }
     ::v-deep{
         .el-select,.el-cascader{
             width: 240px;

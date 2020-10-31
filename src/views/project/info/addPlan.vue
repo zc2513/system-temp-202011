@@ -1,60 +1,57 @@
 <template>
-  <div class="hfull" style="background:#ccc;">
-    案例页面
-    <button @click="showDialogVisible = true">弹窗</button>
-    <el-dialog
-      :visible.sync="showDialogVisible"
-      width="60%"
-      class="dialog"
-    >
-      <div slot="title" class="flc-y dialog-header">
-        <span class="mr15 f16">新建计划</span>
-        <svg-icon icon-class="ask" />
+
+  <el-dialog
+    :visible.sync="showDialogVisible"
+    width="60%"
+    class="addPlan"
+  >
+    <div slot="title" class="flc-y dialog-header">
+      <span class="mr15 f16">新建计划</span>
+      <svg-icon icon-class="ask" />
+    </div>
+    <div class="main">
+      <div class="card fl">
+        <div v-for="(item,index) in personInfo" :key="index" class="list">
+          <div><span>计划类型</span><span>{{ item.type }}</span></div>
+          <div><span>计划时间</span><span>{{ item.time }}</span></div><br>
+          <div><span>应届生</span><span>{{ item.submitPerson }}</span></div>
+          <div><span>地区</span><span>{{ item.area }}</span></div>
+          <div><span>组别</span><span>{{ item.group }}</span></div>
+        </div>
       </div>
-      <div class="main">
-        <div class="card fl">
-          <div v-for="(item,index) in personInfo" :key="index" class="list">
-            <div><span>计划类型</span><span>{{ item.type }}</span></div>
-            <div><span>计划时间</span><span>{{ item.time }}</span></div><br>
-            <div><span>应届生</span><span>{{ item.submitPerson }}</span></div>
-            <div><span>地区</span><span>{{ item.area }}</span></div>
-            <div><span>组别</span><span>{{ item.group }}</span></div>
-          </div>
-        </div>
-        <div class="skill fl mb20">
-          <span class="mt5">技能类型</span>
-          <el-select v-model="value1" multiple filterable reserve-keyword placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </div>
-        <div class="plan fl">
-          <span class="mt5">技能类型</span>
-          <el-input
-            v-model="textarea"
-            type="textarea"
-            :rows="8"
-            placeholder="请输入内容"
+      <div class="skill fl mb20">
+        <span class="mt5">技能类型</span>
+        <el-select v-model="value1" multiple filterable reserve-keyword placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
-        </div>
+        </el-select>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="showDialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-  </div>
+      <div class="plan fl">
+        <span class="mt5">技能类型</span>
+        <el-input
+          v-model="textarea"
+          type="textarea"
+          :rows="8"
+          placeholder="请输入内容"
+        />
+      </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+      <el-button @click="showDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="showDialogVisible = false">确 定</el-button>
+    </span>
+  </el-dialog>
 </template>
 
 <script>
 export default {
     data() {
         return {
-            showDialogVisible: true,
+            showDialogVisible: false,
             personInfo: [
                 {
                     id: 1,
@@ -84,21 +81,26 @@ export default {
             value1: [],
             textarea: ''
         }
+    },
+    methods: {
+        show(data) {
+            this.showDialogVisible = true
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.hfull {
-    .dialog {
-        ::v-deep .el-dialog__header {
+.addPlan {
+    ::v-deep {
+        .el-dialog__header {
             padding: 0;
             text-indent: 24px;
         }
-        ::v-deep .el-dialog__footer {
+        .el-dialog__footer {
             border-top: 1px solid #E0E4EB;
         }
-        ::v-deep .el-select {
+        .el-select {
             width: 100%;
         }
     }

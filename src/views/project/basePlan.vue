@@ -4,7 +4,8 @@
     <z-header title="基础计划">
       <select-student :user-id="userId" :show-button="true" @seache="seache" />
     </z-header>
-    <el-row :gutter="15">
+
+    <el-row :gutter="15" class="mt15">
       <el-col :span="12">
         <TabelHeader title="所负责应届生总人数" num="4" img-name="person" />
       </el-col>
@@ -58,6 +59,7 @@
     <add-plan-modal ref="addDayPlan" @ok="getCustomPlan" />
     <show-week-plan-modal ref="showWeekPlan" />
 
+    <lock ref="lock" />
   </div>
 
 </template>
@@ -75,9 +77,12 @@ import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
 // import TabelHeader from '../../components/tsforce/TableHeader.vue'
+
+import lock from './info/lock' // 详情
 export default {
     name: 'Myplan',
     components: {
+        lock,
         TsCalendar,
         AddPlanModal,
         showWeekPlanModal,
@@ -294,8 +299,9 @@ export default {
             if (data.menu.action === 'add') {
                 this.addPlan(data)
             } else if (data.menu.action === 'view') {
-                data.item.currentYear = data.currentYear
-                this.openWeek(data.item)
+                this.$refs.lock.show({ id: 666 })
+                // data.item.currentYear = data.currentYear
+                // this.openWeek(data.item)
             }
         },
         clickMonthMenu(data) {
