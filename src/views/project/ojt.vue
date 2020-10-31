@@ -1,27 +1,9 @@
 
 <template>
   <div>
-    <el-card>
-      <el-row>
-        <span>基础计划</span>
-      </el-row>
-
-      <el-row style="padding:10px">
-        <el-col :span="2">应届生</el-col>
-        <el-col :span="4">
-          <div class="block">
-            <el-cascader
-              v-model="value"
-              :options="options"
-              size="medium"
-              :props="{ expandTrigger: 'hover' }"
-              @change="handleChange"
-            />
-          </div>
-        </el-col>
-        <el-col :span="4"> <el-button>查询</el-button></el-col>
-      </el-row>
-    </el-card>
+    <z-header title="基础计划" class="mb15">
+      <select-student :user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
+    </z-header>
 
     <z-header title="基础计划">
       <div class="flc-y" style="height:80px;color:#5F6266;">
@@ -134,7 +116,7 @@
 
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
-
+import SelectStudent from '@/components/tsforce/SelectStudent.vue'
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
 import { getUserInfo } from '@/api/calendar'
@@ -147,7 +129,8 @@ export default {
     components: {
         TsCalendar,
         AddPlanModal,
-        showWeekPlanModal
+        showWeekPlanModal,
+        SelectStudent
     },
     data() {
         return {

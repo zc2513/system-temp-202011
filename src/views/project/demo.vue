@@ -2,12 +2,13 @@
 <template>
   <div>
     <el-button type="primary" size="mini" @click="type=1">查看计划</el-button>
-    <el-button type="primary" size="mini" @click="type=2">计划抽屉</el-button>
     <el-button type="primary" size="mini" @click="type=3">评论样式</el-button>
+    <el-button type="primary" size="mini" @click="explain('计划1')">计划抽屉</el-button>
+    <el-button type="primary" size="mini" @click="explain('计划说明')">计划说明抽屉</el-button>
     <el-button type="primary" size="mini" @click="type=4">新建计划/新建应届生计划</el-button>
 
     <lock v-if="type===1" />
-    <planDrawer v-if="type===2" />
+    <planDrawer ref="planDrawer" />
     <commentList v-if="type===3" class="mt20" />
 
   </div>
@@ -25,6 +26,11 @@ export default {
     data() {
         return {
             type: 0
+        }
+    },
+    methods: {
+        explain(title) {
+            this.$refs.planDrawer.show({ title })
         }
     }
 }
