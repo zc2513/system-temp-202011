@@ -18,11 +18,18 @@
               @change="handleChange"
             />
           </div>
-
         </el-col>
         <el-col :span="4"> <el-button>查询</el-button></el-col>
       </el-row>
     </el-card>
+
+    <z-header title="基础计划">
+      <div class="flc-y" style="height:80px;color:#5F6266;">
+        <div class="f14">应届生姓名</div>
+        <div class="f14">应届生姓名</div>
+        <div class="f14">查询</div>
+      </div>
+    </z-header>
     <template>
       <el-row>
         <el-col :span="12">

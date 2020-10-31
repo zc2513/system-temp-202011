@@ -1,10 +1,53 @@
 
 <template>
-  <div>
-    <el-row>
+  <div class="header-search flc-y">
+    <div class="flc-y">
+      <div class="f14">组别</div>
+      <div class="ml20 mr30 ">
+        <el-cascader
+          ref="tree"
+          v-model="selectorg"
+          style="width:340px;"
+          :options="areas"
+          :props="{ expandTrigger: 'hover' }"
+          @change="handleChange"
+        />
+      </div>
+    </div>
+    <div class="flc-y">
+      <div class="f14">导师</div>
+      <div class="ml20 mr30 group">
+        请选择导师
+        <!-- <el-select v-model="selectUser" placeholder="请选择导师">
+          <el-option
+            v-for="item in users"
+            :key="item.id"
+            :label="item.realname"
+            :value="item.id"
+          />
+        </el-select> -->
+      </div>
+    </div>
+    <div class="flc-y">
+      <div class="f14">应届生姓名</div>
+      <div class="ml20 mr30">
+        <el-select v-model="selectUser" multiple filterable placeholder="请输入姓名">
+          <el-option
+            v-for="item in users"
+            :key="item.id"
+            :label="item.realname"
+            :value="item.id"
+          />
+        </el-select>
+      </div>
+    </div>
+    <div class="f14">
+      <el-button size="mini" type="primary">查询</el-button>
+      <el-button size="mini" type="primary">重置</el-button>
+    </div>
+    <!-- <el-row>
       <el-col :span="2">导师</el-col>
       <el-col :span="4">
-
         <el-cascader
           ref="tree"
           v-model="selectorg"
@@ -13,7 +56,6 @@
           :props="{ expandTrigger: 'hover' }"
           @change="handleChange"
         />
-
       </el-col>
       <el-col :span="8">
         <span>选择的区域/部门/小组：{{ selectOrgName }}</span>
@@ -32,8 +74,7 @@
 
       </el-col>
       <el-col :span="1"> <el-button @click="seache">查询</el-button></el-col>
-    </el-row>
-
+    </el-row> -->
   </div>
 </template>
 
@@ -164,7 +205,13 @@ export default {
 }
 </script>
 <style lang='scss'  scoped>
- .block{
-     width: 400px;
- }
+.header-search{
+    height: 80px;
+    color: #5F6266;
+    ::v-deep{
+        .el-select,.el-cascader{
+            width: 240px;
+        }
+    }
+}
 </style>
