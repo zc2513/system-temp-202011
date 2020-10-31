@@ -27,7 +27,7 @@ const project = {
         {
             path: 'tutor',
             name: 'Tutor',
-            component: () => import('@/views/project/tutor'),
+            component: () => import('@/views/project/basePlan'),
             meta: { title: '基础计划', icon: '' }
         },
         {

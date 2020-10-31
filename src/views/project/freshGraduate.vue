@@ -132,10 +132,7 @@ export default {
             return str ? str.count : 0
         },
         countMonthSave(month) {
-            console.log('===============================0000000000000============', this.groupMonth, month, this.currentYear)
-
             const str = this.groupMonth.filter(e => e.month === month + '' && e.year === this.currentYear + '')[0]
-            console.log('===============================0000000000000===========ccccccc=', str)
 
             return str ? str.count : 0
         },
@@ -313,8 +310,8 @@ export default {
             const model = {
                 planType: 1,
                 createType: 1,
-                year: this.currentYear.year,
-                month: this.currentMonth.month,
+                year: this.currentYear,
+                month: this.currentMonth,
                 week: this.currentWeek,
                 createUser: this.tsUserInfo.realName,
                 createUserId: this.userInfo.id,

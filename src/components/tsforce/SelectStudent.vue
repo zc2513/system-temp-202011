@@ -14,24 +14,24 @@
         />
       </div>
     </div>
-    <div class="flc-y">
+    <!-- <div class="flc-y">
       <div class="f14">导师</div>
       <div class="ml20 mr30 group">
         请选择导师
-        <!-- <el-select v-model="selectUser" placeholder="请选择导师">
+        <el-select v-model="selectUser" placeholder="请选择导师">
           <el-option
             v-for="item in users"
             :key="item.id"
             :label="item.realname"
             :value="item.id"
           />
-        </el-select> -->
+        </el-select>
       </div>
-    </div>
+    </div> -->
     <div class="flc-y">
       <div class="f14">应届生姓名</div>
       <div class="ml20 mr30">
-        <el-select v-model="selectUser" multiple filterable placeholder="请输入姓名">
+        <el-select v-model="selectUser" multiple filterable placeholder="请输入姓名" @change="changeUser">
           <el-option
             v-for="item in users"
             :key="item.id"
@@ -41,9 +41,9 @@
         </el-select>
       </div>
     </div>
-    <div class="f14">
-      <el-button size="mini" type="primary">查询</el-button>
-      <el-button size="mini" type="primary">重置</el-button>
+    <div v-if="showButton" class="f14">
+      <el-button size="mini" type="primary" @click="seache">查询</el-button>
+      <el-button size="mini" type="primary" @click="reset">重置</el-button>
     </div>
     <!-- <el-row>
       <el-col :span="2">导师</el-col>
@@ -87,6 +87,10 @@ export default {
     props: {
         userId: {
             type: String,
+            required: true
+        },
+        showButton: {
+            type: Boolean,
             required: true
         }
     },
@@ -172,7 +176,7 @@ export default {
                             this.selectOrgName += this.areas[0].children[0].label + '/'
                             this.selectorg[2] = this.areas[0].children[0].children[0].value
                             this.selectOrgName += this.areas[0].children[0].children[0].label
-                            console.log('区域', this.areas, this.selectorg)
+                            console.log('区域-----------------------', this.areas, this.selectorg)
                             this.queryUserBaseByGroupId(this.selectorg[2])
                         })
                     } else {
@@ -200,6 +204,19 @@ export default {
         },
         seache() {
             this.$emit('seache', this.selectorg, this.selectUser)
+        },
+        changeUser(e) {
+            this.$emit('changeUser', this.selectorg, this.selectUser)
+        },
+        reset() {
+            this.users = []
+            this.selectorg = []
+            this.selectorg[0] = this.areas[0].value
+
+            this.selectorg[1] = this.areas[0].children[0].value
+            this.selectorg[2] = this.areas[0].children[0].children[0].value
+            console.log('区域-----------------------', this.areas, this.selectorg)
+            this.queryUserBaseByGroupId(this.selectorg[2])
         }
     }
 }

@@ -36,6 +36,9 @@
           <slot name="tsdateCell" :data="{date,data}" />
 
           <div class="date-mode fl-y-sb" @click.stop="e=>e">
+            <!-- <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
+              <span @click.stop="clickDayMenu(menu,data.day)">{{ menu.lable }}</span>
+            </div> -->
             <div class="flc-y">
               <span @click.stop="addDay(data.day)">新增</span>
             </div>
@@ -132,17 +135,14 @@ export default {
         },
         showDay: {
             type: Boolean,
-            required: true,
             default: true
         },
         showWeek: {
             type: Boolean,
-            required: true,
             default: true
         },
         showMonth: {
             type: Boolean,
-            required: true,
             default: true
         },
         currentDay: {
@@ -163,6 +163,19 @@ export default {
                     }]
             }
         },
+        // dayAction: {
+        //     type: Array,
+        //     required: true,
+        //     default: () => {
+        //         [
+        //             { 'action': 'add',
+        //                 lable: '新增'
+        //             },
+        //             { 'action': 'view',
+        //                 lable: '查看'
+        //             }]
+        //     }
+        // },
         monthAction: {
             type: Array,
             required: true,
@@ -252,6 +265,9 @@ export default {
         viewDay(e) {
             this.$emit('viewDay', { 'currentYear': this.currentYear, 'currentMonth': this.currentMonth, 'day': e })
         },
+        clickDayMenu(menu, day) {
+            this.$emit('clickWeekMenu', { 'menu': menu, 'item': day, 'currentYear': this.currentYear })
+        },
         clickMenu(menu, item) {
             this.$emit('clickWeekMenu', { 'menu': menu, 'item': item, 'currentYear': this.currentYear, 'currentWeek': this.weekNo })
         },
@@ -287,6 +303,8 @@ export default {
             getCalendarInfo(params2)
                 .then(res => {
                     if (res.success) {
+                        this.currentWeek = res.result.newWeek
+                        this.weekNo = res.result.newWeek
                         const weeks1 = res.result.weeks
                         console.log('查询新日历结果---全部', res)
                         this.months = res.result.months
@@ -436,12 +454,6 @@ export default {
             }
 
             this.calanderChange(this.tabPosition)
-        },
-        openWeek(data) {
-            console.log('data---- 周--------------', data)
-        },
-        openMonth(data) {
-            console.log('data---------------------月-----------------', data)
         }
 
     }
