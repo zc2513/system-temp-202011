@@ -20,8 +20,8 @@ const project = {
         },
         {
             path: 'ojt',
-            name: 'Ojt',
-            component: () => import('@/views/project/ojt'),
+            name: 'OJT',
+            component: () => import('@/views/project/OJT/index'),
             meta: { title: 'OJT计划', icon: '' }
         },
         {
