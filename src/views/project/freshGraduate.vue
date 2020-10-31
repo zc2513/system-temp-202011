@@ -1,7 +1,7 @@
 
 <template>
   <div>
-    <z-header title="自定义计划" />
+    <z-header title="自定义计划" class="mb15" />
     <tabel-header />
     <ts-calendar
       :current-day="value"

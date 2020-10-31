@@ -1,5 +1,7 @@
+
 <template>
-  <div class="header-layout box mb15">
+  <!-- 常用标题定义 -->
+  <div class="header-layout box">
     <div class="header-title flc-y">
       <slot name="title">{{ title }}</slot>
     </div>
@@ -18,7 +20,6 @@ export default {
             default: '研发经理月报'
         }
     }
-
 }
 </script>
 
@@ -26,6 +27,7 @@ export default {
 .header-layout{
     padding: 0 24px;
     .header-title{
+        font-weight: 500;
         height: 70px;
         color: #303133;
     }

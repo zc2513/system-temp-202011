@@ -2,7 +2,7 @@
 <template>
   <div class="header-search flc-y">
     <div class="flc-y">
-      <div class="f14">组别</div>
+      <div class="f14" style="width:30px;">组别</div>
       <div class="ml20 mr30 ">
         <el-cascader
           ref="tree"
@@ -14,8 +14,8 @@
         />
       </div>
     </div>
-    <!-- <div class="flc-y">
-      <div class="f14">导师</div>
+    <div class="flc-y">
+      <div class="f14" style="min-width:30px;">导师</div>
       <div class="ml20 mr30 group">
         请选择导师
         <el-select v-model="selectUser" placeholder="请选择导师">
@@ -29,7 +29,7 @@
       </div>
     </div> -->
     <div class="flc-y">
-      <div class="f14">应届生姓名</div>
+      <div class="f14" style="width:70px;">应届生姓名</div>
       <div class="ml20 mr30">
         <el-select v-model="selectUser" multiple filterable placeholder="请输入姓名" @change="changeUser">
           <el-option

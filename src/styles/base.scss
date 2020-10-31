@@ -10,6 +10,12 @@
 .c-54{ //页面常用文字颜色
     color: #5488F9;
 }
+.c-5f{ //页面常用文字颜色
+    color: #5F6266;
+} 
+.plr24{//页面常用布局宽度
+    padding: 0 24px;
+}
 
 // 布局
 .fl {
@@ -430,20 +436,19 @@
     height: 100%;
 }
 
-// 辅助样式
-//文字居中
-.t-c {
+// 辅助样式 
+.t-c {//文字居中
     text-align: center;
 }
-
-//文字右居中
-.t-r {
+ 
+.t-r {//文字右居中
     text-align: right;
 }
-//加粗 
-.bold{
+ 
+.bold{//加粗
     font-weight: bold;
 }
+ 
 
 .red {
     background-color: #F00;
