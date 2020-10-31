@@ -71,12 +71,7 @@
             <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
               <span @click.stop="clickMenu(menu,item)">{{ menu.lable }}</span>
             </div>
-            <!-- <div class="flc-y">
-              <span @click.stop="addWeek(item)">删除</span>
-            </div>
-            <div class="flc-y">
-              <span @click.stop="viewWeek(item)">查看</span>
-            </div> -->
+
           </div>
         </el-col>
       </el-row>
@@ -94,17 +89,14 @@
           <!-- <svg-icon icon-class="yewan" /> -->
           <div class="f18" style="color:#5F6266;">{{ item.month }}月</div>
           <div>
-            <!-- <slot name="monthContent" :month="{ item }" /> -->
-            <z-circle size="22" />
+            <slot name="monthContent" :month="{ item }" />
+            <!-- <z-circle size="22" /> -->
           </div>
           <!-- <span style="color: black"> {{ item.start }} ~ {{ item.end }} </span> -->
 
           <div class="date-mode fl-y-sb" @click.stop="e=>e">
-            <div class="flc-y">
-              <span @click.stop="addWeek(item)">新增</span>
-            </div>
-            <div class="flc-y">
-              <span @click.stop="viewWeek(item)">查看</span>
+            <div v-for="menu in weekAction" :key="menu.action" class="flc-y">
+              <span @click.stop="clickMonthMenu(menu,item)">{{ menu.lable }}</span>
             </div>
           </div>
         </el-col>
@@ -159,6 +151,19 @@ export default {
             default: new Date()
         },
         weekAction: {
+            type: Array,
+            required: true,
+            default: () => {
+                [
+                    { 'action': 'add',
+                        lable: '新增'
+                    },
+                    { 'action': 'view',
+                        lable: '查看'
+                    }]
+            }
+        },
+        monthAction: {
             type: Array,
             required: true,
             default: () => {
@@ -248,7 +253,10 @@ export default {
             this.$emit('viewDay', { 'currentYear': this.currentYear, 'currentMonth': this.currentMonth, 'day': e })
         },
         clickMenu(menu, item) {
-            this.$emit('clickWeekMenu', { 'menu': menu, 'item': item, 'currentYear': this.currentYear, 'currentWeek': this.currentWeek })
+            this.$emit('clickWeekMenu', { 'menu': menu, 'item': item, 'currentYear': this.currentYear, 'currentWeek': this.weekNo })
+        },
+        clickMonthMenu(menu, item) {
+            this.$emit('clickMonthMenu', { 'menu': menu, 'item': item, 'currentYear': this.currentYear, 'currentMonth': this.currentMonth })
         },
         reset() {
             this.currentDate = new Date()

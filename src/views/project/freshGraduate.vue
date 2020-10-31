@@ -11,12 +11,14 @@
       week-title="周计划"
       month-title="月计划"
       :week-action="weekActions"
+      :month-action="monthActions"
       @refreshDay="refreshDay"
       @refreshWeek="refreshWeek"
       @refreshMonth="refreshMonth"
       @addDay="addPlan"
       @viewDay="openDay"
       @clickWeekMenu="clickWeekMenu"
+      @clickMonthMenu="clickMonthMenu"
     >
       <template v-slot:tsdateCell="{ data }">
 
@@ -43,7 +45,7 @@
         <div class="bottom">
 
           <z-circle size="20" :color=" countMonthSave(month.item.month)>0?'#A2F07B':'#FF785F' ">
-            {{ countMonthSave(month.item) }}
+            {{ countMonthSave(month.item.month) }}
           </z-circle>
         </div>
       </template>
@@ -92,9 +94,17 @@ export default {
             groupWeek: [],
             groupMonth: [],
             weekActions: [
-                { action: 'add',
-                    lable: '新增'
-                },
+                // { action: 'add',
+                //     lable: '新增'
+                // },
+                { action: 'view',
+                    lable: '查看'
+                }
+            ],
+            monthActions: [
+                // { action: 'add',
+                //     lable: '新增'
+                // },
                 { action: 'view',
                     lable: '查看'
                 }
@@ -118,17 +128,14 @@ export default {
             return str
         },
         countWeekSave(week) {
-            console.log('===============================wwwwww============', this.groupWeek, week, this.currentYear)
-
             const str = this.groupWeek.filter(e => (e.week === week + '' && e.year === this.currentYear))[0]
-            console.log('===============================wwwww===========week=', str)
 
             return str ? str.count : 0
         },
         countMonthSave(month) {
             console.log('===============================0000000000000============', this.groupMonth, month, this.currentYear)
 
-            const str = this.groupMonth.filter(e => e.month === month && e.year === this.currentYear + '')[0]
+            const str = this.groupMonth.filter(e => e.month === month + '' && e.year === this.currentYear + '')[0]
             console.log('===============================0000000000000===========ccccccc=', str)
 
             return str ? str.count : 0
@@ -242,19 +249,25 @@ export default {
         },
         getListGroupMonth() {
             console.log('月报--------- --------------------------')
+            //  TODO 这才是对的，后端改正后返回
+            // var param2 = {
+            //     year: this.currentYear,
+            //     planType: 2,
+            //     createType: 1,
+            //     planUserId: this.userInfo.id
+            // }
 
             var param2 = {
                 year: this.currentYear,
-                userGroupId: 1,
                 planType: 2,
-                createType: 1,
-                planUserId: this.userInfo.id
+                creatUserId: this.userInfo.id
             }
+
             console.log('月计划汇总cansghu', param2)
             queryListGroupMonth(param2).then(res1 => {
                 if (res1.success === true) {
                     console.log('月计划汇总cansghu结果', res1)
-                    this.monthWeek = res1.result
+                    this.groupMonth = res1.result
                 }
             })
         },
@@ -263,7 +276,7 @@ export default {
             console.log('data---- 周--------------', data)
             this.$refs.showWeekPlan.planType = '周计划'
             this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.week + '周'
+            this.$refs.showWeekPlan.planTime = data.currentYear + '年' + data.week + '周'
             this.$refs.showWeekPlan.loadData('1', data)
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
@@ -271,7 +284,7 @@ export default {
             console.log('data---------------------月-----------------', data)
             this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
             this.$refs.showWeekPlan.planType = '月计划'
-            this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.month + '月'
+            this.$refs.showWeekPlan.planTime = this.currentYear + '年' + data.month + '月'
             this.$refs.showWeekPlan.loadData('2', data)
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
@@ -285,6 +298,14 @@ export default {
         },
         clickWeekMenu(data) {
             console.log('menu------------', data)
+            data.item.currentYear = data.currentYear
+            this.openWeek(data.item)
+        },
+        clickMonthMenu(data) {
+            console.log('menu------------', data)
+            // TODO 判断菜单类型 决定操作
+            data.item.currentYear = data.currentYear
+            this.openMonth(data.item)
         },
         addPlan(param) {
             console.log('增加计划', param)

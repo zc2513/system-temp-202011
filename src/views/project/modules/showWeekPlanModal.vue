@@ -151,13 +151,17 @@ export default {
             console.log('查询计划的条件-----------', param)
             var params = {} // 查询条件
             if (planType === '1') {
-                // 周计划
-                params.planUserId = this.tsUserInfo.userId
+                // 周计划   TODO 这才是正确得 执行人是当前用户
+                //  params.planUserId = this.tsUserInfo.userId
+                // 这个出结果，但是是错的，周计划得创建人不要应该是应届生
+                params.createUserId = this.tsUserInfo.userId
                 params.week = param.week
                 //  params.day = systemEnv.currentDay
             } else if (planType === '2') {
-                // 月计划
-                params.planUserId = this.tsUserInfo.userId
+                // 月计划 TODO 这才是正确得 执行人是当前用户
+                // params.planUserId = this.tsUserInfo.userId
+                // 这个出结果，但是是错的，月计划得创建人不要应该是应届生
+                params.createUserId = this.tsUserInfo.userId
                 params.month = param.month
             } else {
                 params.createUserId = this.tsUserInfo.userId
