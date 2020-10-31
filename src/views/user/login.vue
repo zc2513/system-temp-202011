@@ -130,6 +130,9 @@ export default {
         this.loginForm.checkKey = Date.now() // 生成页面初始时间
         this.handleChangeCheckCode()
     },
+    activated() {
+        this.loginForm.checkKey = Date.now()
+    },
     methods: {
         showPwd() {
             if (this.passwordType === 'password') {

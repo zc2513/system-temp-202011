@@ -1,9 +1,7 @@
 
 <template>
   <div>
-    <el-card style="margin-bottom:10px">
-      <span>自定义计划</span>
-    </el-card>
+    <z-header title="自定义计划" />
     <tabel-header />
     <ts-calendar
       :current-day="value"

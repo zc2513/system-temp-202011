@@ -1,15 +1,10 @@
 
 <template>
   <div>
-    <el-card style="margin-bottom:10px">
-      <el-row style="padding:10px">
-        <span>基础计划</span>
-      </el-row>
 
-      <el-row style="padding:10px">
-        <select-student :user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
-      </el-row>
-    </el-card>
+    <z-header title="基础计划">
+      <select-student :user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
+    </z-header>
 
     <el-row gutter="15">
       <el-col :span="12">

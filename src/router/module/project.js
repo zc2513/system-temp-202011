@@ -35,7 +35,7 @@ const project = {
             name: 'demo',
             component: () => import('@/views/project/demo'),
             meta: { title: 'demo', icon: '' }
-        },
+        }
         // {
         //     path: 'me',
         //     name: 'Me',
