@@ -7,7 +7,7 @@
   >
     <div slot="title" class="flc-y dialog-header">
       <span class="mr15 f16">新建计划</span>
-      <svg-icon icon-class="ask" />
+      <svg-icon icon-class="ask" class="cursor" @click="$emit('planHelp',{id:666,title:'计划说明'})" />
     </div>
     <div class="main">
       <div class="card fl">
@@ -31,9 +31,9 @@
         </el-select>
       </div>
       <div class="plan fl">
-        <span class="mt5">技能类型</span>
+        <span class="mt5">计划内容</span>
         <el-input
-          v-model="textarea"
+          v-model="areaText"
           type="textarea"
           :rows="8"
           placeholder="请输入内容"
@@ -79,7 +79,7 @@ export default {
                 label: '北京烤鸭'
             }],
             value1: [],
-            textarea: ''
+            areaText: ''
         }
     },
     methods: {

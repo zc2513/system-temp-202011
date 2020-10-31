@@ -93,7 +93,8 @@ export default {
     components: { smallTitle, commentList },
     data() {
         return {
-            dialogVisible: false
+            dialogVisible: false,
+            textarea: ''
         }
     },
     methods: {
