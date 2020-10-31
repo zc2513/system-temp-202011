@@ -32,7 +32,7 @@
 <script>
 
 export default {
-    name: 'MyDemo',
+    name: 'CommentList',
     props: {
         arr: {
             type: Array,

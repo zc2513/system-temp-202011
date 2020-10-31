@@ -2,9 +2,9 @@
 <template>
   <div class="student-info box">
     <div class="small-title flc-y">
-      <div class="f18 small-title-text">{{ title }}</div>
+      <div class="f18 small-title-text" :style="{padding:`0 ${titleLeft}px`}">{{ title }}</div>
     </div>
-    <div class="pl25 pr25">
+    <div :style="{padding:`0 ${Number(titleLeft)+4}px`}">
       <slot />
     </div>
   </div>
@@ -17,7 +17,12 @@ export default {
         title: {
             type: String,
             default: '技能类型'
+        },
+        titleLeft: {
+            type: [String, Number],
+            default: 24
         }
+
     }
 }
 </script>
@@ -28,7 +33,6 @@ export default {
     background: #FFFFFF;
     border-radius: 10px;
     &-text{
-        padding: 0 24px;
         border-left: 4px solid #66f;
     }
 }

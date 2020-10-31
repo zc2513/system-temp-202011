@@ -47,14 +47,14 @@
         </div>
 
         <div class="student-info box">
-          <SmallTitle title="技能类型">
+          <smallTitle title="技能类型">
             <div class="skill-tag">
               <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
               <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
               <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
             </div>
-          </SmallTitle>
-          <SmallTitle title="计划详情">
+          </smallTitle>
+          <smallTitle title="计划详情">
             <div>
               <h4 class="f22 t-c mt20 mb30">我是标题标题标题</h4>
               <div class="c-56 mb30">
@@ -65,8 +65,8 @@
                 <p>(3)步骤。这是指执行计划的工作程序和时间安排。每项任务，在完成过程中都有阶段性，而每个阶段又有许多环节，它们之间常常是互相交错的。因此，订计划必须胸有全局，妥善安排，哪些先干，哪些后干，应合理安排。</p>
               </div>
             </div>
-          </SmallTitle>
-          <SmallTitle title="计划评论" style="padding-bottom:50px;">
+          </smallTitle>
+          <smallTitle title="计划评论" style="padding-bottom:50px;">
             <el-input
               v-model="textarea"
               type="textarea"
@@ -78,7 +78,7 @@
             <div class="t-r mt15">
               <el-button size="mini" type="primary">提交</el-button>
             </div>
-          </SmallTitle>
+          </smallTitle>
           <commentList />
         </div>
       </div>
@@ -87,10 +87,10 @@
 </template>
 
 <script>
-import SmallTitle from './smallTitle'
+import smallTitle from './smallTitle'
 import commentList from '@/components/commentList'
 export default {
-    components: { SmallTitle, commentList },
+    components: { smallTitle, commentList },
     data() {
         return {
             dialogVisible: true
