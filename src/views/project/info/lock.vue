@@ -1,5 +1,5 @@
 <template>
-  <!-- 详情/查看计划 -->
+  <!-- 计划详情/查看计划 -->
   <el-dialog
     custom-class="info-page"
     fullscreen
