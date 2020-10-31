@@ -93,7 +93,12 @@ export default {
     components: { smallTitle, commentList },
     data() {
         return {
-            dialogVisible: true
+            dialogVisible: false
+        }
+    },
+    methods: {
+        show(data) {
+            this.dialogVisible = true
         }
     }
 }
