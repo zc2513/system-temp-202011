@@ -1,19 +1,46 @@
 <template>
-  <div>
+  <div class="hfull" style="background:#ccc;">
     案例页面
     <div class="box tab-control flc-y c-56">
       <div class="img-box green">
         <img :src="require(`@/assets/imgs/${imgName}.png`)" alt="">
       </div>
       <div class="tab-right fl-y-sa">
-        <div class="wfull green">
+        <div class="wfull green f16">
           <slot name="title"> {{ title }} </slot>
         </div>
         <div class="wfull green">
           <slot>
-            <div class="fl">
-              <div>已提交</div>
-              <div class="ml80">未提交</div>
+            <div v-if="num" class="tab-num-cls" v-text="num" />
+            <div v-if="type==='1'" class="fl f14">
+              <div class="flc-y">
+                <z-circle size="12" class="mr5" color="#A2F07B" />
+                已提交人数
+              </div>
+              <div class="ml80 flc-y">
+                <z-circle size="12" class="mr5" color="#D697FF" />
+                全员提交
+              </div>
+            </div>
+            <div v-if="type==='2'" class="fl f14">
+              <div class="flc-y">
+                <z-circle size="12" class="mr5" color="#A2F07B" />
+                已提交
+              </div>
+              <div class="ml80 flc-y">
+                <z-circle size="12" class="mr5" color="#FF785F" />
+                未提交
+              </div>
+            </div>
+            <div v-if="type==='3'" class="fl f14">
+              <div class="flc-y">
+                <z-circle size="12" class="mr5" color="#A2F07B" />
+                已制定
+              </div>
+              <div class="ml80 flc-y">
+                <z-circle size="12" class="mr5" color="#FF785F" />
+                未制定
+              </div>
             </div>
           </slot>
         </div>
@@ -27,11 +54,19 @@ export default {
     props: {
         imgName: {
             type: String,
-            default: 'person'
+            default: 'text'// person
         },
         title: {
             type: String,
             default: '标注说明'
+        },
+        num: {
+            type: [Number, String],
+            default: 0
+        },
+        type: {
+            type: String,
+            default: '2'
         }
     }
 }
@@ -47,7 +82,12 @@ export default {
         margin-right: 20px;
     }
     .tab-right{
+        color: #5F6266;
         height: 72px;
+        .tab-num-cls{
+            font-size: 40px;
+            color: #5488F9;
+        }
     }
     .ml80{
         margin-left: 80px;
