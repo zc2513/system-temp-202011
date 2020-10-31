@@ -79,11 +79,8 @@
               <el-button size="mini" type="primary">提交</el-button>
             </div>
           </SmallTitle>
-          <div>
-            评论区内容盒子
-          </div>
+          <commentList />
         </div>
-
       </div>
     </div>
   </el-dialog>
@@ -91,8 +88,9 @@
 
 <script>
 import SmallTitle from './smallTitle'
+import commentList from '@/components/commentList'
 export default {
-    components: { SmallTitle },
+    components: { SmallTitle, commentList },
     data() {
         return {
             dialogVisible: true
