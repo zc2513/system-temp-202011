@@ -3,6 +3,14 @@
   <div>
     <el-card style="margin-bottom:10px">
       <SelectStudent user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
+      <el-select v-model="value1" multiple filterable="filterable" reserve-keyword="reserveKeyword" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </el-card>
   </div>
 </template>
@@ -55,7 +63,26 @@ export default {
             },
             groupDay: [],
             groupWeek: [],
-            groupMonth: []
+            groupMonth: [],
+            options: [{
+                value: '选项1',
+                label: '黄金糕'
+            }, {
+                value: '选项2',
+                label: '龙须面2'
+            }, {
+                value: '选项3',
+                label: '龙须面1'
+            }, {
+                value: '选项4',
+                label: '龙须面'
+            }, {
+                value: '选项5',
+                label: '北京烤鸭'
+            }],
+            value1: [],
+            filterable: true,
+            reserveKeyword: true
         }
     },
     computed: {

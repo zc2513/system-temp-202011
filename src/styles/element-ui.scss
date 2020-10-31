@@ -18,13 +18,6 @@
   box-sizing: content-box;
 }
 
-.el-dialog__header{ //弹出层标题为棕色
-    background: #304156;
-    .el-dialog__title{
-        color: #fff;
-    }
-}
-
 // 修复textarea位置
 .el-textarea .el-input__count{
     background-color: transparent;
