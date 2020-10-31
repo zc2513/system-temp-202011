@@ -10,7 +10,7 @@
       <div class="wfull">
         <slot>
           <div v-if="num" class="tab-num-cls" v-text="num" />
-          <div v-if="type==='1'" class="fl f14">
+          <div v-if="type==='1' && !num" class="fl f14">
             <div class="flc-y">
               <z-circle size="12" class="mr5" color="#A2F07B" />
               已提交人数
@@ -20,7 +20,7 @@
               全员提交
             </div>
           </div>
-          <div v-if="type==='2'" class="fl f14">
+          <div v-if="type==='2' && !num " class="fl f14">
             <div class="flc-y">
               <z-circle size="12" class="mr5" color="#A2F07B" />
               已提交
@@ -30,7 +30,7 @@
               未提交
             </div>
           </div>
-          <div v-if="type==='3'" class="fl f14">
+          <div v-if="type==='3' && !num " class="fl f14">
             <div class="flc-y">
               <z-circle size="12" class="mr5" color="#A2F07B" />
               已制定

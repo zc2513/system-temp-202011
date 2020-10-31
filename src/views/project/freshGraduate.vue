@@ -4,7 +4,7 @@
     <el-card style="margin-bottom:10px">
       <span>自定义计划</span>
     </el-card>
-    <tabel-header style="margin-bottom:10px" />
+    <tabel-header />
     <ts-calendar
       :current-day="value"
       day-title="自定义"
@@ -67,7 +67,8 @@ import { queryListGroupCustom, queryListGroupWeek, queryListGroupMonth } from '@
 import moment from 'moment'
 import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
-import TabelHeader from '../../components/tsforce/TableHeader.vue'
+// import TabelHeader from '../../components/tsforce/TableHeader.vue'
+import TabelHeader from '@/components/headerTab'
 export default {
     name: 'Myplan',
     components: {

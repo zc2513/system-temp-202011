@@ -10,40 +10,15 @@
         <select-student :user-id="e3517f1ca22245e897077a25b5a8c328" @seache="seache" />
       </el-row>
     </el-card>
-    <template>
-      <el-row>
-        <el-col :span="12">
-          <el-card style="margin-right:8px">
 
-            <el-row :gutter="24">
-              <el-col :span="4">
-                <img src="@/assets/planicon.png">
-              </el-col>
-              <el-col :span="10">
-
-                <el-row style="margin:20px">
-                  <el-col :span="18">
-                    <el-row>
-                      <span>所负责应届生总人数</span>
-                    </el-row>
-                    <el-row style="padding:10px">
-                      <span>4</span>
-                    </el-row>
-                  </el-col>
-
-                </el-row>
-
-              </el-col>
-            </el-row>
-
-          </el-card>
-
-        </el-col>
-        <el-col :span="12">
-          <TabelHeader :src="src" :symbols="symbols" style="margin-left:8px" />
-        </el-col>
-      </el-row>
-    </template>
+    <el-row gutter="15">
+      <el-col :span="12">
+        <TabelHeader title="所负责应届生总人数" num="4" img-name="person" />
+      </el-col>
+      <el-col :span="12">
+        <TabelHeader type="1" />
+      </el-col>
+    </el-row>
 
     <div>
       <ts-calendar :current-day="value" :show-day="false" day-title="周计划" week-title="周计划" month-title="月计划" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth" @addDay="addPlan" @viewDay="openDay">
@@ -86,7 +61,7 @@
 
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
-import TabelHeader from '../../components/tsforce/TableHeader.vue'
+import TabelHeader from '@/components/headerTab'
 import SelectStudent from '../../components/tsforce/SelectStudent.vue'
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
