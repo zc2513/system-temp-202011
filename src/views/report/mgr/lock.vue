@@ -17,27 +17,30 @@
         <div class="info-con-left">
           <h4 class="f18">基本信息</h4>
           <div class="con-item fl f14 mb25">
-            <div>应届生</div>
-            <div class="pl10">张三</div>
+            <div>地区</div>
+            <div class="pl10">成都</div>
           </div>
           <div class="con-item fl f14 mb25">
-            <div>计划时间</div>
-            <div class="pl10">2020年第47周</div>
+            <div>Mgr姓名</div>
+            <div class="pl10">张三</div>
           </div>
           <div class="con-item fl f14 mb15">
-            <div>组别</div>
-            <div class="pl10">成都 二部 第1小组</div>
+            <div>汇报标题</div>
+            <div class="pl10">TS-Force2020年10月份月报</div>
+          </div>
+          <div class="con-item fl f14 mb15">
+            <div>提交时间</div>
+            <div class="pl10">2020-10-23</div>
           </div>
         </div>
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header title="辅导记录" />
+        <z-header title="Mgr月报" />
 
         <div class="student-info box mt15">
-          <smallTitle title="计划详情">
+          <smallTitle title="月报内容" class="pb30">
             <div>
-              <h4 class="f22 t-c mt20 mb30">我是标题标题标题</h4>
               <div class="c-56 mb30">
                 <p>(1)目标。这是计划的灵魂。计划就是为了完成一定任务而制订的。目标是计划产生的导因，也是计划奋斗方向。因此，计划应根据需要与可能，规定出在一定时间内所完成的任务和应达到的要求。任务和要求应该具体明确，有的还要定出数量、质量和时间要求。</p>
                 <p>(2)措施。要明确何时实现目标和完成任务，就必须制定出相应的措施和办法，这是实现计划的保证。措施和方法主要指达到既定目标需要采取什么手段，动员哪些力量，创造什么条件，排除哪些困难等。总之，要根据客观条件，统筹安排，将“怎么做”写得明确具体，切实可行。</p>
@@ -47,7 +50,7 @@
               </div>
             </div>
           </smallTitle>
-          <smallTitle title="计划评论" style="padding-bottom:50px;">
+          <smallTitle v-if="false" title="计划评论" style="padding-bottom:50px;">
             <el-input
               v-model="textarea"
               type="textarea"
@@ -60,7 +63,7 @@
               <el-button size="mini" type="primary">提交</el-button>
             </div>
           </smallTitle>
-          <commentList />
+          <commentList v-if="false" />
         </div>
       </div>
     </div>

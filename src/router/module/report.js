@@ -26,7 +26,7 @@ const report = {
         {
             path: 'mgr',
             name: 'Mgr',
-            component: () => import('@/views/report/mgr'),
+            component: () => import('@/views/report/mgr/index'),
             meta: { title: 'Mgr月报', icon: '' }
         },
         {
