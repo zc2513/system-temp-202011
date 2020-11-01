@@ -262,6 +262,7 @@ export default {
         handleCancel() {
             this.close()
         },
+
         getSkillType() {
             const params = {}
             getSkillType(params)

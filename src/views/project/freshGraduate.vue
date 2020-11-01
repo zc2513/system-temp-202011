@@ -50,14 +50,18 @@
     </ts-calendar>
     <add-plan-modal ref="addDayPlan" @ok="getCustomPlan" />
     <show-week-plan-modal ref="showWeekPlan" />
-
+    <addPlanv2 ref="addDayPlanv2" @planHelp="explain" />
+    <planDrawer ref="planDrawer" />
+    <lock ref="lock" />
   </div>
 
 </template>
 
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
-
+import addPlanv2 from './info/addPlanv2'
+import planDrawer from './info/planDrawer'
+import lock from './info/lockv2'
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddPlanModal.vue'
 import { getUserInfo } from '@/api/calendar'
@@ -67,9 +71,13 @@ import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
 // import TabelHeader from '../../components/tsforce/TableHeader.vue'
 import TabelHeader from '@/components/headerTab'
+
 export default {
     name: 'Myplan',
     components: {
+        lock,
+        addPlanv2,
+        planDrawer,
         TsCalendar,
         AddPlanModal,
         showWeekPlanModal,
@@ -115,12 +123,12 @@ export default {
         ...mapGetters(['token'])
     },
     created() {
-        console.log('0000000000000000', this.userInfo)
         this.getPageUserInfo()
     },
 
     methods: {
         moment,
+        // 处理日历组件 数据显示
         countSave(day) {
             var dayint = parseInt(parseTime(day, '{d}'))
             const str = this.groupDay[dayint - 1]
@@ -136,12 +144,9 @@ export default {
 
             return str ? str.count : 0
         },
-        add(val) {
-            console.log(val)
-        },
-        lock(val) {
-            console.log(val)
-        },
+        // 处理日历组件数据显示------------------end
+
+        // 进入页面首先加载的内容
         getPageUserInfo() {
             this.value = new Date()
             console.log('当前用信息，注意是否为空：', this.userInfo)
@@ -179,18 +184,14 @@ export default {
             })
         },
 
-        mouseover(e) {
-            //  console.log('日计划--------------移动-----------------------', e)
-        },
-        clickDay(e) {
-            // console.log('日计划--------- 点击----------------------------', e)
-        },
+        // 处理当用户点击 日历的 自定义计划按钮是刷新日历数据
         refreshDay(data) {
             console.log('自定义计划--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.currentMonth = data.currentMonth
             this.getCustomPlan()
         },
+        // 获得自定义计划月汇总
         getCustomPlan() {
             var param2 = {
                 year: this.currentYear,
@@ -207,12 +208,14 @@ export default {
                 }
             })
         },
+        // 用户点击周计划，刷新周计划季度汇总
         refreshWeek(data) {
             console.log('周计划--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.currentSeason = data.currentSeason
             this.getqueryListGroupWeek()
         },
+        // 获得周计划汇总
         getqueryListGroupWeek() {
             console.log('周计划-------- --------------------------')
             // TODO 这才是错的
@@ -237,12 +240,13 @@ export default {
                 }
             })
         },
-
+        // 用户点击月计划按钮触发
         refreshMonth(data) {
             console.log('月报--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.getListGroupMonth()
         },
+        // 获得月计划汇总
         getListGroupMonth() {
             console.log('月报--------- --------------------------')
             //  TODO 这才是对的，后端改正后返回
@@ -267,49 +271,58 @@ export default {
                 }
             })
         },
-
+        // 浏览周计划
         openWeek(data) {
-            console.log('data---- 周--------------', data)
-            this.$refs.showWeekPlan.planType = '周计划'
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planTime = data.currentYear + '年' + data.week + '周'
-            this.$refs.showWeekPlan.loadData('1', data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
+            var param = {
+                planType: 1,
+                currentYear: data.currentYear,
+                currentWeek: data.week,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(param)
         },
+        // 浏览月计划
         openMonth(data) {
-            console.log('data---------------------月-----------------', data)
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planType = '月计划'
-            this.$refs.showWeekPlan.planTime = this.currentYear + '年' + data.month + '月'
-            this.$refs.showWeekPlan.loadData('2', data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
+            var param = {
+                planType: 2,
+                currentYear: data.currentYear,
+                currentMonth: data.month,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(param)
         },
+        // 浏览自定义计划
         openDay(param) {
-            console.log('data------------日----------------00007777------------0000000------------', this.tsUserInfo, param)
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planType = '自定义计划'
-            this.$refs.showWeekPlan.planTime = param.day
-            this.$refs.showWeekPlan.loadData('3', param)
-            this.$refs.showWeekPlan.dialogFormVisible = true
+            var data = {
+                planType: 3,
+                planTime: param.day,
+                currentYear: this.currentYear,
+                currentMonth: this.currentMonth,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(data)
         },
+        // 点击了周计划中的菜单按钮
         clickWeekMenu(data) {
             console.log('menu------------', data)
             data.item.currentYear = data.currentYear
             this.openWeek(data.item)
         },
+        // 点击了月计划中的菜单按钮
         clickMonthMenu(data) {
             console.log('menu------------', data)
             // TODO 判断菜单类型 决定操作
             data.item.currentYear = data.currentYear
             this.openMonth(data.item)
         },
+        // 新增自定义计划
         addPlan(param) {
             console.log('增加计划', param)
-            this.$refs.addDayPlan.planType = '自定义计划'
-            this.$refs.addDayPlan.planTime = param
+            // this.$refs.addDayPlan.planType = '自定义计划'
+            // this.$refs.addDayPlan.planTime = param
             const model = {
-                planType: 1,
-                createType: 1,
+                planType: 3,
+                createType: 2,
                 year: this.currentYear,
                 month: this.currentMonth,
                 week: this.currentWeek,
@@ -332,12 +345,16 @@ export default {
                 weekStart: null,
                 weekEnd: null
             }
-            this.$refs.addDayPlan.visible = true
+            // this.$refs.addDayPlan.visible = true
 
             console.log('----------model', model)
 
-            Object.assign(this.$refs.addDayPlan.form, model)
-            this.$refs.addDayPlan.add(model)
+            // Object.assign(this.$refs.addDayPlan.form, model)
+            this.$refs.addDayPlanv2.show(model)
+        },
+        // 自定义计划说明文档
+        explain() {
+            this.$refs.planDrawer.show({ title: '自定义计划' })
         }
     }
 }
