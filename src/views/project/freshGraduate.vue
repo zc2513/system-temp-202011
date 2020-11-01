@@ -273,32 +273,27 @@ export default {
         },
         // 浏览周计划
         openWeek(data) {
-            console.log('data---- 周--------------', data)
-            this.$refs.showWeekPlan.planType = '周计划'
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planTime = data.currentYear + '年' + data.week + '周'
-            this.$refs.showWeekPlan.loadData('1', data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
-            this.$refs.lock.show()
+            var param = {
+                planType: 1,
+                currentYear: data.currentYear,
+                currentWeek: data.week,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(param)
         },
         // 浏览月计划
         openMonth(data) {
-            console.log('data---------------------月-----------------', data)
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planType = '月计划'
-            this.$refs.showWeekPlan.planTime = this.currentYear + '年' + data.month + '月'
-            this.$refs.showWeekPlan.loadData('2', data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
+            var param = {
+                planType: 2,
+                currentYear: data.currentYear,
+                currentMonth: data.month,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(param)
         },
         // 浏览自定义计划
         openDay(param) {
-            // console.log('data------------日----------------00007777------------0000000------------', this.tsUserInfo, param)
-            // this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            // this.$refs.showWeekPlan.planType = '自定义计划'
-            // this.$refs.showWeekPlan.planTime = param.day
-            // this.$refs.showWeekPlan.loadData('3', param)
-            // this.$refs.showWeekPlan.dialogFormVisible = true
-            const data = {
+            var data = {
                 planType: 3,
                 planTime: param.day,
                 currentYear: this.currentYear,

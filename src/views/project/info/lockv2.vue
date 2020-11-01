@@ -107,6 +107,7 @@ export default {
             planTime: '',
             commentType: '1',
             plans: null,
+            commentContent: '',
             tsUserInfo: null
 
         }
@@ -114,15 +115,16 @@ export default {
     methods: {
         async init(data) {
             this.tsUserInfo = data.tsUserInfo
+            console.log(data, 888888)
             // 处理计划类型
             switch (data.planType) {
                 case 1:
                     this.planType = '周计划'
-                    this.planTime = data.year + '年第' + data.week + '周'
+                    this.planTime = data.currentYear + '年第' + data.currentWeek + '周'
                     break
                 case 2:
                     this.planType = '月计划'
-                    this.planTime = data.year + '年' + data.month + '月'
+                    this.planTime = data.currentYear + '年' + data.currnetMonth + '月'
                     break
                 case 3:
                     this.planType = '自定义计划'
@@ -142,19 +144,19 @@ export default {
         loadData(param) {
             console.log('查询计划的条件-----------', param)
             var params = {} // 查询条件
-            if (param.planType === '1') {
+            if (param.planType === 1) {
                 // 周计划   TODO 这才是正确得 执行人是当前用户
                 //  params.planUserId = this.tsUserInfo.userId
                 // 这个出结果，但是是错的，周计划得创建人不要应该是应届生
                 params.createUserId = this.tsUserInfo.userId
-                params.week = param.week
+                params.week = param.currentWeek
                 //  params.day = systemEnv.currentDay
-            } else if (param.planType === '2') {
+            } else if (param.planType === 2) {
                 // 月计划 TODO 这才是正确得 执行人是当前用户
                 // params.planUserId = this.tsUserInfo.userId
                 // 这个出结果，但是是错的，月计划得创建人不要应该是应届生
                 params.createUserId = this.tsUserInfo.userId
-                params.month = param.month
+                params.month = param.currentMonth
             } else {
                 params.createUserId = this.tsUserInfo.userId
                 params.day = parseTime(param.planTime, '{d}')
@@ -181,7 +183,7 @@ export default {
             console.log('计划查询参数', params)
 
             this.fetching = true
-            this.myWeekPlan = []
+            this.plans = []
             //  params={}
             getSelfCutomPlan(params).then((res) => {
                 console.log('返回结果', res)
