@@ -20,7 +20,7 @@
         </div>
 
       </div>
-      <el-form rel="ruleForm" :model="form" label-width="80px" class="form-box">
+      <el-form ref="ruleForm" :model="form" label-width="80px" class="form-box">
         <div v-if=" form.planType === 3 " class="skill fl mb20">
           <div>
             <el-form-item label="开始日期:" class="ml10" prop="startDate">
@@ -47,7 +47,7 @@
             </el-form-item>
           </div>
         </div>
-        <div v-if=" form.planType === 1 || form.planType === 2" class="skill fl mb20">
+        <div v-if=" (form.planType === 1 || form.planType === 2) && showDialogVisible " class="skill fl mb20">
           <select-student :user-id="userId" :show-button="false" :mult="multSelect" @changeUser="changeUser" />
         </div>
         <div class=" skill  mb20">
@@ -91,7 +91,7 @@
       </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="showDialogVisible = false">取 消</el-button>
+      <el-button @click="cancel">取 消</el-button>
       <el-button type="primary" @click="handleOk">确 定</el-button>
     </span>
   </el-dialog>
@@ -175,9 +175,13 @@ export default {
             this.init()
             this.showDialogVisible = true
         },
+        cancel() {
+            this.$refs.ruleForm.resetFields()
+            this.showDialogVisible = false
+        },
         handleOk() {
             this.showDialogVisible = false
-            const formData = Object.assign(this.form)
+            var formData = Object.assign(this.form)
             formData.startDate = formData.startDate ? parseTime(formData.startDate, '{y}-{m}-{d}') : null
             formData.endDate = formData.endDate ? parseTime(formData.endDate, '{y}-{m}-{d}') : null
             formData.skillType = this.skillTypes
@@ -197,6 +201,7 @@ export default {
                 })
                 .finally(() => {
                     Object.assign(this.form, {})
+                    this.$refs.ruleForm.resetFields()
                     this.skillTypes = []
                 })
         },
@@ -216,8 +221,27 @@ export default {
                 })
                 .finally(() => {})
         },
-        changeUser(selectorg, selectUser) {
-            console.log('选中的用户组织架构与用户', selectorg, selectUser)
+        changeUser(selectorg, selectUser, selectOrgName, selectNode) {
+            console.log('选中的用户组织架构与用户', selectorg, selectUser, selectOrgName, selectNode)
+            if (selectOrgName.length > 0) {
+                this.form.planUser = selectUser.realname
+                this.form.planUserId = selectUser.userId
+                this.form.areaId = selectorg[0]
+                this.form.areaName = selectOrgName[0]
+                this.form.departId = selectorg[1]
+                this.form.departName = selectOrgName[1]
+                this.form.groupId = selectorg[2]
+                this.form.groupName = selectOrgName[2]
+            } else {
+                this.form.planUser = selectUser.realname
+                this.form.planUserId = selectUser.userId
+                this.form.areaId = selectorg[0]
+                this.form.areaName = selectNode[0].parent.parent.label
+                this.form.departId = selectorg[1]
+                this.form.departName = selectNode[0].parent.label
+                this.form.groupId = selectorg[2]
+                this.form.groupName = selectNode[0].label
+            }
         }
     }
 }

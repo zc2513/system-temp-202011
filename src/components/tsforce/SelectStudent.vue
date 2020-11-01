@@ -66,17 +66,17 @@ export default {
         },
         mult: {
             type: Boolean,
-            required: true,
-            default: true
+            default: false
         }
     },
     data() {
         return {
             areas: [],
             selectorg: [],
-            selectOrgName: '',
+            selectOrgName: [],
             users: null,
-            selectUser: null
+            selectUser: null,
+            selectNode: null
         }
     },
     computed: {
@@ -92,10 +92,9 @@ export default {
         handleChange(value) {
             console.log('选择-------------', value)
             this.selectorg = value
-            var node = this.$refs.tree.getCheckedNodes()
-            console.log('选择-------------', node)
-            this.selectOrgName = ''
-            this.selectOrgName = node[0].parent.parent.label + '/' + node[0].parent.label + '/' + node[0].label
+            this.selectNode = this.$refs.tree.getCheckedNodes()
+            console.log('选择-------------', this.selectNode)
+            this.selectOrgName = []
             // 读取组里边的应届生
             this.queryUserBaseByGroupId(this.selectorg[2])
         },
@@ -146,13 +145,14 @@ export default {
                                 })
                             }
                             this.areas.push(area)
-                            this.selectOrgName = this.areas[0].label + '/'
+                            this.selectOrgName[0] = this.areas[0].label
                             this.selectorg[0] = this.areas[0].value
                             this.selectorg[1] = this.areas[0].children[0].value
-                            this.selectOrgName += this.areas[0].children[0].label + '/'
+                            this.selectOrgName[1] = this.areas[0].children[0].label
                             this.selectorg[2] = this.areas[0].children[0].children[0].value
-                            this.selectOrgName += this.areas[0].children[0].children[0].label
+                            this.selectOrgName[2] = this.areas[0].children[0].children[0].label
                             console.log('区域-----------------------', this.areas, this.selectorg)
+                            this.selectNode = this.areas[0]
                             this.queryUserBaseByGroupId(this.selectorg[2])
                         })
                     } else {
@@ -171,8 +171,13 @@ export default {
                 if (res.success) {
                     console.log(' 返回的用户信息2222', res.result)
                     this.users = res.result
-                    this.selectUser = []
-                    this.selectUser[0] = this.users[0].id
+                    if (this.mult) {
+                        this.selectUser = []
+                        this.selectUser[0] = this.users[0].id
+                    } else {
+                        this.selectUser = this.users[0].id
+                    }
+                    this.changeUser()
                 } else {
                     this.$message.error({ title: '查询失败', content: res.message })
                 }
@@ -182,15 +187,24 @@ export default {
             this.$emit('seache', this.selectorg, this.selectUser)
         },
         changeUser(e) {
-            this.$emit('changeUser', this.selectorg, this.selectUser)
+            console.log('000000000000000000000000000000000000000', this.selectUser, this.users)
+            var user = this.users.filter(e => {
+                return e.id === this.selectUser
+            })
+            this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode)
         },
         reset() {
             this.users = []
             this.selectorg = []
             this.selectorg[0] = this.areas[0].value
+            this.selectOrgName[0] = this.areas[0].label
 
             this.selectorg[1] = this.areas[0].children[0].value
+            this.selectOrgName[1] = this.areas[0].children[0].label
+
             this.selectorg[2] = this.areas[0].children[0].children[0].value
+            this.selectOrgName[2] = this.areas[0].children[0].children[0].label
+
             console.log('区域-----------------------', this.areas, this.selectorg)
             this.queryUserBaseByGroupId(this.selectorg[2])
         }

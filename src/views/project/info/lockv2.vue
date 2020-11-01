@@ -124,7 +124,7 @@ export default {
                     break
                 case 2:
                     this.planType = '月计划'
-                    this.planTime = data.currentYear + '年' + data.currnetMonth + '月'
+                    this.planTime = data.currentYear + '年' + data.currentMonth + '月'
                     break
                 case 3:
                     this.planType = '自定义计划'
