@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import smallTitle from './smallTitle'
+import smallTitle from '../component/smallTitle'
 import commentList from '@/components/commentList'
 import { addPlanComment } from '@/api/project'
 import { parseTime } from '@/utils/filter'
