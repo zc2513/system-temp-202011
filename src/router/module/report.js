@@ -20,7 +20,7 @@ const report = {
         {
             path: 'coach',
             name: 'Coach',
-            component: () => import('@/views/report/coach'),
+            component: () => import('@/views/report/coach/index'),
             meta: { title: '辅导记录', icon: '' }
         },
         {
