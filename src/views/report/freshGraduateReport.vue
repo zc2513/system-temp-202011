@@ -1,17 +1,30 @@
 
 <template>
   <div>
-    <el-card style="margin-bottom:10px">
-      <span>应届生汇报</span>
-    </el-card>
-    <tabel-header style="margin-bottom:10px" />
-    <ts-calendar :current-day="value" day-title="日报" week-title="周报" month-title="月报" @refreshDay="refreshDay" @refreshWeek="refreshWeek" @refreshMonth="refreshMonth">
+    <z-header title="应届生汇报" class="mb15" />
+    <tabel-header />
+    <ts-calendar
+      :current-day="value"
+      day-title="日报"
+      week-title="周报"
+      month-title="月报"
+      :week-action="weekActions"
+      :month-action="monthActions"
+      @refreshDay="refreshDay"
+      @refreshWeek="refreshWeek"
+      @refreshMonth="refreshMonth"
+      @addDay="addReport"
+      @viewDay="openDay"
+      @clickWeekMenu="clickWeekMenu"
+      @clickMonthMenu="clickMonthMenu"
+      @sysInitDate="getSysInitDate"
+    >
       <template v-slot:tsdateCell="{ data }">
 
         <!-- <div class="bottom"></div> -->
         <div class="bottom">
           <z-circle size="20" :color=" countSave(data.data.day)>0?'#A2F07B':'#FF785F' ">
-            <!-- {{ countSave(data.data.day) }} -->
+            {{ countSave(data.data.day) }}
           </z-circle>
         </div>
       </template>
@@ -31,28 +44,37 @@
         <div class="bottom">
 
           <z-circle size="20" :color=" countMonthSave(month.item.month)>0?'#A2F07B':'#FF785F' ">
-            {{ countMonthSave(month.item) }}
+            {{ countMonthSave(month.item.month) }}
           </z-circle>
         </div>
       </template>
     </ts-calendar>
+    <addReport ref="addDayReport" @planHelp="explain" @showPlan="showPlan" @ok="refreshDayReport" />
+    <planDrawer ref="planDrawer" />
+    <lock ref="lock" />
   </div>
+
 </template>
 
 <script>
 import TsCalendar from '../../components/tsforce/TsCalendar.vue'
-
-// import showWeekPlanModal from './modules/showWeekPlanModal.vue'
-// import AddPlanModal from './modules/AddPlanModal.vue'
+import planDrawer from '../project/info/planDrawerv2.vue'
+import addReport from './modules/addReport.vue'
+import lock from './modules/lockReportv2'
 import { getUserInfo } from '@/api/calendar'
-import { queryListGroupWeek, queryListGroupDay, queryListGroupMonth } from '@/api/report'
+import { queryListGroupDay, queryListGroupWeek, queryListGroupMonth } from '@/api/report'
 import moment from 'moment'
-import TabelHeader from '../../components/tsforce/TableHeader.vue'
-
 import { mapState, mapGetters } from 'vuex'
+import { parseTime } from '@/utils/filter'
+// import TabelHeader from '../../components/tsforce/TableHeader.vue'
+import TabelHeader from '@/components/headerTab'
+
 export default {
     name: 'Myplan',
     components: {
+        lock,
+        addReport,
+        planDrawer,
         TsCalendar,
         TabelHeader
     },
@@ -61,24 +83,34 @@ export default {
 
             currentWeek: null,
             currentSeason: null,
-            currentMonth: 10,
+            currentMonth: null,
             currentDay: null,
             currentYear: 2020,
             tsUserInfo: null,
             seasonNo: null,
             weekNo: null,
             systemEnv: {
-                // currentYear,
-                // currentSeason,
-                // currentMonth,
-                // currentDay,
-                // currentWeek,
-                // tsUserInfo,
-                // userInfo,
+
             },
             groupDay: [],
             groupWeek: [],
-            groupMonth: []
+            groupMonth: [],
+            weekActions: [
+                { action: 'add',
+                    lable: '新增'
+                },
+                { action: 'view',
+                    lable: '查看'
+                }
+            ],
+            monthActions: [
+                { action: 'add',
+                    lable: '新增'
+                },
+                { action: 'view',
+                    lable: '查看'
+                }
+            ]
         }
     },
     computed: {
@@ -86,45 +118,44 @@ export default {
         ...mapGetters(['token'])
     },
     created() {
-        console.log('0000000000000000', this.userInfo)
         this.getPageUserInfo()
     },
 
     methods: {
         moment,
+        // 处理日历组件 数据显示
         countSave(day) {
-            const str = this.groupDay.filter(e => e.month === (day.split('-')[1]) && e.DAY === Number(day.split('-')[2]) && e.year === this.currentYear + '')[0]
+            var dayint = parseInt(parseTime(day, '{d}'))
+            const str = this.groupDay.filter(e => (e.DAY === dayint && e.year === this.currentYear && e.month === parseTime(day, '{m}')))[0]
             return str ? str.count : 0
         },
         countWeekSave(week) {
             const str = this.groupWeek.filter(e => (e.week === week + '' && e.year === this.currentYear))[0]
+
             return str ? str.count : 0
         },
         countMonthSave(month) {
-            console.log('===============================0000000000000============', this.groupMonth, month, this.currentYear)
-
-            const str = this.groupMonth.filter(e => e.month === month && e.year === this.currentYear + '')[0]
-            console.log('===============================0000000000000===========ccccccc=', str)
+            const str = this.groupMonth.filter(e => e.month === month + '' && e.year === this.currentYear + '')[0]
 
             return str ? str.count : 0
         },
-        add(val) {
-            console.log(val)
-        },
-        lock(val) {
-            console.log(val)
-        },
+        // 处理日历组件数据显示------------------end
+
+        // 进入页面首先加载的内容
         getPageUserInfo() {
             this.value = new Date()
             console.log('当前用信息，注意是否为空：', this.userInfo)
+            if (this.currentMonth == null) {
+                this.currentMonth = parseTime(this.value, '{m}')
+            }
             const params = {
                 userId: this.userInfo.id
             }
             getUserInfo(params).then(res => {
-                console.log(' 返回的用户信息', res.result)
+                console.log(' 返回的用户信息-------------------------', res.result)
                 if (res.success) {
-                    this.tsUserInfo = res.result
-                    console.log(' 返回的用户信息', res.result)
+                    this.tsUserInfo = res.result[0]
+                    console.log(' 返回的用户信息', this.tsUserInfo)
                     this.tsUserInfo.realName = this.userInfo.realname
                     this.tsUserInfo.userId = this.userInfo.id
                     this.tsUserInfo.userName = this.userInfo.username
@@ -133,10 +164,10 @@ export default {
                     var param2 = {
                         year: this.currentYear,
                         month: this.currentMonth,
-                        userGroupId: 1,
                         userId: this.userInfo.id
+                        // planUserId: this.userInfo.id // TODO 有问题
                     }
-                    console.log('日报汇总cansghu', param2)
+                    console.log('日报汇总参数------------------------------------------->', param2)
                     queryListGroupDay(param2).then(res1 => {
                         if (res1.success === true) {
                             console.log('日报汇总', res1)
@@ -149,150 +180,199 @@ export default {
             })
         },
 
-        mouseover(e) {
-            //  console.log('日计划--------------移动-----------------------', e)
-        },
-        clickDay(e) {
-            // console.log('日计划--------- 点击----------------------------', e)
-        },
-        refreshDay(data) {
-            console.log('日报--------- 点击----------------------------')
-            this.currentYear = data.currentYear
-            this.currentMonth = data.currentMonth
+        refreshDayReport() {
             var param2 = {
-                year: this.currentYear,
-                month: this.currentMonth,
-                userGroupId: 1,
+                year: parseTime(this.value, '{y}'),
+                month: parseTime(this.value, '{m}'),
                 userId: this.userInfo.id
             }
-            console.log('日报汇总cansghu', param2)
+            console.log('日报汇总', param2)
             queryListGroupDay(param2).then(res1 => {
                 if (res1.success === true) {
-                    console.log('日报汇带你几获得总', res1)
+                    console.log('日报汇总结果', res1)
                     this.groupDay = res1.result
                 }
             })
         },
+
+        // 处理当用户点击 日历的 自定义计划按钮是刷新日历数据
+        refreshDay(data) {
+            this.currentYear = data.currentYear
+            this.currentMonth = data.currentMonth
+            this.getCustomPlan()
+        },
+        // 获得自定义计划月汇总
+        getCustomPlan() {
+            var param2 = {
+                year: this.currentYear,
+                month: this.currentMonth,
+                userId: this.userInfo.id
+            }
+            console.log('日报汇总', param2)
+            queryListGroupDay(param2).then(res1 => {
+                if (res1.success === true) {
+                    console.log('日报汇总结果', res1)
+                    this.groupDay = res1.result
+                }
+            })
+        },
+        // 用户点击周计划，刷新周计划季度汇总
         refreshWeek(data) {
-            console.log('周报--------- 点击----------------------------')
+            console.log('周计划--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.currentSeason = data.currentSeason
             this.getqueryListGroupWeek()
         },
+        // 获得周计划汇总
         getqueryListGroupWeek() {
-            console.log('周报--------- --------------------------')
-
+            console.log('周计划-------- --------------------------')
+            // TODO 这才是错的
             var param2 = {
                 year: this.currentYear,
                 quarter: this.currentSeason,
-                userGroupId: 1,
                 userId: this.userInfo.id
             }
-            console.log('周报汇总cansghu', param2)
+            //  TODO 这才是对的，后端改正后返回
+            // var param2 = {
+            //     year: this.currentYear,
+            //     quarter: this.currentSeason,
+            //     planType: 1,
+            //     planUserId: this.userInfo.id
+            // }
+            console.log('周报汇总参数', param2)
             queryListGroupWeek(param2).then(res1 => {
                 if (res1.success === true) {
-                    console.log('周报汇带你几获得总', res1)
+                    console.log('周报汇报结果 结果', res1)
                     this.groupWeek = res1.result
                 }
             })
         },
-
+        // 用户点击月计划按钮触发
         refreshMonth(data) {
             console.log('月报--------- 点击----------------------------')
             this.currentYear = data.currentYear
             this.getListGroupMonth()
         },
+        // 获得月计划汇总
         getListGroupMonth() {
             console.log('月报--------- --------------------------')
+            //  TODO 这才是对的，后端改正后返回
+            // var param2 = {
+            //     year: this.currentYear,
+            //     planType: 2,
+            //     createType: 1,
+            //     planUserId: this.userInfo.id
+            // }
 
             var param2 = {
                 year: this.currentYear,
-                userGroupId: 1,
                 userId: this.userInfo.id
             }
-            console.log('月报汇总cansghu', param2)
+
+            console.log('月计划汇总cansghu', param2)
             queryListGroupMonth(param2).then(res1 => {
                 if (res1.success === true) {
-                    console.log('月报汇带你几获得总', res1)
-                    this.monthWeek = res1.result
+                    console.log('月计划汇总cansghu结果', res1)
+                    this.groupMonth = res1.result
                 }
             })
         },
-
+        // 浏览周计划
         openWeek(data) {
-            console.log('data---- 周--------------', data)
-            this.$refs.showWeekPlan.planType = '周计划'
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.week + '周'
-            this.$refs.showWeekPlan.loadData('1', this.systemEnv, data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
-        },
-        openMonth(data) {
-            console.log('data---------------------月-----------------', data)
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planType = '月计划'
-            this.$refs.showWeekPlan.planTime = this.currentYear.desc + data.month + '月'
-            this.$refs.showWeekPlan.loadData('2', this.systemEnv, data)
-            this.$refs.showWeekPlan.dialogFormVisible = true
-        },
-        openDay(param) {
-            console.log('data------------日-------------------------0000000------------', this.tsUserInfo)
-            this.$refs.showWeekPlan.tsUserInfo = this.tsUserInfo
-            this.$refs.showWeekPlan.planType = '自定义计划'
-            this.$refs.showWeekPlan.planTime = param
-            this.$refs.showWeekPlan.loadData('3', this.systemEnv, param)
-            this.$refs.showWeekPlan.dialogFormVisible = true
-        },
-        addPlan(command) {
-            console.log('点击', command)
-            const commands = command.split(',')
-            const action = commands[0]
-            const param = commands[1]
-            let model
-            switch (action) {
-                case 'new':
-                    console.log('增加计划', action, param)
-                    this.$refs.addDayPlan.planType = '自定义计划'
-                    this.$refs.addDayPlan.planTime = param
-                    model = {
-                        planType: 1,
-                        createType: 1,
-                        year: this.currentYear.year,
-                        month: this.currentMonth.month,
-                        week: this.currentWeek,
-                        createUser: this.tsUserInfo.realName,
-                        createUserId: this.userInfo.id,
-                        planUser: this.tsUserInfo.realName,
-                        planUserId: this.userInfo.id,
-                        areaId: this.tsUserInfo.areaId,
-                        areaName: this.tsUserInfo.areaName,
-                        departId: this.tsUserInfo.dept[0].deptId,
-                        departName: this.tsUserInfo.dept[0].deptName,
-                        startDate: param,
-                        endDate: param,
-                        groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
-                        groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
-                        title: '请给计划输入一个标题',
-                        planContent: null,
-                        skillType: [],
-                        status: 0,
-                        weekStart: null,
-                        weekEnd: null
-                    }
-                    this.$refs.addDayPlan.visible = true
-
-                    console.log('----------model', model)
-
-                    Object.assign(this.$refs.addDayPlan.model, model)
-                    this.$refs.addDayPlan.add(model)
-                    break
-                case 'view':
-                    console.log('浏览计划111', action, param)
-                    this.openDay(param)
-                    break
-                default:
-                    break
+            var param = {
+                planType: 1,
+                currentYear: data.currentYear,
+                currentWeek: data.week,
+                tsUserInfo: this.tsUserInfo
             }
+            this.$refs.lock.show(param)
+        },
+        // 浏览月计划
+        openMonth(data) {
+            var param = {
+                planType: 2,
+                currentYear: data.currentYear,
+                currentMonth: data.month,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(param)
+        },
+        // 浏览自定义计划
+        openDay(param) {
+            var data = {
+                planType: 3,
+                planTime: param.day,
+                currentYear: this.currentYear,
+                currentMonth: this.currentMonth,
+                tsUserInfo: this.tsUserInfo
+            }
+            this.$refs.lock.show(data)
+        },
+        // 点击了周计划中的菜单按钮
+        clickWeekMenu(data) {
+            console.log('menu------------', data)
+            data.item.currentYear = data.currentYear
+            this.openWeek(data.item)
+        },
+        // 点击了月计划中的菜单按钮
+        clickMonthMenu(data) {
+            console.log('menu------------', data)
+            // TODO 判断菜单类型 决定操作
+            data.item.currentYear = data.currentYear
+            this.openMonth(data.item)
+        },
+        // 新增自定义计划
+        addReport(param, current) {
+            console.log('增加日报', param, current)
+            // this.$refs.addDayPlan.planType = '自定义计划'
+            // this.$refs.addDayPlan.planTime = param
+
+            const model = {
+                reportType: 3,
+                reportContent: '',
+                year: current.currentYear,
+                quarter: current.currentSeason,
+                month: current.currentMonth,
+                week: current.currentWeek,
+                userId: this.userInfo.id,
+                username: this.tsUserInfo.userName,
+                realname: this.tsUserInfo.realName,
+                areaId: this.tsUserInfo.areaId,
+                areaName: this.tsUserInfo.areaName,
+                departId: this.tsUserInfo.dept[0].deptId,
+                departName: this.tsUserInfo.dept[0].deptName,
+                groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
+                groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
+                status: '1',
+                periodId: '1',
+                periodName: '2020届', // TODO 替换选择
+                reportDate: param
+
+            }
+
+            // this.$refs.addDayPlan.visible = true
+
+            console.log('----------model', model)
+
+            // Object.assign(this.$refs.addDayPlan.form, model)
+            this.$refs.addDayReport.show(model)
+        },
+        // 自定义计划说明文档
+        explain(e) {
+            console.log('计划id', e)
+            this.$refs.planDrawer.show({ planId: '1' })
+        },
+        showPlan(e) {
+            console.log('计划id-------------------', e)
+            this.$refs.planDrawer.show({ plan: e })
+        },
+        getSysInitDate(e) {
+            console.log('系统初始日期----------------', e)
+            this.currentYear = e.currentYear
+            this.currentSeason = e.currentSeason
+            this.currentMonth = e.currentMonth
+            this.currentWeek = e.currentWeek
+            this.currentDay = e.currentDay
         }
     }
 }

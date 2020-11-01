@@ -9,7 +9,7 @@
     :show-close="false"
   >
     <div slot="title" class="info-page-title flc-y flsb">
-      <div>查看计划</div>
+      <div>查看汇报</div>
       <div class="cursor" style="color:#6666FF;" @click="back">返回</div>
     </div>
     <div class="info-page-content fl">
@@ -21,12 +21,8 @@
             <div class="pl10">{{ tsUserInfo.realName }}</div>
           </div>
           <div class="con-item fl f14 mb25">
-            <div>计划类型</div>
-            <div class="pl10">{{ planType }}</div>
-          </div>
-          <div class="con-item fl f14 mb25">
-            <div>计划时间</div>
-            <div class="pl10">{{ planTime }}</div>
+            <div>汇报时间</div>
+            <div class="pl10">{{ createDate }}</div>
           </div>
           <div class="con-item fl f14 mb15">
             <div>组别</div>
@@ -89,7 +85,7 @@
 </template>
 
 <script>
-import smallTitle from '../component/smallTitle'
+import smallTitle from '../../project/component/smallTitle'
 import commentList from '@/components/commentList'
 import { addPlanComment } from '@/api/project'
 import { parseTime } from '@/utils/filter'

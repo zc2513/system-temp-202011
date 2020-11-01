@@ -232,7 +232,7 @@ export default {
             }
         },
         addDay(e) {
-            this.$emit('addDay', e)
+            this.$emit('addDay', e, { currentYear: this.currentYear, currentSeason: this.currentSeason, currentMonth: this.currentMonth, currentWeek: this.currentWeek })
         },
         viewDay(e) {
             this.$emit('viewDay', { 'currentYear': this.currentYear, 'currentMonth': this.currentMonth, 'day': e })
@@ -259,6 +259,7 @@ export default {
             this.currentSeason = this.seasonNo
             console.log('当前季度', this.currentSeason)
             this.currentWeek = this.weekNo
+            this.$emit('sysInitDate', { currentYear: this.currentYear, currentSeason: this.currentSeason, currentMonth: this.currentMonth, currentWeek: this.currentWeek, currentDay: parseTime(this.currentDay, '{y}-{m}-{d}') })
         },
         init() {
             this.getCalander(this.value, 'init')
@@ -337,12 +338,12 @@ export default {
             this.calanderChange(e)
         },
 
-        mouseover(e) {
-            //  console.log('日计划--------------移动-----------------------', e)
-        },
-        clickDay(e) {
-            // console.log('日计划--------- 点击----------------------------', e)
-        },
+        // mouseover(e) {
+        //     //  console.log('日计划--------------移动-----------------------', e)
+        // },
+        // clickDay(e) {
+        //     // console.log('日计划--------- 点击----------------------------', e)
+        // },
         pre() {
             if (this.tabPosition === 'self') {
                 if (this.currentMonth > 1) {
