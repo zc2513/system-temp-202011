@@ -32,7 +32,7 @@ const report = {
         {
             path: 'personnel',
             name: 'Personnel',
-            component: () => import('@/views/report/personnel'),
+            component: () => import('@/views/report/personnel/index'),
             meta: { title: '人员状态', icon: '' }
         },
         {
@@ -45,7 +45,7 @@ const report = {
             path: 'manager',
             name: 'Manager',
             component: () => import('@/views/report/manager'),
-            meta: { title: '研发经理月报', icon: '' }
+            meta: { title: '经理月报', icon: '' }
         }
     ]
 }

@@ -114,7 +114,6 @@ export default {
 .info-page{
     padding: 0 24px;
     background: #F5F7F9;
-    .el-dialog__header,.el-dialog__body{  padding: 0; }
     .info-page-title{
         height: 72px;
         color:#4E5C7A;
