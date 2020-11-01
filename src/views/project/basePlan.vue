@@ -79,7 +79,7 @@ import { mapState, mapGetters } from 'vuex'
 import { parseTime } from '@/utils/filter'
 // import TabelHeader from '../../components/tsforce/TableHeader.vue'
 
-import lock from './info/lock' // 详情
+import lock from './info/lockv2' // 详情
 export default {
     name: 'Myplan',
     components: {
@@ -282,20 +282,32 @@ export default {
             this.$refs.showWeekPlan.dialogFormVisible = true
         },
         clickWeekMenu(data) {
-            console.log('menu-------week-----', data)
+            console.log('menu-------week---0000000000--', data)
             if (data.menu.action === 'add') {
                 this.addPlan(data)
             } else if (data.menu.action === 'view') {
-                this.$refs.lock.show({ id: 666 })
-                // data.item.currentYear = data.currentYear
-                // this.openWeek(data.item)
+                var param = {
+                    planType: 1,
+                    currentYear: data.currentYear,
+                    currentWeek: data.item.week,
+                    tsUserInfo: this.tsUserInfo
+                }
+                this.$refs.lock.show(param)
             }
         },
         clickMonthMenu(data) {
-            console.log('menu------------', data)
-            // TODO 判断菜单类型 决定操作
-            data.item.currentYear = data.currentYear
-            this.openMonth(data.item)
+            console.log('menu---------月---', data)
+            if (data.menu.action === 'add') {
+                this.addMonthPlan(data)
+            } else if (data.menu.action === 'view') {
+                var param = {
+                    planType: 2,
+                    currentYear: data.currentYear,
+                    currentWeek: data.item.week,
+                    tsUserInfo: this.tsUserInfo
+                }
+                this.$refs.lock.show(param)
+            }
         },
         addPlan(param) {
             console.log('增加周计划', param)
@@ -326,6 +338,40 @@ export default {
                 status: 0,
                 weekStart: param.item.start,
                 weekEnd: param.item.end
+            }
+
+            console.log('----------model', model)
+            this.$refs.addDayPlanv2.show(model)
+        },
+        addMonthPlan(param) {
+            console.log('增加周计划', param)
+            // this.$refs.addDayPlan.planType = '周计划'
+            // this.$refs.addDayPlan.planTime = param
+            this.$refs.addDayPlanv2.userId = this.userInfo.id
+            const model = {
+                planType: 2,
+                createType: 1,
+                year: this.currentYear,
+                month: param.item.month,
+                week: null,
+                createUser: this.tsUserInfo.realName,
+                createUserId: this.userInfo.id,
+                planUser: null,
+                planUserId: null,
+                areaId: null,
+                areaName: null,
+                departId: null,
+                departName: null,
+                // startDate: param,
+                // endDate: param,
+                groupId: null,
+                groupName: null,
+                title: '',
+                planContent: '',
+                skillType: [],
+                status: 0,
+                weekStart: null,
+                weekEnd: null
             }
 
             console.log('----------model', model)

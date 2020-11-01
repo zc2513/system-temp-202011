@@ -20,65 +20,75 @@
         </div>
 
       </div>
-      <div v-if=" form.planType === 3 " class="skill fl mb20">
-        <div>
-          <span class="mt5">开始日期</span>
-          <el-date-picker
-            v-model="form.startDate"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerOptions"
-          />
+      <el-form rel="ruleForm" :model="form" label-width="80px" class="form-box">
+        <div v-if=" form.planType === 3 " class="skill fl mb20">
+          <div>
+            <el-form-item label="开始日期:" class="ml10" prop="startDate">
+
+              <el-date-picker
+                v-model="form.startDate"
+                align="right"
+                type="date"
+                placeholder="选择日期"
+                :picker-options="pickerOptions"
+              />
+            </el-form-item>
+          </div>
+          <div>
+            <el-form-item label="结束日期:" class="ml10" prop="endDate">
+
+              <el-date-picker
+                v-model="form.endDate"
+                align="right"
+                type="date"
+                placeholder="选择日期"
+                :picker-options="pickerOptions"
+              />
+            </el-form-item>
+          </div>
         </div>
-        <div>
-          <span class="mt5">结束日期</span>
-          <el-date-picker
-            v-model="form.endDate"
-            align="right"
-            type="date"
-            placeholder="选择日期"
-            :picker-options="pickerOptions"
-          />
+        <div v-if=" form.planType === 1 || form.planType === 2" class="skill fl mb20">
+          <select-student :user-id="userId" :show-button="false" :mult="multSelect" @changeUser="changeUser" />
         </div>
-      </div>
-      <div v-if=" form.planType === 1 || form.planType === 2" class="skill fl mb20">
-        <select-student :user-id="userId" :show-button="false" :mult="multSelect" @changeUser="changeUser" />
-      </div>
-      <div class="skill fl mb20">
-        <div class="fl" style="width:100%">
-          <span class="mt5">计划标题</span>
-          <el-input
-            v-model="form.title"
-            type="text"
-            placeholder="请输入计划标题"
-            maxlength="100"
-            show-word-limit
-          />
+        <div class=" skill  mb20">
+
+          <el-form-item label="计划标题" prop="title">
+            <el-input
+              v-model="form.title"
+              type="text"
+              placeholder="请输入计划标题"
+              maxlength="100"
+              show-word-limit
+            />
+          </el-form-item>
+
         </div>
-      </div>
-      <div class="skill fl mb20">
-        <span class="mt5">技能类型</span>
-        <el-select v-model="skillTypes" multiple filterable reserve-keyword placeholder="请选择">
-          <el-option
-            v-for="item in skills"
-            :key="item.id"
-            :label="item.skillType"
-            :value="item.id"
-          />
-        </el-select>
-      </div>
-      <div class="plan fl">
-        <span class="mt5">计划内容</span>
-        <el-input
-          v-model="form.planContent"
-          type="textarea"
-          :rows="8"
-          placeholder="请输入内容"
-          maxlength="200"
-          show-word-limit
-        />
-      </div>
+        <div class="skill  mb20">
+
+          <el-form-item label="技能类型" prop="skillType">
+            <el-select v-model="skillTypes" multiple filterable reserve-keyword placeholder="请选择">
+              <el-option
+                v-for="item in skills"
+                :key="item.id"
+                :label="item.skillType"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </div>
+        <div class="plan ">
+          <el-form-item label="计划内容" prop="planContent">
+            <el-input
+              v-model="form.planContent"
+              type="textarea"
+              :rows="8"
+              placeholder="请输入内容"
+              maxlength="200"
+              show-word-limit
+            />
+          </el-form-item>
+        </div>
+      </el-form>
     </div>
     <span slot="footer" class="dialog-footer">
       <el-button @click="showDialogVisible = false">取 消</el-button>
@@ -90,6 +100,7 @@
 <script>
 import { saveSelfPlan, getSkillType } from '@/api/project'
 import SelectStudent from '@/components/tsforce/SelectStudent.vue'
+import { parseTime } from '@/utils/filter'
 
 export default {
     components: {
@@ -104,9 +115,43 @@ export default {
             planType: '',
             skills: null,
             skillTypes: [],
-            form: {},
+            form: {
+                startDate: '',
+                endDate: '',
+                title: '',
+                planContent: ''
+            },
             userId: null,
-            multSelect: false
+            multSelect: false,
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now()
+                },
+                shortcuts: [
+                    {
+                        text: '今天',
+                        onClick(picker) {
+                            picker.$emit('pick', new Date())
+                        }
+                    },
+                    {
+                        text: '昨天',
+                        onClick(picker) {
+                            const date = new Date()
+                            date.setTime(date.getTime() - 3600 * 1000 * 24)
+                            picker.$emit('pick', date)
+                        }
+                    },
+                    {
+                        text: '一周前',
+                        onClick(picker) {
+                            const date = new Date()
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7)
+                            picker.$emit('pick', date)
+                        }
+                    }
+                ]
+            }
         }
     },
     methods: {
@@ -133,7 +178,8 @@ export default {
         handleOk() {
             this.showDialogVisible = false
             const formData = Object.assign(this.form)
-
+            formData.startDate = formData.startDate ? parseTime(formData.startDate, '{y}-{m}-{d}') : null
+            formData.endDate = formData.endDate ? parseTime(formData.endDate, '{y}-{m}-{d}') : null
             formData.skillType = this.skillTypes
             console.log(
                 'formdata ====================================================',

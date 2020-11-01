@@ -338,7 +338,7 @@ export default {
                 endDate: param,
                 groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
                 groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
-                title: '请给计划输入一个标题',
+                title: '',
                 planContent: '',
                 skillType: [],
                 status: 0,
