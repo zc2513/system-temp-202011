@@ -11,27 +11,30 @@
       </div>
     </div>
 
-    <div v-if="isTabActive" class="box mt15">
+    <div v-if="isTabActive && time" class="box mt15">
       <z-header>
         <div slot="title" class="f14" style="color:#5F6266;">
-          OJT区域计划时间段：2020年1月-2020年6月
+          OJT{{ typeName }}计划时间段：{{ time }}
         </div>
-        <div>
+        <div v-if="tableData.length">
           <search :type="isTabActive" />
         </div>
       </z-header>
-      <div class="plr24">
+      <div v-if="tableData.length" class="plr24 mb30">
         <el-button size="mini" type="primary" @click="addPlan(isTabActive)">新建</el-button>
-        <z-table :titles="titles" :btns="btn" align="left" class="mt15" @sendVal="getVal" />
+        <z-table :titles="titles" :btns="btn" :lists="tableData" align="left" class="mt15" @sendVal="getVal" />
+      </div>
+      <div v-else class="flcc" style="height:660px;color:#66f;">
+        <div style="margin-bottom:60px;">
+          <z-circle size="120" color="#F4F7FA" class="mb20">
+            <svg-icon icon-class="add" class="f30" style="color:#66f;" />
+          </z-circle>
+          <div class="wfull cursor t-c">新建{{ typeName }}计划</div>
+        </div>
       </div>
     </div>
-
-    <!-- 未选择区域时的默认样式 -->
-    <div v-if="isTabActive==='error'" class="mt15 box flcc" style="height:734px;color:#66f;">
-      地区接口人还未制定OJT计划时间段，暂时无法制定计划！
-    </div>
-    <div v-if="isTabActive==='error'" class="mt15 box flcc" style="height:734px;color:#66f;">
-      地区接口人还未制定OJT计划时间段，暂时无法制定计划！
+    <div v-else class="mt15 box flcc" style="height:734px;color:#66f;">
+      {{ typeName }}接口人还未制定OJT计划时间段，暂时无法制定计划！
     </div>
 
     <!-- 新增弹出层 -->
@@ -47,19 +50,35 @@ import search from './search'
 import addOtjPlan from './addOtjPlan'
 import planDrawer from './planDrawer'
 import lock from './lock'
+// eslint-disable-next-line no-unused-vars
+import datas from '@/assets/json/data'
 export default {
     name: 'OJT',
     components: { search, addOtjPlan, planDrawer, lock },
     data() {
         return {
             isTabActive: 1,
+            time: '2020年1月-2020年6月',
             titles: [],
+            tableData: datas,
             btn: {
                 title: '操作',
                 btnlist: [
                     { con: '查看', type: 'text' }
                 ]
             }
+        }
+    },
+    computed: {
+        typeName() {
+            let str = '区域'
+            if (this.isTabActive === 2) {
+                str = '部门'
+            }
+            if (this.isTabActive === 3) {
+                str = '团队'
+            }
+            return str
         }
     },
     watch: {

@@ -78,13 +78,25 @@ export default {
             ]
         }
     },
+    watch: {
+        type: {
+            handler(val) {
+                this.inin()
+            },
+            immediate: true
+        }
+    },
     methods: {
+        inin() { // 初始化基本数据
+            //  根据类型拿对应数据this.type
+        },
         submitForm(formName) {
             this.$emit('change', this.formInline)
         },
         resetForm(formName) {
             this.$refs[formName].resetFields()
         }
+
     }
 }
 </script>
