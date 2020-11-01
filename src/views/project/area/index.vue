@@ -4,11 +4,17 @@
     <div class="box header flsb">
       <div class="hfull flc-y left">
         <div class="tab-title hfull fl">
-          <div class="hfull cursor flc-y" :class="{'active':isTabActive===1}" @click="isTabActive=1"> OJT区域计划 </div>
-          <div class="hfull cursor flc-y" :class="{'active':isTabActive===2}" @click="isTabActive=2"> OJT部门计划 </div>
-          <div class="hfull cursor flc-y" :class="{'active':isTabActive===3}" @click="isTabActive=3"> OJT团队计划 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===1}" @click="isTabActive=1"> 集训计划 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===2}" @click="isTabActive=2"> 实训计划 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===3}" @click="isTabActive=3"> OJT计划 </div>
         </div>
       </div>
+    </div>
+
+    <div v-if="isTabActive===3" class="obj-tag flc-y plr24" style="height:70px;">
+      <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'a' ? 'dark':'plain'" @click="objTag='a'">OJT区域计划</el-tag>
+      <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'b' ? 'dark':'plain'" @click="objTag='b'">OJT部门计划</el-tag>
+      <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'c' ? 'dark':'plain'" @click="objTag='c'">OJT团队计划</el-tag>
     </div>
 
     <div v-if="isTabActive && time" class="box mt15">
@@ -33,14 +39,22 @@
         </div>
       </div>
     </div>
+
     <div v-else class="mt15 box flcc" style="height:734px;color:#66f;">
-      {{ typeName }}接口人还未制定OJT计划时间段，暂时无法制定计划！
+      <div style="margin-bottom:60px;" @click="addTime">
+        <z-circle size="120" color="#F4F7FA" class="mb20 cursor">
+          <svg-icon icon-class="add" class="f30" style="color:#66f;" />
+        </z-circle>
+        <div class="wfull t-c">请先定制时间段</div>
+      </div>
     </div>
 
     <!-- 新增弹出层 -->
-    <addOtjPlan ref="addOtjPlan" :type="isTabActive" />
+    <addOtjPlan ref="addOtjPlan" :type="isTabActive" :obj-tag="objTag" />
     <!-- 详情弹出层 -->
     <lock ref="lock" :type="isTabActive" />
+    <!-- 新增时间段 -->
+    <addTime ref="addTime" />
     <planDrawer ref="planDrawer" />
   </div>
 </template>
@@ -49,16 +63,19 @@
 import search from './search'
 import addOtjPlan from './addOtjPlan'
 import planDrawer from './planDrawer'
+import addTime from './addTime'
 import lock from './lock'
 // eslint-disable-next-line no-unused-vars
 import datas from '@/assets/json/data'
+
 export default {
-    name: 'OJT',
-    components: { search, addOtjPlan, planDrawer, lock },
+    name: 'Area',
+    components: { search, addOtjPlan, planDrawer, lock, addTime },
     data() {
         return {
+            objTag: 'a',
             isTabActive: 1,
-            time: '2020年1月-2020年6月',
+            time: '2020年1月-2020年6月', // 判断是否显示新增时间段的关键 2020年1月-2020年6月
             titles: [],
             tableData: datas,
             btn: {
@@ -71,12 +88,14 @@ export default {
     },
     computed: {
         typeName() {
-            let str = '区域'
+            let str = '集训'
             if (this.isTabActive === 2) {
-                str = '部门'
+                str = '实训'
             }
             if (this.isTabActive === 3) {
-                str = '团队'
+                if (this.objTag === 'a') str = '区域'
+                if (this.objTag === 'b') str = '部门'
+                if (this.objTag === 'c') str = '团队'
             }
             return str
         }
@@ -85,7 +104,16 @@ export default {
         isTabActive: {
             handler(val) {
                 if (!val) return
+                if (val === 3) {
+                    this.objTag = 'a'
+                }
                 this.titles = this.tableTitle(val)
+            },
+            immediate: true
+        },
+        objTag: {
+            handler(val) {
+                console.log(val)
             },
             immediate: true
         }
@@ -119,6 +147,9 @@ export default {
             }
             console.log(type)
             console.log(data)
+        },
+        addTime() { // 新增时间段
+            this.$refs.addTime.show()
         }
 
     }
@@ -139,17 +170,22 @@ export default {
                 &.active{
                     border-bottom-color: #6666FF;
                 }
-                &:nth-child(n+2){
-                    position: relative;
-                    &::after{
-                        content: '>>';
-                        position: absolute;
-                        font-size: 12px;
-                        left: -27px;
-                        top: 27px;
-                    }
-                }
             }
+        }
+    }
+    .obj-tag{//标签
+        height: 80px;
+        .el-tag{
+            border: 1px solid #E0E4EB;
+            border-radius: 4px;
+            color: #5F6266;
+        }
+        .el-tag--dark{
+            color: #FFF;
+        }
+        .disabled{
+            background: #F4F7FA;
+            color: #909398;
         }
     }
 }

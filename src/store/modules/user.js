@@ -3,13 +3,14 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { Message } from 'element-ui'
+import { getStorage } from '@/utils/storage'
 // eslint-disable-next-line no-unused-vars
 import sysRouter from '@/api/syncRouters'
 const getDefaultState = () => {
     return {
         token: getToken(),
         roles: [],
-        userInfo: {},
+        userInfo: getStorage('userInfo') || '',
         name: '',
         avatar: ''
     }
@@ -51,7 +52,7 @@ const actions = {
                 commit('SET_TOKEN', token)
                 commit('SET_USER_INFO', userInfo)
                 setToken(token)
-                resolve()
+                resolve(userInfo)
             }).catch(error => {
                 reject(error)
             })

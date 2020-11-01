@@ -19,6 +19,12 @@ const project = {
             meta: { title: '应届生计划', icon: '' }
         },
         {
+            path: 'area',
+            name: 'Area',
+            component: () => import('@/views/project/area/index'),
+            meta: { title: '区域计划', icon: '' }
+        },
+        {
             path: 'ojt',
             name: 'OJT',
             component: () => import('@/views/project/OJT/index'),
