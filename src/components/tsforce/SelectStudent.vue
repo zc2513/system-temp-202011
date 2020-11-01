@@ -31,10 +31,10 @@
     <div class="flc-y">
       <div class="f14" style="width:70px;">应届生姓名</div>
       <div class="ml20 mr30">
-        <el-select v-model="selectUser" multiple filterable placeholder="请输入姓名" @change="changeUser">
+        <el-select v-model="selectUser" :multiple="mult" filterable placeholder="请输入姓名" @change="changeUser">
           <el-option
-            v-for="item in users"
-            :key="item.id"
+            v-for="(item,index) in users"
+            :key="index"
             :label="item.realname"
             :value="item.id"
           />
@@ -63,6 +63,11 @@ export default {
         showButton: {
             type: Boolean,
             required: true
+        },
+        mult: {
+            type: Boolean,
+            required: true,
+            default: true
         }
     },
     data() {
@@ -71,7 +76,7 @@ export default {
             selectorg: [],
             selectOrgName: '',
             users: null,
-            selectUser: []
+            selectUser: null
         }
     },
     computed: {

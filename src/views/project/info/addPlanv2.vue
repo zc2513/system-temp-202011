@@ -14,9 +14,9 @@
         <div class="list">
           <div><span>计划类型</span><span>{{ planType }}</span></div>
           <div><span>制定人员</span><span>{{ form.createUser }}</span></div><br>
-          <div><span>执行人员</span><span>{{ form.planUser }}</span></div>
-          <div><span>地区</span><span>{{ form.areaName }}</span></div>
-          <div class="flc"><span>组别</span><span>{{ form.departName }} {{ form.groupName }}</span></div>
+          <div v-if=" form.planType === 3 "><span>执行人员</span><span>{{ form.planUser }}</span></div>
+          <div v-if=" form.planType === 3 "><span>地区</span><span>{{ form.areaName }}</span></div>
+          <div v-if=" form.planType === 3 " class="flc"><span>组别</span><span>{{ form.departName }} {{ form.groupName }}</span></div>
         </div>
 
       </div>
@@ -41,6 +41,9 @@
             :picker-options="pickerOptions"
           />
         </div>
+      </div>
+      <div v-if=" form.planType === 1 || form.planType === 2" class="skill fl mb20">
+        <select-student :user-id="userId" :show-button="false" :mult="multSelect" @changeUser="changeUser" />
       </div>
       <div class="skill fl mb20">
         <div class="fl" style="width:100%">
@@ -86,43 +89,24 @@
 
 <script>
 import { saveSelfPlan, getSkillType } from '@/api/project'
+import SelectStudent from '@/components/tsforce/SelectStudent.vue'
 
 export default {
+    components: {
+        SelectStudent
+    },
     data() {
         return {
             showDialogVisible: false,
-            personInfo: [
-                {
-                    id: 1,
-                    type: '日计划',
-                    time: '2020-10-10',
-                    submitPerson: '张益达',
-                    area: '成都',
-                    group: '成都 二部 第一小组'
-                }
-            ],
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '龙须面2'
-            }, {
-                value: '选项3',
-                label: '龙须面1'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
+
             value1: [],
             areaText: '',
             planType: '',
             skills: null,
             skillTypes: [],
-            form: {}
+            form: {},
+            userId: null,
+            multSelect: false
         }
     },
     methods: {
@@ -185,6 +169,9 @@ export default {
                     }
                 })
                 .finally(() => {})
+        },
+        changeUser(selectorg, selectUser) {
+            console.log('选中的用户组织架构与用户', selectorg, selectUser)
         }
     }
 }
