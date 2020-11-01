@@ -67,29 +67,31 @@ export default {
             drawer: false,
             title: '',
             plan: null,
-            planTime: ''
+            planTime: '',
+            index: 0
         }
     },
     methods: {
         init() {
             switch (this.plan.planType) {
                 case 1:
-                    this.title = '周计划'
+                    this.title = '周计划(计划' + this.index + ')'
                     this.planTime = this.plan.year + '年第' + this.plan.week + '周（' + this.plan.weekStart + '~' + this.plan.weekEnd + ')'
                     break
                 case 2:
-                    this.title = '月计划'
+                    this.title = '月计划(计划' + this.index + ')'
                     this.planTime = this.plan.year + '年' + this.plan.month + '月'
                     break
                 case 3:
-                    this.title = '自定义计划'
+                    this.title = '自定义计划(计划' + this.index + ')'
                     this.planTime = parseTime(this.plan.startDate, '{y}年{m}月{d}日') + '~' + parseTime(this.plan.endDate, '{y}年{m}月{d}日')
                     break
                 default:
             }
         },
         show(data) {
-            this.plan = data.plan
+            this.plan = data.plan.plan
+            this.index = data.plan.index + 1
             console.log('计划---------------------》', this.plan)
             this.init()
             this.drawer = true

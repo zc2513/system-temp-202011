@@ -22,7 +22,7 @@
           </div>
           <div class="con-item fl f14 mb25">
             <div>汇报时间</div>
-            <div class="pl10">{{ createDate }}</div>
+            <div class="pl10">{{ reportDate }}</div>
           </div>
           <div class="con-item fl f14 mb15">
             <div>组别</div>
@@ -33,37 +33,20 @@
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header :title="planType" />
+        <z-header title="应届生计划" />
 
         <div class="name-tag flc-y">
           <el-tag v-for="(item, index) in plans" :key="index" class="mr10" size="medium" :effect=" index === planIndex ? 'dark' : 'plain' " @click="clickPlan(index)">计划{{ index + 1 }} </el-tag>
         </div>
-        <div v-for="(item, index2) in plans" :key="index2">
-          <div v-if="index2 === planIndex" class="student-info box">
-            <smallTitle title="计划标题">
+        <div>
+          <div class="student-info box">
+            <smallTitle title="汇报详情">
               <div>
-                <span>{{ item.title }}</span>
+                <span>{{ report.reportContent }}</span>
               </div>
             </smallTitle>
-            <smallTitle v-if=" item.planType === 3 " title="计划时间">
-              <div>
-                <span>{{ item.startDate }} ~ {{ item.endDate }}</span>
-              </div>
-            </smallTitle>
-            <smallTitle title="技能类型">
-              <div class="skill-tag">
-                <el-tag v-for="(tag, key) in item.skillType" :key="key" class="mr15 c-5f" size="medium" effect="plain">{{ tag }}</el-tag>
-              </div>
-            </smallTitle>
-            <smallTitle title="计划详情">
-              <div>
-                <h4 class="f22 t-c mt20 mb30">{{ item.title }}</h4>
-                <div class="c-56 mb30">
-                  <p v-html="item.planContent" />
-                </div>
-              </div>
-            </smallTitle>
-            <smallTitle title="计划评论" style="padding-bottom:50px;">
+
+            <smallTitle title="汇报评论" style="padding-bottom:50px;">
               <el-input
                 v-model="commentContent"
                 type="textarea"
@@ -76,7 +59,7 @@
                 <el-button size="mini" type="primary" @click="addPlanComment">提交</el-button>
               </div>
             </smallTitle>
-            <commentList ref="commentList" :reportid="item.id" />
+            <commentList ref="commentList" :reportid="report.id" />
           </div>
         </div>
       </div>
@@ -90,6 +73,7 @@ import commentList from '@/components/commentList'
 import { addPlanComment } from '@/api/project'
 import { parseTime } from '@/utils/filter'
 import { getSelfCutomPlan } from '@/api/project'
+import { listReport, reportQueryById } from '@/api/report'
 
 export default {
     components: { smallTitle, commentList },
@@ -97,13 +81,14 @@ export default {
         return {
             dialogVisible: false,
             textarea: '',
-            planIndex: 0,
-            planType: '',
+            planIndex: 99,
+            reportType: '',
             planTime: '',
             commentType: '1',
             plans: null,
             commentContent: '',
-            tsUserInfo: null
+            tsUserInfo: null,
+            report: null
 
         }
     },
@@ -112,67 +97,44 @@ export default {
             this.tsUserInfo = data.tsUserInfo
             console.log(data, 888888)
             // 处理计划类型
-            switch (data.planType) {
+            switch (data.reportType) {
                 case 1:
-                    this.planType = '周计划'
+                    this.reportType = '周报'
                     this.planTime = data.currentYear + '年第' + data.currentWeek + '周'
                     break
                 case 2:
-                    this.planType = '月计划'
+                    this.reportType = '月报'
                     this.planTime = data.currentYear + '年' + data.currentMonth + '月'
                     break
                 case 3:
-                    this.planType = '自定义计划'
-                    this.planTime = data.planTime
+                    this.reportType = '日报'
+                    this.reportDate = data.createDate
                     break
 
                 default:
             }
             console.log(data, 9999)
-            this.loadData(data)
+            this.getUserPlan(data)
+            this.getDayReport(data)
             // 发送请求拿到用户数据
         },
         async show(data) {
             await this.init(data)
             this.dialogVisible = true
         },
-        loadData(param) {
-            console.log('查询计划的条件-----------', param)
-            var params = {} // 查询条件
-            if (param.planType === 1) {
-                // 周计划   TODO 这才是正确得 执行人是当前用户
-                //  params.planUserId = this.tsUserInfo.userId
-                // 这个出结果，但是是错的，周计划得创建人不要应该是应届生
-                params.createUserId = this.tsUserInfo.userId
-                params.week = param.currentWeek
-                //  params.day = systemEnv.currentDay
-            } else if (param.planType === 2) {
-                // 月计划 TODO 这才是正确得 执行人是当前用户
-                // params.planUserId = this.tsUserInfo.userId
-                // 这个出结果，但是是错的，月计划得创建人不要应该是应届生
-                params.createUserId = this.tsUserInfo.userId
-                params.month = param.currentMonth
-            } else {
-                params.createUserId = this.tsUserInfo.userId
-                params.day = parseTime(param.planTime, '{d}')
 
-                params.month = param.currentMonth
-            }
-            params.planType = param.planType
-            // params.planTime = this.planTime
-            // params.planUserId = this.tsUserInfo.userId
-            // params.year = moment(this.planTime).format('yyyy')
-            params.year = param.currentYear
+        getUserPlan(data) {
+            var params = {
+                // planUserId: this.tsUserInfo.userId,
+                // year: parseTime(data.createDate, '{y}'),
+                // month: parseTime(data.createDate, '{m}'),
+                // day: parseTime(data.createDate, '{d}')
+                planUserId: this.tsUserInfo.userId,
+                year: parseTime(data.createDate, '{y}'),
+                month: 10,
+                day: 22
+            } // 查询条件
 
-            // &year=2020&month=10&week=&day=22
-            // com.thundersoft.studentreport/fstFreshStudentPlan/queryListPlanInfo?
-            // planType=3
-            // &createUserId=e9ca23d68d884d4ebb19d07889727dae
-            // &planUserId=e3517f1ca22245e897077a25b5a8c328
-            // &year=2020
-            // &month=10
-            // &week=
-            // &day=22
             //       listp:'com.thundersoft.studentreport/fstFreshStudentPlan/queryListPlanInfo?planType=3&planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10&week=&day=22',
 
             console.log('计划查询参数', params)
@@ -207,6 +169,56 @@ export default {
             })
         },
 
+        getDayReport(data) {
+            var params = {
+                // planUserId: this.tsUserInfo.userId,
+                // year: parseTime(data.createDate, '{y}'),
+                // month: parseTime(data.createDate, '{m}'),
+                // day: parseTime(data.createDate, '{d}')
+                reprotType: 3,
+                userId: this.tsUserInfo.userId,
+                year: parseTime(data.createDate, '{y}'),
+                groupId: '3',
+
+                month: 10,
+                day: 28
+            }
+            console.log('刘宝正确返回结888888888888888888果', params)
+            // 查询条件
+            listReport(params).then((res) => {
+                console.log('返回结果', res)
+                if (res.success) {
+                    console.log('刘宝正确返回结果', res)
+
+                    this.reports = res.result
+                    if (this.reports.length > 0) {
+                        reportQueryById({ id: '1320611718632554498' }).then((res) => {
+                            // reportQueryById({ id: this.reports[1].id }).then((res) => {
+                            console.log('返回结果', res)
+                            if (res.success) {
+                                console.log('刘宝正确返回---------------------------结果', res)
+
+                                this.report = res.result
+
+                                console.log('---------------------------------报告查询介个--------------------------------', this.report)
+                            // }
+                            }
+                            if (res.code === 510) {
+                                this.$message.warning(res.message)
+                            }
+                            this.fetching = false
+                        })
+                    }
+
+                    // }
+                }
+                if (res.code === 510) {
+                    this.$message.warning(res.message)
+                }
+                this.fetching = false
+            })
+        },
+
         addPlanComment() {
             var params = {
                 commentContent: this.commentContent,
@@ -232,8 +244,9 @@ export default {
                 .finally(() => {})
         },
         clickPlan(index) {
-            console.log('点击了计划标签', index)
+            console.log('点击了计划标签-------------------', this.plans)
             this.planIndex = index
+            this.$emit('showPlan', { plan: this.plans[index], index: index })
         },
         back() {
             this.dialogVisible = false

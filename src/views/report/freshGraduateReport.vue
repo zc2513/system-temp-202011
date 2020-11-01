@@ -51,7 +51,7 @@
     </ts-calendar>
     <addReport ref="addDayReport" @planHelp="explain" @showPlan="showPlan" @ok="refreshDayReport" />
     <planDrawer ref="planDrawer" />
-    <lock ref="lock" />
+    <lock ref="lock" @showPlan="showPlan" />
   </div>
 
 </template>
@@ -300,10 +300,8 @@ export default {
         // 浏览自定义计划
         openDay(param) {
             var data = {
-                planType: 3,
-                planTime: param.day,
-                currentYear: this.currentYear,
-                currentMonth: this.currentMonth,
+                reportType: 3,
+                createDate: param.day,
                 tsUserInfo: this.tsUserInfo
             }
             this.$refs.lock.show(data)
@@ -363,7 +361,7 @@ export default {
             this.$refs.planDrawer.show({ planId: '1' })
         },
         showPlan(e) {
-            console.log('计划id-------------------', e)
+            console.log('计划id---------------666666666666666----', e)
             this.$refs.planDrawer.show({ plan: e })
         },
         getSysInitDate(e) {

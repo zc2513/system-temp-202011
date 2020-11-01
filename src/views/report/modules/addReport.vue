@@ -10,13 +10,13 @@
       <svg-icon icon-class="ask" class="cursor" @click="$emit('planHelp',{id:666,title:'计划说明'})" />
     </div>
     <div class="main">
-      <div class="card fl">
+      <div class="card ">
 
-        <div class="name-tag flc">
+        <div class="name-tag wfull mb15 ">
           <el-tag v-for="(item, index) in plans" :key="index" class="mr10 cursor " size="medium" :effect="index === planIndex ? 'dark' : 'plain' " @click="clickPlan(index)">计划{{ index + 1 }} </el-tag>
         </div>
 
-        <div class="list">
+        <div class="list wfull">
           <div><span>汇报类型</span><span>{{ reportType }}</span></div>
           <div><span>{{ reportType }}时间</span><span>{{ form.reportDate }}</span></div><br>
           <div><span>提交人</span><span>{{ form.realname }}</span></div><br>
@@ -227,7 +227,6 @@ export default {
                             }
                         })
                     }
-                    console.log('---------------------------------计划查询结果--------------------------------', this.myWeekPlan)
                     // }
                 }
                 if (res.code === 510) {
@@ -238,7 +237,7 @@ export default {
         },
         clickPlan(index) {
             this.planIndex = index
-            this.$emit('showPlan', this.plans[index])
+            this.$emit('showPlan', { plan: this.plans[index], index: index })
         }
     }
 }

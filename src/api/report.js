@@ -2,6 +2,8 @@ import request from '@/utils/request'
 
 const url = {
     add: 'com.thundersoft.studentreport/fstFreshStudentReport/add',
+    list: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListReportInfo',
+    reportQueryById: 'com.thundersoft.studentreport/fstFreshStudentReport/queryById',
     queryListGroupDay: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupDay',
     queryListGroupWeek: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupWeek',
     queryListGroupMonth: 'com.thundersoft.studentreport/fstFreshStudentReport/queryListGroupMonth'
@@ -35,6 +37,22 @@ export function queryListGroupDay(params) {
     params.periodId = '1'
     return request({
         url: url.queryListGroupDay,
+        method: 'get',
+        params
+    })
+}
+export function listReport(params) {
+    params.periodId = '1'
+    return request({
+        url: url.list,
+        method: 'get',
+        params
+    })
+}
+
+export function reportQueryById(params) {
+    return request({
+        url: url.reportQueryById,
         method: 'get',
         params
     })
