@@ -24,7 +24,7 @@
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
 
-      <el-form-item v-if="Number(type)===2" label="部门:" class="ml10" prop="department">
+      <el-form-item v-if="Number(type)===3&& objTag === 'b'" label="部门:" class="ml10" prop="department">
         <el-select v-model="formInline.department" placeholder="请选择部门">
           <el-option
             v-for="item in options"
