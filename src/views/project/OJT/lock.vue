@@ -16,44 +16,40 @@
       <div>
         <div class="info-con-left">
           <h4 class="f18">基本信息</h4>
+          <div v-if="Number(type)===1" class="con-item fl f14 mb25">
+            <div>区域</div>
+            <div class="pl10">成都</div>
+          </div>
+          <div v-if="Number(type)===2" class="con-item fl f14 mb25">
+            <div>部门</div>
+            <div class="pl10">成都二部</div>
+          </div>
+          <div v-if="Number(type)===3" class="con-item fl f14 mb25">
+            <div>团队</div>
+            <div class="pl10">梦想权鉴</div>
+          </div>
           <div class="con-item fl f14 mb25">
-            <div>应届生</div>
+            <div>提交人</div>
             <div class="pl10">张三</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>计划类型</div>
-            <div class="pl10">周计划</div>
+            <div v-if="Number(type)===1" class="pl10">OJT区域计划</div>
+            <div v-if="Number(type)===2" class="pl10">OJT部门计划</div>
+            <div v-if="Number(type)===3" class="pl10">OJT团队计划</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>计划时间</div>
             <div class="pl10">2020年第47周</div>
           </div>
-          <div class="con-item fl f14 mb15">
-            <div>组别</div>
-            <div class="pl10">成都 二部 第1小组</div>
-          </div>
         </div>
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header title="基础计划" />
-
-        <div class="name-tag flc-y">
-          <el-tag class="mr10" size="medium" effect="dark">标签一</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签二</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签三</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签四</el-tag>
-          <el-tag class="mr10 disabled" size="medium" effect="plain">标签五</el-tag>
-        </div>
-
-        <div class="student-info box">
-          <smallTitle title="技能类型">
-            <div class="skill-tag">
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-            </div>
-          </smallTitle>
+        <z-header v-if="Number(type)===1" title="OJT区域计划" />
+        <z-header v-if="Number(type)===2" title="OJT部门计划" />
+        <z-header v-if="Number(type)===3" title="OJT团队计划" />
+        <div class="student-info box mt15">
           <smallTitle title="计划详情">
             <div>
               <h4 class="f22 t-c mt20 mb30">我是标题标题标题</h4>
@@ -91,6 +87,12 @@ import smallTitle from '../component/smallTitle'
 import commentList from '@/components/commentList'
 export default {
     components: { smallTitle, commentList },
+    props: {
+        type: {
+            type: [String, Number],
+            default: 1
+        }
+    },
     data() {
         return {
             dialogVisible: false,

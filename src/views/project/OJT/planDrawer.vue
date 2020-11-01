@@ -61,6 +61,12 @@ import smallTitle from '../component/smallTitle'
 export default {
     name: 'PlankDrawer',
     components: { smallTitle },
+    props: {
+        type: {
+            type: [String, Number],
+            default: 1
+        }
+    },
     data() {
         return {
             drawer: false,
