@@ -56,9 +56,9 @@
         </div>
       </template>
     </ts-calendar>
-    <add-plan-modal ref="addDayPlan" @ok="getCustomPlan" />
     <show-week-plan-modal ref="showWeekPlan" />
-
+    <addPlanv2 ref="addDayPlanv2" @planHelp="explain" />
+    <planDrawer ref="planDrawer" />
     <lock ref="lock" />
   </div>
 
@@ -68,7 +68,8 @@
 import TsCalendar from '@/components/tsforce/TsCalendar.vue'
 import SelectStudent from '@/components/tsforce/SelectStudent.vue'
 import TabelHeader from '@/components/headerTab'
-
+import addPlanv2 from './info/addPlanv2'
+import planDrawer from './info/planDrawer'
 import showWeekPlanModal from './modules/showWeekPlanModal.vue'
 import AddPlanModal from './modules/AddWeekPlan.vue'
 import { getUserInfo, getCalendarInfo } from '@/api/calendar'
@@ -83,6 +84,8 @@ export default {
     name: 'Myplan',
     components: {
         lock,
+        addPlanv2,
+        planDrawer,
         TsCalendar,
         AddPlanModal,
         showWeekPlanModal,
@@ -179,7 +182,7 @@ export default {
                             planType: 1,
                             createUserId: this.userInfo.id
                         }
-                        console.log('周计划汇总参数', param2)
+                        console.log('周计划汇总参数 加载------------------', param2)
                         queryListGroupWeek(param2).then(res1 => {
                             if (res1.success === true) {
                                 console.log('周计划计划汇总', res1)
@@ -193,22 +196,6 @@ export default {
             })
         },
 
-        getCustomPlan() {
-            var param2 = {
-                year: this.currentYear,
-                month: this.currentMonth,
-                createType: 2,
-                planType: 3,
-                createUserId: this.userInfo.id
-            }
-            console.log('自定义计划汇总cansghu', param2)
-            queryListGroupCustom(param2).then(res1 => {
-                if (res1.success === true) {
-                    console.log('自定义计划汇总结果', res1)
-                    this.groupDay = res1.result
-                }
-            })
-        },
         refreshWeek(data) {
             console.log('周计划--------- 点击----------------------------')
             this.currentYear = data.currentYear
@@ -231,7 +218,7 @@ export default {
             //     planType: 1,
             //     planUserId: this.userInfo.id
             // }
-            console.log('周计划汇总参数', param2)
+            console.log('周计划汇总参数 涮新的------------------', param2)
             queryListGroupWeek(param2).then(res1 => {
                 if (res1.success === true) {
                     console.log('周计划汇总cansghu 结果', res1)
@@ -312,15 +299,15 @@ export default {
         },
         addPlan(param) {
             console.log('增加周计划', param)
-            this.$refs.addDayPlan.planType = '周计划'
-            this.$refs.addDayPlan.planTime = param
-            this.$refs.addDayPlan.userId = this.userInfo.id
+            // this.$refs.addDayPlan.planType = '周计划'
+            // this.$refs.addDayPlan.planTime = param
+            this.$refs.addDayPlanv2.userId = this.userInfo.id
             const model = {
                 planType: 1,
                 createType: 1,
                 year: this.currentYear,
                 month: this.currentMonth,
-                week: this.currentWeek,
+                week: param.item.week,
                 createUser: this.tsUserInfo.realName,
                 createUserId: this.userInfo.id,
                 planUser: this.tsUserInfo.realName,
@@ -329,23 +316,24 @@ export default {
                 areaName: this.tsUserInfo.areaName,
                 departId: this.tsUserInfo.dept[0].deptId,
                 departName: this.tsUserInfo.dept[0].deptName,
-                startDate: param,
-                endDate: param,
+                // startDate: param,
+                // endDate: param,
                 groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
                 groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
                 title: '请给计划输入一个标题',
                 planContent: '',
                 skillType: [],
                 status: 0,
-                weekStart: null,
-                weekEnd: null
+                weekStart: param.item.start,
+                weekEnd: param.item.end
             }
-            this.$refs.addDayPlan.visible = true
 
             console.log('----------model', model)
-
-            Object.assign(this.$refs.addDayPlan.form, model)
-            this.$refs.addDayPlan.add(model)
+            this.$refs.addDayPlanv2.show(model)
+        },
+        // 自定义计划说明文档
+        explain() {
+            this.$refs.planDrawer.show({ title: '周计划' })
         }
     }
 }
