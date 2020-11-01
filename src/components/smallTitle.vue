@@ -2,7 +2,10 @@
 <template>
   <div class="student-info box">
     <div class="small-title flc-y">
-      <div class="f18 small-title-text" :style="{padding:`0 ${titleLeft}px`}">{{ title }}</div>
+      <div class="f18 small-title-text fl" :style="{padding:`0 ${titleLeft}px`}">
+        {{ title }}
+        <slot name="addTitle" />
+      </div>
     </div>
     <div :style="{padding:`0 ${Number(titleLeft)+4}px`}">
       <slot />

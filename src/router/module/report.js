@@ -35,16 +35,16 @@ const report = {
             component: () => import('@/views/report/personnel/index'),
             meta: { title: '人员状态', icon: '' }
         },
-        {
-            path: 'meReport',
-            name: 'MeReport',
-            component: () => import('@/views/report/meReport'),
-            meta: { title: '我的汇报', icon: '' }
-        },
+        // {
+        //     path: 'meReport',
+        //     name: 'MeReport',
+        //     component: () => import('@/views/report/meReport'),
+        //     meta: { title: '我的汇报', icon: '' }
+        // },
         {
             path: 'manager',
             name: 'Manager',
-            component: () => import('@/views/report/manager'),
+            component: () => import('@/views/report/manager/index'),
             meta: { title: '经理月报', icon: '' }
         }
     ]
