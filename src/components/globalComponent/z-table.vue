@@ -37,6 +37,9 @@
             <template v-else-if="item.type==='percent'">
               <span class="war">{{ row[item.data].nums }}</span> / <span class="f14">{{ row[item.data].nume }}</span>
             </template>
+            <template v-else-if="item.type==='time'">
+              {{ row[item.data] | parseTime(item.time==='default' ? '{y}-{m}-{d} {h}:{i}:{s}':item.time ) }}
+            </template>
             <template v-else>
               <el-tooltip class="item" effect="dark" :disabled="!item.tip" :content="row[item.data]+''" placement="top">
                 <div :class="{'elps':item.tip}">{{ row[item.data] }}</div>
@@ -93,6 +96,7 @@
  *          {percent} 内容分号处理
  *          {tip} 是否显示省略号 默认两行
  *          {width} 当前列的宽度 Number类型
+ *          {time}  当前列的时间格式化 default ;接受时间格式 {y}-{m}-{d} {a} {h}:{i}:{s}
  *  @lists  遍历数组
  *  @btns   操作按钮 不传则不显示 传入则按照props下规则使用
  *  @loading 是否开启加载动画
@@ -105,7 +109,7 @@ export default {
     props: {
         stripe: {
             type: Boolean,
-            default: true
+            default: false
         },
         maxHeight: {
             type: [Number, String],
