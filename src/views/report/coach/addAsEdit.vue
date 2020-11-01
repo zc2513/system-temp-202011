@@ -2,30 +2,17 @@
   <!-- OTJ新建计划/区域、部门、团队 -->
   <el-dialog :visible.sync="showDialogVisible" class="addPlan">
     <div slot="title" class="flc-y dialog-header">
-      <span v-if="Number(type)===1">集训计划</span>
-      <span v-if="Number(type)===2">实训计划</span>
-      <span v-if="Number(type)===3 && objTag === 'a'">OJT区域计划</span>
-      <span v-if="Number(type)===3 && objTag === 'b'">OJT部门计划</span>
-      <span v-if="Number(type)===3 && objTag === 'c'">OJT团队计划</span>
+      {{ title }}
     </div>
     <div class="list fl">
-      <div v-if="Number(type)===1">
-        <span>地区:</span>
-        <span>{{ formInline.address }}</span>
-      </div>
       <div>
-        <span>提交人职级:</span>
-        <span>{{ formInline.rank }}</span>
-      </div>
-      <div>
-        <span>提交人:</span>
+        <span>辅导员姓名:</span>
         <span>{{ formInline.person }}</span>
       </div>
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-
-      <el-form-item v-if="Number(type)===3&& objTag === 'b'" label="部门:" class="ml10" prop="department">
-        <el-select v-model="formInline.department" placeholder="请选择部门">
+      <el-form-item label="组别:" class="ml10" prop="group">
+        <el-select v-model="formInline.group" placeholder="请选择组别">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -34,22 +21,23 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="Number(type)===3" label="团队:" class="ml10" prop="team">
-        <el-select v-model="formInline.team" placeholder="请选择团队">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="计划时间:" class="ml10" prop="time">
+      <el-form-item label="辅导时间:" class="ml10" prop="time">
         <el-date-picker
           v-model="formInline.time"
           type="date"
           placeholder="请选择时间"
+          value-format="timestamp"
         />
+      </el-form-item>
+      <el-form-item label="应届生:" class="ml10" prop="student">
+        <el-select v-model="formInline.student" multiple filterable reserve-keyword placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="计划内容:" class="ml10" prop="content">
         <el-input
@@ -77,27 +65,26 @@ export default {
             type: [String, Number],
             default: 1
         },
-        objTag: {
+        title: {
             type: String,
-            default: 'a'
+            default: '新建辅导记录'
         }
     },
     data() {
         return {
-            title: '新建OJT区域计划',
             showDialogVisible: false,
             formInline: {
-                team: '',
-                department: '',
+                group: '',
+                student: '',
                 time: '',
                 person: '张三',
-                content: '',
-                rank: '项目经理',
-                address: '成都'
+                content: ''
             },
             options: [
                 { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双皮奶' },
+                { value: '选项2', label: '双奶皮' },
+                { value: '选项4', label: '双皮奶' },
+                { value: '选项5', label: '皮双奶' },
                 { value: '选项3', label: '蚵仔煎' }
             ],
             areaText: ''
@@ -105,9 +92,19 @@ export default {
     },
     methods: {
         show(data) {
+            if (data) {
+                this.formInline = {
+                    content: '范德萨发生',
+                    group: '选项2',
+                    person: '张三',
+                    student: ['选项5'],
+                    time: 1603641600000
+                }
+            }
             this.showDialogVisible = true
         },
         submitForm(status) {
+            console.log(this.formInline)
             if (status) {
                 // 验证提交信息
                 this.$refs.ruleForm.validate((valid) => {
@@ -150,6 +147,7 @@ export default {
         }
         .el-select,.el-date-editor {
             width: 280px;
+            min-width: 50%;
         }
     }
     .dialog-header  {

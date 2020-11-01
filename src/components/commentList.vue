@@ -40,7 +40,7 @@ export default {
         },
         reportid: {
             type: String,
-            required: true,
+            // required: true, //临时注释防止出错
             default: '1'
         }
     },

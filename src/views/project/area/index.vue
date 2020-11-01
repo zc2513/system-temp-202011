@@ -97,6 +97,7 @@ export default {
                 if (this.objTag === 'b') str = '部门'
                 if (this.objTag === 'c') str = '团队'
             }
+            this.tableTitle(this.isTabActive)
             return str
         }
     },
@@ -113,7 +114,7 @@ export default {
         },
         objTag: {
             handler(val) {
-                console.log(val)
+                if (this.isTabActive === 3) this.titles = this.tableTitle(3)
             },
             immediate: true
         }
@@ -127,13 +128,15 @@ export default {
                 { name: '计划时间', data: 'lastUpdateTime', type: 'time', time: '{y}-{m}-{d} ~ {h}:{i}:{s}' }
             ]
             if (type === 1) {
-                titles = [{ name: '区域', data: 'organizationName' }, ...titles]
+                titles = [{ name: '集训', data: 'organizationName' }, ...titles]
             }
             if (type === 2) {
-                titles = [{ name: '部门', data: 'organizationName' }, ...titles]
+                titles = [{ name: '实训', data: 'organizationName' }, ...titles]
             }
             if (type === 3) {
-                titles = [{ name: '团队', data: 'organizationName' }, ...titles]
+                if (this.objTag === 'a') titles = [{ name: '区域', data: 'organizationName' }, ...titles]
+                if (this.objTag === 'b') titles = [{ name: '部门', data: 'organizationName' }, ...titles]
+                if (this.objTag === 'c') titles = [{ name: '团队', data: 'organizationName' }, ...titles]
             }
             return titles
         },

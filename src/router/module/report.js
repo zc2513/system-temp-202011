@@ -20,19 +20,19 @@ const report = {
         {
             path: 'coach',
             name: 'Coach',
-            component: () => import('@/views/report/coach'),
+            component: () => import('@/views/report/coach/index'),
             meta: { title: '辅导记录', icon: '' }
         },
         {
             path: 'mgr',
             name: 'Mgr',
-            component: () => import('@/views/report/mgr'),
+            component: () => import('@/views/report/mgr/index'),
             meta: { title: 'Mgr月报', icon: '' }
         },
         {
             path: 'personnel',
             name: 'Personnel',
-            component: () => import('@/views/report/personnel'),
+            component: () => import('@/views/report/personnel/index'),
             meta: { title: '人员状态', icon: '' }
         },
         {
@@ -45,7 +45,7 @@ const report = {
             path: 'manager',
             name: 'Manager',
             component: () => import('@/views/report/manager'),
-            meta: { title: '研发经理月报', icon: '' }
+            meta: { title: '经理月报', icon: '' }
         }
     ]
 }

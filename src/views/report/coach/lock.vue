@@ -21,10 +21,6 @@
             <div class="pl10">张三</div>
           </div>
           <div class="con-item fl f14 mb25">
-            <div>计划类型</div>
-            <div class="pl10">周计划</div>
-          </div>
-          <div class="con-item fl f14 mb25">
             <div>计划时间</div>
             <div class="pl10">2020年第47周</div>
           </div>
@@ -36,24 +32,9 @@
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header title="基础计划" />
+        <z-header title="辅导记录" />
 
-        <div class="name-tag flc-y">
-          <el-tag class="mr10" size="medium" effect="dark">标签一</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签二</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签三</el-tag>
-          <el-tag class="mr10" size="medium" effect="plain">标签四</el-tag>
-          <el-tag class="mr10 disabled" size="medium" effect="plain">标签五</el-tag>
-        </div>
-
-        <div class="student-info box">
-          <smallTitle title="技能类型">
-            <div class="skill-tag">
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-              <el-tag class="mr15 c-5f" size="medium" effect="plain">标签一</el-tag>
-            </div>
-          </smallTitle>
+        <div class="student-info box mt15">
           <smallTitle title="计划详情">
             <div>
               <h4 class="f22 t-c mt20 mb30">我是标题标题标题</h4>
@@ -87,7 +68,7 @@
 </template>
 
 <script>
-import smallTitle from '../component/smallTitle'
+import smallTitle from '@/components/smallTitle'
 import commentList from '@/components/commentList'
 export default {
     components: { smallTitle, commentList },
@@ -114,6 +95,7 @@ export default {
 .info-page{
     padding: 0 24px;
     background: #F5F7F9;
+    .el-dialog__header,.el-dialog__body{  padding: 0; }
     .info-page-title{
         height: 72px;
         color:#4E5C7A;
