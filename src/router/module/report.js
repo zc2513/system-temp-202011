@@ -44,7 +44,7 @@ const report = {
         {
             path: 'manager',
             name: 'Manager',
-            component: () => import('@/views/report/manager'),
+            component: () => import('@/views/report/manager/index'),
             meta: { title: '经理月报', icon: '' }
         }
     ]
