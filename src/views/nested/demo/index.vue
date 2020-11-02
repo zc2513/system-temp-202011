@@ -1,140 +1,117 @@
 <template>
-  <div class="hfull" style="background:#ccc;">
-    案例页面
-    <button @click="showDialogVisible = true">弹窗</button>
-    <el-dialog
-      :visible.sync="showDialogVisible"
-      width="60%"
-      class="dialog"
+  <div class="hfull">
+    <el-upload
+      ref="uploadImg"
+      class="uploadImg"
+      action="https://jsonplaceholder.typicode.com/posts/"
+      :file-list="fileList"
+      :on-success="handleSuccess"
+      accept=".jpg,.jpeg,.bmp,.gif,.png"
     >
-      <div slot="title" class="flc-y dialog-header">
-        <span class="mr15 f16">新建计划</span>
-        <svg-icon icon-class="ask" />
-      </div>
-      <div class="main">
-        <div class="card fl">
-          <div v-for="(item,index) in personInfo" :key="index" class="list">
-            <div><span>计划类型</span><span>{{ item.type }}</span></div>
-            <div><span>计划时间</span><span>{{ item.time }}</span></div><br>
-            <div><span>应届生</span><span>{{ item.submitPerson }}</span></div>
-            <div><span>地区</span><span>{{ item.area }}</span></div>
-            <div><span>组别</span><span>{{ item.group }}</span></div>
-          </div>
-        </div>
-        <div class="skill fl mb20">
-          <span class="mt5">技能类型</span>
-          <el-select v-model="value1" multiple filterable reserve-keyword placeholder="请选择">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </div>
-        <div class="plan fl">
-          <span class="mt5">技能类型</span>
-          <el-input
-            v-model="textarea"
-            type="textarea"
-            :rows="8"
-            placeholder="请输入内容"
-          />
-        </div>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="showDialogVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
+      <el-button size="small" type="primary">点击上传</el-button>
+      <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+    </el-upload>
+    <quill-editor
+      ref="myQuillEditor"
+      v-model="content"
+      :options="editorOption"
+      style="height:600px;"
+      @blur="onEditorBlur($event)"
+      @focus="onEditorFocus($event)"
+      @ready="onEditorReady($event)"
+      @change="onEditorChange($event)"
+    />
   </div>
 </template>
 
 <script>
+import { quillEditor } from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
 export default {
+    components: { quillEditor },
     data() {
         return {
-            showDialogVisible: true,
-            personInfo: [
-                {
-                    id: 1,
-                    type: '日计划',
-                    time: '2020-10-10',
-                    submitPerson: '张益达',
-                    area: '成都',
-                    group: '成都 二部 第一小组'
+            content: '',
+            editorOption: {
+                placeholder: '编辑文章内容',
+                readyOnly: false, // 是否只读
+                theme: 'snow', // 主题 snow/bubble
+                syntax: true, // 语法检测
+                modules: {
+                    toolbar: {
+                        container: [
+                        // ['bold', 'italic', 'underline', 'strike'], // 加粗 斜体 下划线 删除线
+                            ['bold', 'italic', 'underline'], // 加粗 斜体 下划线 删除线
+                            // ['blockquote', 'code-block'], // 引用  代码块
+                            // [{ header: 1 }, { header: 2 }], // 1、2 级标题
+                            // [{ list: 'ordered' }, { list: 'bullet' }], // 有序、无序列表
+                            // [{ script: 'sub' }, { script: 'super' }], // 上标/下标
+                            // [{ indent: '-1' }, { indent: '+1' }], // 缩进
+                            // [{ 'direction': 'rtl' }], // 文本方向
+                            // [{ size: ['small', false, 'large', 'huge'] }], // 字体大小
+                            // [{ header: [1, 2, 3, 4, 5, 6, false] }], // 标题
+                            // [{ color: [] }, { background: [] }], // 字体颜色、字体背景颜色
+                            // [{ font: [] }], // 字体种类
+                            [{ align: [] }], // 对齐方式
+                            // ['clean'], // 清除文本格式
+                            // ['link', 'image', 'video'] // 链接、图片、视频
+                            ['link', 'image'] // 链接、图片、视频
+                        ], // 工具菜单栏配置, // 工具栏
+                        handlers: {
+                            'image': (value) => {
+                                console.log(value)
+                                if (value) {
+                                    console.dir(this.$refs.myQuillEditor)
+                                    document.querySelector('.uploadImg .el-upload .el-upload__input').click()
+                                    // document.querySelector('.ivu-upload .ivu-btn').click()
+                                } else {
+                                    this.quill.format('image', false)
+                                }
+                            }
+                        }
+                    }
                 }
-            ],
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '龙须面2'
-            }, {
-                value: '选项3',
-                label: '龙须面1'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
-            value1: [],
-            textarea: ''
+            },
+            fileList: []
+        }
+    },
+    // computed: {
+    //     quill() {
+    //         return this.$refs.myTextEditor.myQuillEditor
+    //     }
+    // },
+    methods: {
+        // 值发生变化
+        onEditorChange({ editor, html, text }) {
+            console.log(html)
+            this.content = html
+        },
+        onEditorBlur(editor) {},
+        // 获得焦点
+        onEditorFocus(editor) {},
+        // 开始
+        onEditorReady(editor) {},
+
+        handleSuccess(res) {
+            const quill = this.$refs.myQuillEditor.quill
+            if (res) {
+            // 获取光标所在位置
+                const length = quill.getSelection().index
+                // 插入图片，res为服务器返回的图片链接地址
+                quill.insertEmbed(length, 'image', res)
+                // 调整光标到最后
+                quill.setSelection(length + 1)
+            } else {
+            // 提示信息，需引入Message
+                this.$message.error('图片插入失败')
+            }
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.hfull {
-    .dialog {
-        ::v-deep .el-dialog__header {
-            padding: 0;
-            text-indent: 24px;
-        }
-        ::v-deep .el-dialog__footer {
-            border-top: 1px solid #E0E4EB;
-        }
-        ::v-deep .el-select {
-            width: 100%;
-        }
-    }
-    .dialog-header  {
-        height: 54px;
-        color: #303133;
-        border-bottom: 1px solid #E0E4EB;
-    }
-    .main {
-        .card {
-            .list {
-                div {
-                    width: 220px;
-                    display: inline-block;
-                    margin-bottom: 22px;
-                    span {
-                        color: #303133;
-                    }
-                    >span:nth-of-type(1) {
-                        display: inline-block;
-                        width: 80px;
-                        text-align: right;
-                        margin-right: 10px;
-                        color: #5F6266;
-                    }
-                }
-            }
-        }
-        .skill,.plan {
-            span {
-                display: inline-block;
-                width: 90px;
-                text-align: right;
-                margin-right: 10px;
-            }
-        }
-    }
-}
+
 </style>
