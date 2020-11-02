@@ -1,5 +1,5 @@
 <template>
-  <div class="hfull">
+  <div class="hfull" style="padding:40px;">
     <editor v-model="content" />
   </div>
 </template>

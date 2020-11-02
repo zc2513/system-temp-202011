@@ -13,9 +13,15 @@ const notification = {
     children: [
         {
             path: 'index',
-            name: 'Project',
+            name: 'notification',
             component: () => import('@/views/notification/index'),
             meta: { title: '通知管理', icon: '' }
+        },
+        {
+            path: 'info',
+            name: 'NotificationInfo',
+            component: () => import('@/views/notification/info'),
+            meta: { title: '通知详情', icon: '' }
         }
     ]
 }

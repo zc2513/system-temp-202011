@@ -88,7 +88,9 @@ export const constantRoutes = [
             }
         ]
     },
-    project, report, courseware,
+    project,
+    report,
+    courseware,
     system,
     setting,
     notification,

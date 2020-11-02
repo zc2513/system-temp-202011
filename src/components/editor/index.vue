@@ -15,6 +15,7 @@
     <quill-editor
       ref="myQuillEditor"
       v-model="content"
+      class="editor-box"
       :options="editorOption"
       :style="{height:height+'px'}"
       @blur="onEditorBlur($event)"
@@ -46,7 +47,7 @@ export default {
         return {
             content: '',
             editorOption: {
-                placeholder: '编辑文章内容',
+                placeholder: '',
                 readyOnly: false, // 是否只读
                 theme: 'snow', // 主题 snow/bubble
                 syntax: true, // 语法检测
@@ -132,5 +133,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.editor-box{
+    ::v-deep{
+        .ql-toolbar.ql-snow , .ql-container.ql-snow{
+            border-color: #E0E4EB;
+        }
+        .ql-container.ql-snow{
+           height:  calc(100% - 42px);
+        }
+    }
+}
 </style>
