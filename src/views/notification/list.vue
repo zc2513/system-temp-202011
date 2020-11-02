@@ -76,7 +76,7 @@ export default {
                 })
             }
             if (type === 'more') {
-                this.datas = [...data,
+                this.datas = [...this.datas,
                     { status: true, type: '系统消息', title: 'XXX发布了应届生培训规则', des: '', person: 'HRXX', time: '2020-10-20 12:20:09' },
                     { status: false, type: '公告通知', title: 'XXX发布了应届生培训规则', des: '2020年10月3日工作汇报', person: 'HRXX', time: '2020-10-20 12:20:09' }
                 ]
