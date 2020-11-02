@@ -24,7 +24,7 @@
         <!-- <div class="bottom"></div> -->
         <div class="bottom">
           <z-circle size="20" :color=" countSave(data.data.day)>0?'#A2F07B':'#FF785F' ">
-            {{ countSave(data.data.day) }}
+            <!-- {{ countSave(data.data.day) }} -->
           </z-circle>
         </div>
       </template>
@@ -34,7 +34,7 @@
         <div class="bottom">
 
           <z-circle size="20" :color=" countWeekSave(week.item.week)>0?'#A2F07B':'#FF785F' ">
-            {{ countWeekSave(week.item.week) }}
+            <!-- {{ countWeekSave(week.item.week) }} -->
           </z-circle>
         </div>
       </template>
@@ -44,7 +44,7 @@
         <div class="bottom">
 
           <z-circle size="20" :color=" countMonthSave(month.item.month)>0?'#A2F07B':'#FF785F' ">
-            {{ countMonthSave(month.item.month) }}
+            <!-- {{ countMonthSave(month.item.month) }} -->
           </z-circle>
         </div>
       </template>
@@ -326,7 +326,7 @@ export default {
             // this.$refs.addDayPlan.planTime = param
 
             const model = {
-                reportType: 3,
+                reportType: 1,
                 reportContent: '',
                 year: current.currentYear,
                 quarter: current.currentSeason,

@@ -15,18 +15,18 @@
       </div>
     </div>
     <div class="flc-y">
-      <div class="f14" style="min-width:30px;">导师</div>
+      <!-- <div class="f14" style="min-width:30px;">导师</div>
       <div class="ml20 mr30 group">
         666
-        <!-- <el-select v-model="selectUser" placeholder="请选择导师">
+        <el-select v-model="selectUser" placeholder="请选择导师">
           <el-option
             v-for="item in users"
             :key="item.id"
             :label="item.realname"
             :value="item.id"
           />
-        </el-select> -->
-      </div>
+        </el-select>
+      </div> -->
     </div>
     <div class="flc-y">
       <div class="f14" style="width:70px;">应届生姓名</div>
@@ -67,6 +67,10 @@ export default {
         mult: {
             type: Boolean,
             default: false
+        },
+        selected: {
+            type: Boolean,
+            default: true
         }
     },
     data() {
@@ -173,9 +177,14 @@ export default {
                     this.users = res.result
                     if (this.mult) {
                         this.selectUser = []
-                        this.selectUser[0] = this.users[0].id
+                        if (this.selected) {
+                            this.selectUser[0] = this.users[0].id
+                        }
                     } else {
-                        this.selectUser = this.users[0].id
+                        this.selectUser = ''
+                        if (this.selected) {
+                            this.selectUser = this.users[0].id
+                        }
                     }
                     this.changeUser()
                 } else {
@@ -184,14 +193,18 @@ export default {
             })
         },
         seache() {
-            this.$emit('seache', this.selectorg, this.selectUser)
+            // this.$emit('seache', this.selectorg, this.selectUser)
+            var user = this.users.filter(e => {
+                return e.id === this.selectUser
+            })
+            this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode, this.users.length)
         },
         changeUser(e) {
             console.log('000000000000000000000000000000000000000', this.selectUser, this.users)
             var user = this.users.filter(e => {
                 return e.id === this.selectUser
             })
-            this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode)
+            this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode, this.users.length)
         },
         reset() {
             this.users = []
