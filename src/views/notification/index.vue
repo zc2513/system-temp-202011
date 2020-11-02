@@ -48,7 +48,7 @@ export default {
     components: { add, search },
     data() {
         return {
-            tableData: [1],
+            tableData: [],
             titles: [
                 { type: 'selection' },
                 { name: '工号', data: 'stateCode' },
