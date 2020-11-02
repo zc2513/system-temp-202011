@@ -6,7 +6,7 @@ Vue.use(Router)
 /* Layout */
 // import Layout from '@/layout'
 import Layout from '@/layout/tblyout.vue'
-import { setting, system, demo, project, report, courseware } from './module/index'
+import { setting, system, demo, project, report, courseware, notification } from './module/index'
 
 /**
  * hidden: true                   如果设置为真，项目将不会显示在侧边栏中(默认为假)
@@ -88,9 +88,12 @@ export const constantRoutes = [
             }
         ]
     },
-    project, report, courseware,
+    project,
+    report,
+    courseware,
     system,
     setting,
+    notification,
     demo
     // { path: '*', redirect: '/404', hidden: true }
 ]

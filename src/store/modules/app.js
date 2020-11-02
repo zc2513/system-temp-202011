@@ -25,6 +25,10 @@ const mutations = {
     },
     TOGGLE_DEVICE: (state, device) => {
         state.device = device
+    },
+    TOGGLE_LEFT: (state, status) => { // 新布局临时处理
+        state.sidebar.opened = status
+        Cookies.set('sidebarStatus', status)
     }
 }
 
@@ -37,6 +41,9 @@ const actions = {
     },
     toggleDevice({ commit }, device) {
         commit('TOGGLE_DEVICE', device)
+    },
+    toggleLeft({ commit }, status) {
+        commit('TOGGLE_LEFT', status)
     }
 }
 

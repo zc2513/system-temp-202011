@@ -4,7 +4,7 @@
     <tbHeadre />
 
     <div class="main flsb">
-      <div class="nav-bar">
+      <div v-if="sidebar.opened" class="nav-bar">
         <div class="flcc navLogo">
           <img src="@/assets/imgs/layout/navLogo.png" alt="">
         </div>

@@ -4,6 +4,7 @@
  * @report      工作汇报
  * @courseware  优秀课件
  * @system      系统设置
+ * @notification 通知管理
  */
 
 //  项目demo
@@ -23,4 +24,7 @@ export { default as system } from './system'
 
 // 监督节点设置
 export { default as setting } from './setting'
+
+// 通知管理
+export { default as notification } from './notification'
 

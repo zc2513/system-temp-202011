@@ -44,10 +44,10 @@ export default {
             diaTitle: '新建辅导记录',
             titles: [
                 { type: 'selection' },
-                { name: '工号', data: 'stateCode' },
-                { name: '应届生姓名', data: 'producer' },
+                { name: '标题', data: 'stateCode' },
+                { name: '发布人', data: 'producer' },
                 { name: '组别', data: 'producer' },
-                { name: '辅导时间', data: 'lastUpdateTime', type: 'time', time: '{y}-{m}-{d}' }
+                { name: '发布时间', data: 'lastUpdateTime', type: 'time' }
             ],
             tableData: datas.slice(0, 8),
             btn: {
