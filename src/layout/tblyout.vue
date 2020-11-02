@@ -10,7 +10,7 @@
         </div>
         <Sidebar class="nav-slide" />
       </div>
-      <div class="main-content fl1">
+      <div class="main-content fl1" :class="{'noPadding':!sidebar.opened}">
         <AppMain />
       </div>
     </div>
@@ -77,6 +77,9 @@ export default {
         .main-content{//内容部分
             overflow-y: auto;
             padding: 24px 24px 0 0;
+        }
+        .noPadding{
+            padding: 0;
         }
 
     }

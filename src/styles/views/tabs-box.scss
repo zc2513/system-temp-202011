@@ -1,0 +1,28 @@
+.tabs-box{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    ::v-deep{
+        .el-tabs__header{
+            margin: 0;
+        }
+        .el-tabs__nav{
+            .el-tabs__item{
+                padding: 0 24px;
+                height: 70px;
+                line-height: 70px;
+                color: #5F6266;
+                &.is-active{
+                    color: #6666FF;
+                }
+            }
+            .el-tabs__active-bar{
+                background-color: #6666FF;
+            }
+        }
+        .el-tabs__nav-wrap::after{
+            background-color:transparent;
+        }
+    }
+}

@@ -18,7 +18,7 @@
             />
           </el-select></div>
         <svg-icon icon-class="cUser" class="mr33 cursor f24" />
-        <svg-icon icon-class="cMsg" class="mr33 cursor f24" />
+        <svg-icon icon-class="cMsg" class="mr33 cursor f24" @click="$router.push('/notification/list')" />
         <svg-icon icon-class="cBack" class="mr33 cursor f24" @click="logout" />
       </div>
     </div>
