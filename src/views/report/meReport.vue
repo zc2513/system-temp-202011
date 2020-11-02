@@ -64,7 +64,7 @@
     </ts-calendar>
     <addReport ref="addDayReport" @planHelp="explain" @showPlan="showPlan" @ok="refreshDayReport" />
     <planDrawer v-if="showDrawer" ref="planDrawer" />
-    <lock v-if="showLock" ref="lock" @showPlan="showPlan" />
+    <lock ref="lock" @showPlan="showPlan" />
   </div>
 
 </template>
@@ -309,24 +309,22 @@ export default {
         openWeek(data) {
             var param = {
                 reportType: 2,
-                userGroupId: this.groupId,
+                groupId: this.groupId,
                 currentYear: data.currentYear,
                 currentWeek: data.week,
                 tsUserInfo: this.tsUserInfo
             }
-            this.showLock = true
             this.$refs.lock.show(param)
         },
         // 浏览月计划
         openMonth(data) {
             var param = {
                 reportType: 3,
-                userGroupId: this.groupId,
+                groupId: this.groupId,
                 currentYear: data.currentYear,
                 currentMonth: data.month,
                 tsUserInfo: this.tsUserInfo
             }
-            this.showLock = true
             this.$refs.lock.show(param)
         },
         // 浏览自定义计划

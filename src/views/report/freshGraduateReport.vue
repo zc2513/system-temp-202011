@@ -309,21 +309,27 @@ export default {
         // 点击了周计划中的菜单按钮
         clickWeekMenu(data) {
             console.log('menu------------', data)
-            data.item.currentYear = data.currentYear
-            this.openWeek(data.item)
+            if (data.menu.action === 'view') {
+                data.item.currentYear = data.currentYear
+                this.openWeek(data.item)
+            } else if (data.menu.action === 'add') {
+                this.addWeekMonthReport(data, 2)
+            }
         },
         // 点击了月计划中的菜单按钮
         clickMonthMenu(data) {
             console.log('menu------------', data)
             // TODO 判断菜单类型 决定操作
-            data.item.currentYear = data.currentYear
-            this.openMonth(data.item)
+            if (data.menu.action === 'view') {
+                data.item.currentYear = data.currentYear
+                this.openMonth(data.item)
+            } else if (data.menu.action === 'add') {
+                this.addWeekMonthReport(data, 3)
+            }
         },
-        // 新增自定义计划
+        // 新增日报
         addReport(param, current) {
-            console.log('增加日报', param, current)
-            // this.$refs.addDayPlan.planType = '自定义计划'
-            // this.$refs.addDayPlan.planTime = param
+            console.log('增加报高', param, current)
 
             const model = {
                 reportType: 1,
@@ -355,6 +361,39 @@ export default {
             // Object.assign(this.$refs.addDayPlan.form, model)
             this.$refs.addDayReport.show(model)
         },
+        addWeekMonthReport(param, reportType) {
+            console.log('增加报高', param, reportType)
+
+            const model = {
+                reportType: reportType,
+                reportContent: '',
+                year: this.currentYear,
+                quarter: this.currentSeason,
+                month: this.currentMonth,
+                week: this.currentWeek,
+                userId: this.userInfo.id,
+                username: this.tsUserInfo.userName,
+                realname: this.tsUserInfo.realName,
+                areaId: this.tsUserInfo.areaId,
+                areaName: this.tsUserInfo.areaName,
+                departId: this.tsUserInfo.dept[0].deptId,
+                departName: this.tsUserInfo.dept[0].deptName,
+                groupId: this.tsUserInfo.dept[0].groupList[0].groupId,
+                groupName: this.tsUserInfo.dept[0].groupList[0].groupName,
+                status: '1',
+                periodId: '1',
+                periodName: '2020届' // TODO 替换选择
+
+            }
+
+            // this.$refs.addDayPlan.visible = true
+
+            console.log('----------model', model)
+
+            // Object.assign(this.$refs.addDayPlan.form, model)
+            this.$refs.addDayReport.show(model)
+        },
+
         // 自定义计划说明文档
         explain(e) {
             console.log('计划id', e)

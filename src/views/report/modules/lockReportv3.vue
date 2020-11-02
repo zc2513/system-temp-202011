@@ -35,7 +35,7 @@
       <div class="info-con-right fl1 ml15 pb30">
         <z-header :title="`应届生${reportType}`" />
         <div class="name-tag flc-y">
-          <el-tag v-for="(item, index) in reports" :disabled="false" :key="index" class="mr10" size="medium" :effect=" item.reportInfo == null ?'light': index === reportIndex ? 'dark' : 'plain' " @click="clickReport(index)">{{ item.realname }} </el-tag>
+          <el-tag v-for="(item, index) in reports" :key="index" :disabled="false" class="mr10" size="medium" :effect=" index === reportIndex ? 'dark' : 'plain' " @click="clickReport(index)">{{ item.realname }} </el-tag>
         </div>
         <div class="name-tag flc-y">
           <el-tag v-for="(item, index) in plans" :key="index" class="mr10" size="medium" :effect=" index === planIndex ? 'dark' : 'plain' " @click="clickPlan(index)">计划{{ index + 1 }} </el-tag>
@@ -48,7 +48,7 @@
               </div>
             </smallTitle>
 
-            <smallTitle title="汇报评论" style="padding-bottom:50px;">
+            <smallTitle v-if="report.id != null " title="汇报评论" style="padding-bottom:50px;">
               <el-input
                 v-model="commentContent"
                 type="textarea"
@@ -61,7 +61,7 @@
                 <el-button size="mini" type="primary" @click="addPlanComment">提交</el-button>
               </div>
             </smallTitle>
-            <commentList ref="commentList" :reportid="report.id" />
+            <commentList v-if="report.id != null " ref="commentList" :reportid="report.id" />
           </div>
         </div>
       </div>
@@ -91,7 +91,9 @@ export default {
             plans: null,
             commentContent: '',
             tsUserInfo: null,
-            report: null
+            params1: null,
+            report: {},
+            reports: null
 
         }
     },
@@ -103,22 +105,24 @@ export default {
             switch (data.reportType) {
                 case 2:
                     this.reportType = '周报'
-                    this.planTime = data.currentYear + '年第' + data.currentWeek + '周'
+                    this.reportDate = data.currentYear + '年第' + data.currentWeek + '周'
+                    this.getWeekReport(data)
                     break
                 case 3:
                     this.reportType = '月报'
-                    this.planTime = data.currentYear + '年' + data.currentMonth + '月'
+                    this.reportDate = data.currentYear + '年' + data.currentMonth + '月'
+                    this.getMonthReport(data)
                     break
                 case 1:
                     this.reportType = '日报'
                     this.reportDate = data.createDate
+                    this.getDayReport(data)
                     break
 
                 default:
             }
             console.log(data, 9999)
-            this.getUserPlan(data)
-            this.getDayReport(data)
+
             // 发送请求拿到用户数据
         },
         async show(data) {
@@ -127,16 +131,36 @@ export default {
         },
 
         getUserPlan(data) {
-            var params = {
-                // planUserId: this.tsUserInfo.userId,
-                // year: parseTime(data.createDate, '{y}'),
-                // month: parseTime(data.createDate, '{m}'),
-                // day: parseTime(data.createDate, '{d}')
-                planUserId: this.tsUserInfo.userId,
-                year: parseTime(data.createDate, '{y}'),
-                month: 10,
-                day: 22
-            } // 查询条件
+            var params
+
+            switch (data.reportType) {
+                case 1:
+                    params = {
+                        planUserId: data.userId,
+                        year: data.year,
+                        month: data.month,
+                        day: data.day
+                    }
+                    break
+                case 2:
+                    params = {
+                        planUserId: data.userId,
+                        year: data.year,
+                        week: data.week
+
+                    }
+                    break
+                case 3:
+                    params = {
+                        planUserId: data.userId,
+                        year: data.year,
+                        month: data.month
+
+                    }
+                    break
+                default:
+                    break
+            }
 
             //       listp:'com.thundersoft.studentreport/fstFreshStudentPlan/queryListPlanInfo?planType=3&planUserId=e3517f1ca22245e897077a25b5a8c328&year=2020&month=10&week=&day=22',
 
@@ -148,7 +172,7 @@ export default {
             getSelfCutomPlan(params).then((res) => {
                 console.log('返回结果', res)
                 if (res.success) {
-                    console.log('正确返回结果', res)
+                    console.log('正确返回结果用户计划', res)
 
                     this.plans = res.result
                     if (this.plans.length > 0) {
@@ -162,7 +186,7 @@ export default {
                             }
                         })
                     }
-                    console.log('---------------------------------计划查询结果--------------------------------', this.myWeekPlan)
+                    console.log('---------------------------------计划查询结果--------------------------------', this.plans)
                     // }
                 }
                 if (res.code === 510) {
@@ -171,10 +195,32 @@ export default {
                 this.fetching = false
             })
         },
+        getWeekReport(data) {
+            console.log('查看周报----------------------------参数', data)
+            this.params1 = {
+                reportType: data.reportType,
+                year: data.currentYear,
+                groupId: data.groupId,
+                week: data.currentWeek
+
+            }
+            this.getReport(this.params1)
+        },
+        getMonthReport(data) {
+            console.log('查看月报--------------------------参数', data)
+            this.params1 = {
+                reportType: data.reportType,
+                year: data.currentYear,
+                groupId: data.groupId,
+                month: data.currentMonth
+
+            }
+            this.getReport(this.params1)
+        },
 
         getDayReport(data) {
             console.log('查看日报----------------------------参数', data)
-            var params = {
+            this.params1 = {
                 reportType: data.reportType,
                 year: parseTime(data.createDate, '{y}'),
                 groupId: data.userGroupId,
@@ -183,12 +229,16 @@ export default {
                 //    day: parseTime(data.createDate, '{d}')
 
             }
-            console.log('刘宝正确返回结888888888888888888果参数---------------------=========', params)
+            console.log('刘宝正确返回结888888888888888888果参数---------------------=========', this.params1)
+            this.getReport(this.params1)
             // 查询条件
-            listReport(params).then((res) => {
+        },
+        getReport(param) {
+            console.log('参数--------------------------------------------------------66666666666666', param)
+            listReport(param).then((res) => {
                 console.log('返回结果', res)
                 if (res.success) {
-                    console.log('日报确返回结果ffffffffffffffffff', res.result)
+                    console.log('报确返回结果ffffffffffffffffff', res.result)
 
                     this.reports = res.result
                     this.reportUser = this.reports[0]
@@ -196,9 +246,11 @@ export default {
                         this.report = this.reportUser.reportInfo
                     } else {
                         this.report = {
-                            reportContent:"没有汇报"
+                            reportContent: '没有汇报',
+                            id: null
                         }
                     }
+                    this.getUserPlan({ ...this.params1, userId: this.reportUser.id })
                 }
                 if (res.code === 510) {
                     this.$message.warning(res.message)
@@ -206,13 +258,12 @@ export default {
                 this.fetching = false
             })
         },
-
         addPlanComment() {
             var params = {
                 commentContent: this.commentContent,
                 commentType: this.commentType,
                 createDate: parseTime(new Date(), '{y}-{m}-{d}'),
-                freshStudentReportId: this.reportid,
+                freshStudentReportId: this.report.id,
                 realname: this.tsUserInfo.realName,
                 userId: this.tsUserInfo.userId,
                 username: this.tsUserInfo.userName
@@ -238,6 +289,16 @@ export default {
         },
         clickReport(index) {
             console.log('点击了汇报标签-------------------', this.reports)
+            this.reportUser = this.reports[index]
+            if (this.reportUser.reportInfo != null) {
+                this.report = this.reportUser.reportInfo
+            } else {
+                this.report = {
+                    reportContent: '没有汇报',
+                    id: null
+                }
+            }
+            this.getUserPlan({ ...this.params1, userId: this.reportUser.id })
             this.reportIndex = index
         },
         back() {

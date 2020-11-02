@@ -18,17 +18,17 @@
 
         <div class="list wfull">
           <div><span>汇报类型</span><span>{{ reportType }}</span></div>
-          <div><span>{{ reportType }}时间</span><span>{{ form.reportDate }}</span></div><br>
+          <div><span>{{ reportType }}时间</span><span>{{ reportTypeTitle }}</span></div><br>
           <div><span>提交人</span><span>{{ form.realname }}</span></div><br>
-          <div v-if=" form.reportType === 3 " style="width:40%"><span>地区</span><span>{{ form.areaName }}</span></div>
-          <div v-if=" form.reportType === 3 " style="width:80%"><span>组别</span><span>{{ form.departName }} {{ form.groupName }}</span></div>
+          <div style="width:40%"><span>地区</span><span>{{ form.areaName }}</span></div>
+          <div style="width:80%"><span>组别</span><span>{{ form.departName }} {{ form.groupName }}</span></div>
         </div>
 
       </div>
       <el-form ref="ruleForm" :model="form" label-width="80px" class="form-box">
-        <div v-if=" (form.reportType === 1 || form.reportType === 2) && showDialogVisible " class="skill fl mb20">
+        <!-- <div v-if=" (form.reportType === 3 || form.reportType === 2) && showDialogVisible " class="skill fl mb20">
           <select-student :user-id="userId" :show-button="false" :mult="multSelect" @changeUser="changeUser" />
-        </div>
+        </div> -->
         <!-- <div class=" skill  mb20">
 
           <el-form-item label="计划标题" prop="title">
@@ -81,6 +81,7 @@ export default {
             value1: [],
             areaText: '',
             reportType: '',
+            reportTypeTitle: '',
             skills: null,
             skillTypes: [],
             form: {
@@ -127,13 +128,17 @@ export default {
         init() {
             switch (this.form.reportType) {
                 case 1:
-                    this.reportType = '周报'
+                    this.reportType = '日报'
+                    this.reportTypeTitle = this.form.reportDate
                     break
                 case 2:
-                    this.reportType = '月报'
+                    this.reportType = '周报'
+                    this.reportTypeTitle = this.form.week + '周'
                     break
                 case 3:
-                    this.reportType = '日报'
+                    this.reportType = '月报'
+                    this.reportTypeTitle = this.form.month + '月'
+
                     break
                 default:
             }
