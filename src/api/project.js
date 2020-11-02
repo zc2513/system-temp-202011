@@ -119,6 +119,7 @@ export function getCalendarInfo(params) {
  * @return {*}
  */
 export function getSelfCutomPlan(params) {
+    params.periodId = '1'
     return request({
         url: url.zdylist,
         method: 'get',
@@ -134,6 +135,7 @@ export function getSelfCutomPlan(params) {
  * @return {*}
  */
 export function queryListGroupCustom(params) {
+    params.periodId = '1'
     return request({
         url: url.queryListGroupCustom,
         method: 'get',
@@ -149,6 +151,7 @@ export function queryListGroupCustom(params) {
  * @return {*}
  */
 export function queryListGroupWeek(params) {
+    params.periodId = '1'
     return request({
         url: url.queryListGroupWeek,
         method: 'get',
@@ -165,6 +168,7 @@ export function queryListGroupWeek(params) {
  * @return {*}
  */
 export function queryListGroupMonth(params) {
+    params.periodId = '1'
     return request({
         url: url.queryListGroupMonth,
         method: 'get',

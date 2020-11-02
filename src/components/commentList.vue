@@ -2,7 +2,7 @@
 <template>
   <div class="comment-box">
     <div class="line" />
-    <div class="plr24" style="color:#4E5C7A;"> 全部评论</div>
+    <div v-if=" comments.length>0" class="plr24 mb15" style="color:#4E5C7A;"> 全部评论</div>
     <ul class="plr24">
       <li
         v-for="(item,key) of comments"
@@ -43,6 +43,7 @@ export default {
             // required: true, //临时注释防止出错
             default: '1'
         }
+
     },
     data() {
         return {
