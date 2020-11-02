@@ -20,12 +20,14 @@ const notification = {
         {
             path: 'info',
             name: 'NotificationInfo',
+            hidden: true,
             component: () => import('@/views/notification/info'),
             meta: { title: '通知详情', icon: '' }
         },
         {
             path: 'list',
             name: 'NotificationList',
+            hidden: true,
             component: () => import('@/views/notification/list'),
             meta: { title: '消息列表', icon: '' }
         }
