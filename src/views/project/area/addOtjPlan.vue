@@ -5,32 +5,13 @@
       新建{{ title }}
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-      <el-form-item v-if="Number(type)===3&& objTag === 'b'" label="部门:" class="ml10" prop="department">
-        <el-select v-model="formInline.department" placeholder="请选择部门">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item v-if="Number(type)===3" label="团队:" class="ml10" prop="team">
-        <el-select v-model="formInline.team" placeholder="请选择团队">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="计划时间:" class="ml10" prop="time">
         2020-01-20～2020-02-20
       </el-form-item>
 
       <div class="list fl">
-        <div v-if="Number(type)===1">
+        <div>
           <span>地区:</span>
           <span>{{ formInline.address }}</span>
         </div>
@@ -43,8 +24,18 @@
           <span>{{ formInline.person }}</span>
         </div>
       </div>
+      <el-form-item v-if="title==='OJT团队计划'" label="团队:" class="ml10" prop="team">
+        <el-select v-model="formInline.team" placeholder="请选择团队">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item
-        v-if="title==='实训计划' || title==='正式入项计划'"
+        v-if="title==='实训计划' || title==='正式入项计划' || title==='OJT部门计划' || title==='OJT团队计划' "
         label="组别:"
         class="ml10"
         prop="time"

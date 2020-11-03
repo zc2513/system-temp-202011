@@ -1,5 +1,5 @@
 <template>
-  <!-- 时间段设置 -->
+  <!-- 时间段设置1-->
   <div class="hfull">
     <z-header title="时间阶段设置" class="mb15" />
     <el-form ref="ruleForm" :model="formData" :rules="rules" class="form-box plr24 mt15" label-width="120px">

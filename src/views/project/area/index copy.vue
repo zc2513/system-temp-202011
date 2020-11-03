@@ -1,4 +1,5 @@
 <template>
+  <!-- 已废弃 -->
   <div class="OJT-cls">
 
     <div class="box header flsb">

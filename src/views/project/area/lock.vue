@@ -16,15 +16,15 @@
       <div>
         <div class="info-con-left">
           <h4 class="f18">基本信息</h4>
-          <div v-if="Number(type)===1" class="con-item fl f14 mb25">
+          <div class="con-item fl f14 mb25">
             <div>区域</div>
             <div class="pl10">成都</div>
           </div>
-          <div v-if="Number(type)===2" class="con-item fl f14 mb25">
+          <div v-if="type==='OJT部门计划' || type==='OJT团队计划'" class="con-item fl f14 mb25">
             <div>部门</div>
             <div class="pl10">成都二部</div>
           </div>
-          <div v-if="Number(type)===3" class="con-item fl f14 mb25">
+          <div v-if="type==='OJT团队计划'" class="con-item fl f14 mb25">
             <div>团队</div>
             <div class="pl10">梦想权鉴</div>
           </div>
@@ -34,9 +34,7 @@
           </div>
           <div class="con-item fl f14 mb25">
             <div>计划类型</div>
-            <div v-if="Number(type)===1" class="pl10">OJT区域计划</div>
-            <div v-if="Number(type)===2" class="pl10">OJT部门计划</div>
-            <div v-if="Number(type)===3" class="pl10">OJT团队计划</div>
+            <div class="pl10">{{ type }}</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>计划时间</div>
@@ -46,9 +44,7 @@
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header v-if="Number(type)===1" title="OJT区域计划" />
-        <z-header v-if="Number(type)===2" title="OJT部门计划" />
-        <z-header v-if="Number(type)===3" title="OJT团队计划" />
+        <z-header :title="type" />
         <div class="student-info box mt15">
           <smallTitle title="计划详情">
             <div>

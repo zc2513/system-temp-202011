@@ -40,11 +40,9 @@
     </div>
 
     <!-- 新增弹出层 -->
-    <addOtjPlan ref="addOtjPlan" :title="typeName" :type="isTabActive" :obj-tag="objTag" />
+    <addOtjPlan ref="addOtjPlan" :title="typeName" />
     <!-- 详情弹出层 -->
-    <lock ref="lock" :type="isTabActive" />
-    <!-- 新增时间段 -->
-    <addTime ref="addTime" />
+    <lock ref="lock" :type="typeName" />
     <planDrawer ref="planDrawer" />
   </div>
 </template>
@@ -53,7 +51,6 @@
 import search from './search'
 import addOtjPlan from './addOtjPlan'
 import planDrawer from './planDrawer'
-import addTime from './addTime'
 import lock from './lock'
 // eslint-disable-next-line no-unused-vars
 import datas from '@/assets/json/data'
@@ -61,15 +58,14 @@ import datas from '@/assets/json/data'
 export default {
     name: 'Area',
     // eslint-disable-next-line vue/no-unused-components
-    components: { search, addOtjPlan, planDrawer, lock, addTime },
+    components: { search, addOtjPlan, planDrawer, lock },
     data() {
         return {
             activeName: '远程学习计划',
             objTag: 'a',
-            isTabActive: 1,
             time: '2020年1月-2020年6月', // 判断是否显示新增时间段的关键 2020年1月-2020年6月
             titles: [],
-            tableData: [],
+            tableData: datas.slice(0, 5),
             btn: {
                 title: '操作',
                 btnlist: [
@@ -82,30 +78,12 @@ export default {
         typeName() {
             let str = this.activeName
             if (this.activeName === 'OJT计划') {
-                if (this.objTag === 'a') str = '区域计划'
-                if (this.objTag === 'b') str = '部门计划'
-                if (this.objTag === 'c') str = '团队计划'
+                if (this.objTag === 'a') str = 'OJT区域计划'
+                if (this.objTag === 'b') str = 'OJT部门计划'
+                if (this.objTag === 'c') str = 'OJT团队计划'
             }
-            this.tableTitle(this.isTabActive)
+            this.tableTitle(str)
             return str
-        }
-    },
-    watch: {
-        isTabActive: {
-            handler(val) {
-                if (!val) return
-                if (val === 3) {
-                    this.objTag = 'a'
-                }
-                this.titles = this.tableTitle(val)
-            },
-            immediate: true
-        },
-        objTag: {
-            handler(val) {
-                if (this.isTabActive === 3) this.titles = this.tableTitle(3)
-            },
-            immediate: true
         }
     },
     created() {
@@ -120,22 +98,17 @@ export default {
         tableTitle(type) { // 表格数据处理
             let titles = [
                 { name: '计划标题', data: 'cName' },
-                { name: '提交人职级', data: 'stateCode' },
+                { name: '提交人角色', data: 'stateCode' },
                 { name: '提交人', data: 'producer' },
                 { name: '计划时间', data: 'lastUpdateTime', type: 'time', time: '{y}-{m}-{d} ~ {h}:{i}:{s}' }
             ]
-            if (type === 1) {
-                titles = [{ name: '集训', data: 'organizationName' }, ...titles]
+            if (type === '远程学习计划' || type === '集训计划') {
+                titles = [{ name: '区域', data: 'organizationName' }, ...titles]
             }
-            if (type === 2) {
-                titles = [{ name: '实训', data: 'organizationName' }, ...titles]
+            if (type === '实训计划' || type === 'OJT区域计划' || type === '正式入项计划' || type === 'OJT部门计划' || type === 'OJT团队计划') {
+                titles = [{ name: '组别', data: 'organizationName' }, ...titles]
             }
-            if (type === 3) {
-                if (this.objTag === 'a') titles = [{ name: '区域', data: 'organizationName' }, ...titles]
-                if (this.objTag === 'b') titles = [{ name: '部门', data: 'organizationName' }, ...titles]
-                if (this.objTag === 'c') titles = [{ name: '团队', data: 'organizationName' }, ...titles]
-            }
-            return titles
+            this.titles = titles
         },
         addPlan() { // 新建计划
             this.$refs.addOtjPlan.show()
@@ -145,11 +118,7 @@ export default {
             if (type === '查看') {
                 this.$refs.lock.show()
             }
-            console.log(type)
             console.log(data)
-        },
-        addTime() { // 新增时间段
-            this.$refs.addTime.show()
         }
 
     }

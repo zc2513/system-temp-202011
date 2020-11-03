@@ -1,4 +1,5 @@
 <template>
+  <!-- 已废弃 -->
   <!-- OTJ新建计划/区域、部门、团队 -->
   <el-dialog :visible.sync="showDialogVisible" width="30%" class="addPlan">
     <div slot="title" class="flc-y dialog-header">制定时间段</div>

@@ -15,14 +15,14 @@
 
       <div v-else>
         <search />
-        <div>
+        <div class="mb15">
           <el-button type="primary" class="ml20" @click="addSave">新建</el-button>
         </div>
-        <div class="selectedTitle plr24 flc-y mt15 c-56 f14">
+        <!-- <div class="selectedTitle plr24 flc-y mt15 c-56 f14">
           已选择
           <span class="c-66f pl5 pr5"> 0 </span>项
           <span class="c-66f ml25 cursor">清空</span>
-        </div>
+        </div> -->
 
         <z-table
           :titles="titles"
@@ -61,7 +61,7 @@ export default {
                 btnlist: [
                     { con: '查看', type: 'text' },
                     { con: '编辑', type: 'text' },
-                    { con: '删除', type: 'text', style: { color: '#FF5633' }}
+                    { con: '发布', type: 'text', style: { color: '#FF5633' }}
                 ]
             }
         }

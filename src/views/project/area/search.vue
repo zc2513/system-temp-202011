@@ -1,16 +1,6 @@
 <template>
   <el-form ref="ruleForm" :inline="true" :model="formInline" class="form-box">
-    <el-form-item v-if="Number(type)===3" label="团队:" class="ml10" prop="team">
-      <el-select v-model="formInline.team" placeholder="请选择团队">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
-    </el-form-item>
-    <el-form-item v-if="Number(type)===2" label="部门:" class="ml10" prop="department">
+    <el-form-item v-if="type==='实训计划'" label="组别:" class="ml10" prop="time">
       <el-select v-model="formInline.department" placeholder="请选择部门">
         <el-option
           v-for="item in options"
@@ -20,15 +10,18 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="计划时间:" class="ml10" prop="time">
-      <el-date-picker
-        v-model="formInline.time"
-        type="date"
-        placeholder="请选择时间"
-      />
+    <el-form-item v-if="type==='远程学习计划' || type==='集训计划' || type==='OJT计划' || type==='正式入项计划' " label="区域:" class="ml10" prop="time">
+      <el-select v-model="formInline.department" placeholder="请选择部门">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
     </el-form-item>
-    <el-form-item label="提交人职级:" class="ml10" prop="leve">
-      <el-select v-model="formInline.leve" placeholder="请选择">
+    <el-form-item v-if="type==='实训计划' || type==='OJT计划' || type==='正式入项计划' " label="提交人角色:" class="ml10" prop="person">
+      <el-select v-model="formInline.person" placeholder="请选择提交人">
         <el-option
           v-for="item in options"
           :key="item.value"
