@@ -3,7 +3,7 @@
   <el-popover
     placement="bottom"
     width="320"
-    trigger="click"
+    trigger="hover"
     popper-class="notification-pop fl-y-sb"
   >
     <el-tabs v-model="activeName" class="el-tabs-cls" stretch>

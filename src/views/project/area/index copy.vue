@@ -1,46 +1,56 @@
 <template>
-  <div class="area-cls">
+  <div class="OJT-cls">
 
-    <el-tabs v-model="activeName" class="el-tabs-cls box mb15">
-      <el-tab-pane label="远程学习计划" name="远程学习计划" />
-      <el-tab-pane label="集训计划" name="集训计划" />
-      <el-tab-pane label="实训计划" name="实训计划" />
-      <el-tab-pane label="OJT计划" name="OJT计划" />
-      <el-tab-pane label="正式入项计划" name="正式入项计划" />
-    </el-tabs>
+    <div class="box header flsb">
+      <div class="hfull flc-y left">
+        <div class="tab-title hfull fl">
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===1}" @click="isTabActive=1"> 集训计划 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===2}" @click="isTabActive=2"> 实训计划 </div>
+          <div class="hfull cursor flc-y" :class="{'active':isTabActive===3}" @click="isTabActive=3"> OJT计划 </div>
+        </div>
+      </div>
+    </div>
 
-    <div v-if="activeName==='OJT计划'" class="obj-tag flc-y" style="height:70px;">
+    <div v-if="isTabActive===3" class="obj-tag flc-y plr24" style="height:70px;">
       <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'a' ? 'dark':'plain'" @click="objTag='a'">OJT区域计划</el-tag>
       <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'b' ? 'dark':'plain'" @click="objTag='b'">OJT部门计划</el-tag>
       <el-tag class="mr20 cursor" size="medium" :effect=" objTag === 'c' ? 'dark':'plain'" @click="objTag='c'">OJT团队计划</el-tag>
     </div>
 
-    <div class="main" :class="{'isobj':activeName==='OJT计划'}">
-      <z-header is-line>
+    <div v-if="isTabActive && time" class="box mt15">
+      <z-header>
         <div slot="title" class="f14" style="color:#5F6266;">
-          {{ typeName }}时间：{{ time }}
+          OJT{{ typeName }}计划时间段：{{ time }}
         </div>
         <div v-if="tableData.length">
-          <search :type="activeName" />
+          <search :type="isTabActive" />
         </div>
       </z-header>
-
       <div v-if="tableData.length" class="plr24 mb30">
-        <el-button size="mini" type="primary" @click="addPlan(activeName)">新建</el-button>
+        <el-button size="mini" type="primary" @click="addPlan(isTabActive)">新建</el-button>
         <z-table :titles="titles" :btns="btn" :lists="tableData" align="left" class="mt15" @sendVal="getVal" />
       </div>
-      <div v-else class="flcc c-66f" style="margin-top:200px;">
-        <div style="margin-bottom:60px;" class="cursor" @click="addPlan(activeName)">
+      <div v-else class="flcc" style="height:660px;color:#66f;">
+        <div style="margin-bottom:60px;" class="cursor" @click="addPlan(isTabActive)">
           <z-circle size="120" color="#F4F7FA" class="mb20">
             <svg-icon icon-class="add" class="f30" style="color:#66f;" />
           </z-circle>
-          <div class="wfull t-c">新建{{ typeName }}</div>
+          <div class="wfull t-c">新建{{ typeName }}计划</div>
         </div>
       </div>
     </div>
 
+    <div v-else class="mt15 box flcc" style="height:734px;color:#66f;">
+      <div style="margin-bottom:60px;" @click="addTime">
+        <z-circle size="120" color="#F4F7FA" class="mb20 cursor">
+          <svg-icon icon-class="add" class="f30" style="color:#66f;" />
+        </z-circle>
+        <div class="wfull t-c">请先定制时间段</div>
+      </div>
+    </div>
+
     <!-- 新增弹出层 -->
-    <addOtjPlan ref="addOtjPlan" :title="typeName" :type="isTabActive" :obj-tag="objTag" />
+    <addOtjPlan ref="addOtjPlan" :type="isTabActive" :obj-tag="objTag" />
     <!-- 详情弹出层 -->
     <lock ref="lock" :type="isTabActive" />
     <!-- 新增时间段 -->
@@ -60,16 +70,14 @@ import datas from '@/assets/json/data'
 
 export default {
     name: 'Area',
-    // eslint-disable-next-line vue/no-unused-components
     components: { search, addOtjPlan, planDrawer, lock, addTime },
     data() {
         return {
-            activeName: '远程学习计划',
             objTag: 'a',
             isTabActive: 1,
             time: '2020年1月-2020年6月', // 判断是否显示新增时间段的关键 2020年1月-2020年6月
             titles: [],
-            tableData: [],
+            tableData: datas,
             btn: {
                 title: '操作',
                 btnlist: [
@@ -80,11 +88,14 @@ export default {
     },
     computed: {
         typeName() {
-            let str = this.activeName
-            if (this.activeName === 'OJT计划') {
-                if (this.objTag === 'a') str = '区域计划'
-                if (this.objTag === 'b') str = '部门计划'
-                if (this.objTag === 'c') str = '团队计划'
+            let str = '集训'
+            if (this.isTabActive === 2) {
+                str = '实训'
+            }
+            if (this.isTabActive === 3) {
+                if (this.objTag === 'a') str = '区域'
+                if (this.objTag === 'b') str = '部门'
+                if (this.objTag === 'c') str = '团队'
             }
             this.tableTitle(this.isTabActive)
             return str
@@ -108,15 +119,7 @@ export default {
             immediate: true
         }
     },
-    created() {
-        this.init()
-    },
     methods: {
-        init() {
-            const istrue = true
-            // 1.请求数据 判断是否存在时间段 如果不存在则跳转时间段添加页面
-            if (!istrue) { this.$router.push('areasetting') }
-        },
         tableTitle(type) { // 表格数据处理
             let titles = [
                 { name: '计划标题', data: 'cName' },
@@ -157,17 +160,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/views/tabs-box.scss';
-.area-cls{
-    height: 100%;
-    .main{
-        min-height: calc(100% - 110px);
-        background: #ffffff;
-        border-radius: 6px;
-        &.isobj{
-            min-height: calc(100% - 180px);
-        }
-    }
+.OJT-cls{
     .header{ //顶部
         height: 70px;
         color: #5F6266;
