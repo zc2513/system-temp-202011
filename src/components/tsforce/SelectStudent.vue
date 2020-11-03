@@ -201,10 +201,22 @@ export default {
         },
         changeUser(e) {
             console.log('000000000000000000000000000000000000000', this.selectUser, this.users)
-            var user = this.users.filter(e => {
-                return e.id === this.selectUser
-            })
-            this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode, this.users.length)
+            var user = []
+            if (!this.mult) {
+                user = this.users.filter(e => {
+                    return e.id === this.selectUser
+                })
+                console.log('1111111111111111111111111111111111111111', this.selectUser, this.users, user)
+                this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode, this.users.length)
+            } else {
+                this.users.forEach(item => {
+                    if (this.selectUser.includes(item.id)) {
+                        user.push(item)
+                    }
+                })
+                console.log('11111111111111111111100000000000001111111111111111111', this.selectUser, this.users, user)
+                this.$emit('changeUser', this.selectorg, user, this.selectOrgName, this.selectNode, this.users.length)
+            }
         },
         reset() {
             this.users = []

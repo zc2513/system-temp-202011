@@ -7,39 +7,23 @@
     <div class="list fl">
       <div>
         <span>辅导员姓名:</span>
-        <span>{{ formInline.person }}</span>
+        <span>{{ formInline.realname }}</span>
       </div>
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-      <el-form-item label="组别:" class="ml10" prop="group">
-        <el-select v-model="formInline.group" placeholder="请选择组别">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+      <el-form-item class="ml10" prop="time">
+        <select-student ref="selectStu" :user-id="formInline.userId" :show-button="false" :selected="false" :mult="true" @changeUser="changeUser" />
       </el-form-item>
+
       <el-form-item label="辅导时间:" class="ml10" prop="time">
         <el-date-picker
-          v-model="formInline.time"
+          v-model="formInline.startTime"
+          :disabled=" type != 1 "
           type="date"
           placeholder="请选择时间"
-          value-format="timestamp"
         />
       </el-form-item>
-      <el-form-item label="应届生:" class="ml10" prop="student">
-        <el-select v-model="formInline.student" multiple filterable reserve-keyword placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="计划内容:" class="ml10" prop="content">
+      <el-form-item label="辅导内容:" class="ml10" prop="content">
         <el-input
           v-model="formInline.content"
           type="textarea"
@@ -59,7 +43,14 @@
 </template>
 
 <script>
+import SelectStudent from '@/components/tsforce/SelectStudent.vue'
+import { saveCoach, listCoach, coachQueryById, deleteCoach } from '@/api/coach'
+import { parseTime } from '@/utils/filter'
+
 export default {
+    components: {
+        SelectStudent
+    },
     props: {
         type: {
             type: [String, Number],
@@ -74,32 +65,32 @@ export default {
         return {
             showDialogVisible: false,
             formInline: {
-                group: '',
-                student: '',
-                time: '',
-                person: '张三',
-                content: ''
+                content: '',
+                areaId: '',
+                areaName: '',
+                departId: '',
+                departName: '',
+                endTime: '',
+                // fstCounselorRecordStudentVOList	[...]
+                groupId: '',
+                groupName: '',
+                periodId: '1',
+                realname: '',
+                startTime: '',
+                status: '-1',
+                userId: '',
+                username: ''
             },
-            options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双奶皮' },
-                { value: '选项4', label: '双皮奶' },
-                { value: '选项5', label: '皮双奶' },
-                { value: '选项3', label: '蚵仔煎' }
-            ],
-            areaText: ''
+            areaText: '',
+            selectOrg: null,
+            selectOrgName: null,
+            selectUser: []
         }
     },
     methods: {
         show(data) {
             if (data) {
-                this.formInline = {
-                    content: '范德萨发生',
-                    group: '选项2',
-                    person: '张三',
-                    student: ['选项5'],
-                    time: 1603641600000
-                }
+                Object.assign(this.formInline, data)
             }
             this.showDialogVisible = true
         },
@@ -110,9 +101,9 @@ export default {
                 this.$refs.ruleForm.validate((valid) => {
                     if (valid) return false
 
-                    // 通过逻辑处理
-                    const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                    console.log(uri, '提交地址')
+                    // // 通过逻辑处理
+                    // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                    // console.log(uri, '提交地址')
                     this.postData()
                 })
             } else {
@@ -122,9 +113,73 @@ export default {
         },
         postData() {
             // 数据提交
+            switch (this.type) {
+                case 1: // 新增
+                    this.formInline.startTime = parseTime(this.formInline.startTime, '{y}-{m}-{d}')
+
+                    this.formInline.fstCounselorRecordStudentVOList = this.selectUser
+                    console.log('保存辅导-------------------------------->', this.formInline)
+                    this.saveCoach()
+                    break
+                case 2: // 编辑
+                    var data = {
+                        id: this.formInline.id,
+                        content: this.formInline.content
+                    }
+                    this.saveCoach(data)
+                    break
+                default:
+                    break
+            }
+        },
+        saveCoach(data) {
+            if (data) {
+                saveCoach(data).then(res => {
+                    if (res.success) {
+                        console.log('返回结果000000000000000000000000', res)
+                        this.$message.success(res.message)
+                        this.showDialogVisible = false
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                        this.showDialogVisible = false
+                    }
+                })
+            } else {
+                saveCoach(this.formInline).then(res => {
+                    if (res.success) {
+                        this.$message.success(res.message)
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                    }
+                    this.showDialogVisible = false
+                    console.log('返回结果', res)
+                })
+            }
         },
         resetForm(formName) {
             this.$refs[formName].resetFields()
+        },
+        changeUser(selectorg, selectUser, selectOrgName, selectNode, userCount) {
+            this.selectOrg = selectorg
+            this.selectOrgName = selectOrgName
+
+            console.log('选中的用户组织架构与用户', selectUser)
+            if (selectOrgName.length > 0) {
+                this.formInline.areaId = selectorg[0]
+                this.formInline.areaName = selectOrgName[0]
+                this.formInline.departId = selectorg[1]
+                this.formInline.departName = selectOrgName[1]
+                this.formInline.groupId = selectorg[2]
+                this.formInline.groupName = selectOrgName[2]
+            }
+            if (selectUser != null && selectUser.length > 0) {
+                this.selectUser = []
+                selectUser.forEach(val => {
+                    this.selectUser.push({ userId: selectUser.id })
+                })
+            }
         }
 
     }
