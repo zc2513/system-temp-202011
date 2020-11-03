@@ -1,13 +1,19 @@
 <template>
-  <div class="hfull" style="padding:40px;">
+  <div style="padding:40px;">
     <editor v-model="content" />
+
+    <div class="flcc">
+      <notificationPop />
+    </div>
+
   </div>
 </template>
 
 <script>
 import editor from '@/components/editor'
+import notificationPop from '@/layout/tblyout/notification-pop'
 export default {
-    components: { editor },
+    components: { editor, notificationPop },
     data() {
         return {
             content: '<p>范德萨发fdsfkldjafkldsjfldjsflk</p>'

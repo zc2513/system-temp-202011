@@ -2,7 +2,7 @@
   <div class="list-page flcc">
     <div class="mian">
       <div class="tabs-box box">
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" class="el-tabs-cls">
           <el-tab-pane label="全部消息" name="all" />
           <el-tab-pane label="公告通知" name="tz" />
           <el-tab-pane label="系统消息" name="sys" />
