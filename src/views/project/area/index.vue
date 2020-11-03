@@ -87,11 +87,12 @@ export default {
         }
     },
     created() {
-        this.init()
+        console.log(this.$route, 666)
+        this.init(this.$route.params.istrue)
     },
     methods: {
-        init() {
-            const istrue = true
+        init(val) {
+            const istrue = val
             // 1.请求数据 判断是否存在时间段 如果不存在则跳转时间段添加页面
             if (!istrue) { this.$router.push('areasetting') }
         },

@@ -94,7 +94,12 @@ export default {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
                     // 1.提交成功后跳转 区域计划页面
-                    this.$router.push('/project/area')
+                    this.$router.push({
+                        name: 'Area',
+                        params: {
+                            istrue: true
+                        }
+                    })
                 } else {
                     console.log(this.formData, '111')
                     return false
