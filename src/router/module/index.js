@@ -22,9 +22,6 @@ export { default as courseware } from './courseware'
 // 系统设置
 export { default as system } from './system'
 
-// 监督节点设置
-export { default as setting } from './setting'
-
 // 通知管理
 export { default as notification } from './notification'
 

@@ -2,7 +2,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
+    background-color: #fff; 
+}
+.el-tabs-cls{
     ::v-deep{
         .el-tabs__header{
             margin: 0;

@@ -39,3 +39,10 @@
     margin: 0;
     span:focus { outline: 0; }
 }
+
+
+// 全局按钮颜色设置 按照type区分
+
+.el-button--primary{
+    background-color: #6666FF;
+}

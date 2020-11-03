@@ -2,28 +2,9 @@
   <!-- OTJ新建计划/区域、部门、团队 -->
   <el-dialog :visible.sync="showDialogVisible" class="addPlan">
     <div slot="title" class="flc-y dialog-header">
-      <span v-if="Number(type)===1">集训计划</span>
-      <span v-if="Number(type)===2">实训计划</span>
-      <span v-if="Number(type)===3 && objTag === 'a'">OJT区域计划</span>
-      <span v-if="Number(type)===3 && objTag === 'b'">OJT部门计划</span>
-      <span v-if="Number(type)===3 && objTag === 'c'">OJT团队计划</span>
-    </div>
-    <div class="list fl">
-      <div v-if="Number(type)===1">
-        <span>地区:</span>
-        <span>{{ formInline.address }}</span>
-      </div>
-      <div>
-        <span>提交人职级:</span>
-        <span>{{ formInline.rank }}</span>
-      </div>
-      <div>
-        <span>提交人:</span>
-        <span>{{ formInline.person }}</span>
-      </div>
+      新建{{ title }}
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-
       <el-form-item v-if="Number(type)===3&& objTag === 'b'" label="部门:" class="ml10" prop="department">
         <el-select v-model="formInline.department" placeholder="请选择部门">
           <el-option
@@ -45,11 +26,37 @@
         </el-select>
       </el-form-item>
       <el-form-item label="计划时间:" class="ml10" prop="time">
-        <el-date-picker
-          v-model="formInline.time"
-          type="date"
-          placeholder="请选择时间"
-        />
+        2020-01-20～2020-02-20
+      </el-form-item>
+
+      <div class="list fl">
+        <div v-if="Number(type)===1">
+          <span>地区:</span>
+          <span>{{ formInline.address }}</span>
+        </div>
+        <div>
+          <span>提交人职级:</span>
+          <span>{{ formInline.rank }}</span>
+        </div>
+        <div>
+          <span>提交人:</span>
+          <span>{{ formInline.person }}</span>
+        </div>
+      </div>
+      <el-form-item
+        v-if="title==='实训计划' || title==='正式入项计划'"
+        label="组别:"
+        class="ml10"
+        prop="time"
+      >
+        <el-select v-model="formInline.team" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="计划内容:" class="ml10" prop="content">
         <el-input
@@ -77,6 +84,10 @@ export default {
             type: [String, Number],
             default: 1
         },
+        title: {
+            type: String,
+            default: '默认标题'
+        },
         objTag: {
             type: String,
             default: 'a'
@@ -84,7 +95,6 @@ export default {
     },
     data() {
         return {
-            title: '新建OJT区域计划',
             showDialogVisible: false,
             formInline: {
                 team: '',

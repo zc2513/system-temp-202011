@@ -18,7 +18,7 @@
             />
           </el-select></div>
         <svg-icon icon-class="cUser" class="mr33 cursor f24" />
-        <svg-icon icon-class="cMsg" class="mr33 cursor f24" @click="$router.push('/notification/list')" />
+        <notificationPop class="mr33" />
         <svg-icon icon-class="cBack" class="mr33 cursor f24" @click="logout" />
       </div>
     </div>
@@ -27,8 +27,9 @@
 
 <script>
 import Breadcrumb from '@/components/Breadcrumb'
+import notificationPop from './notification-pop'
 export default {
-    components: { Breadcrumb },
+    components: { Breadcrumb, notificationPop },
     data() {
         return {
             periods: [

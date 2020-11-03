@@ -41,7 +41,14 @@ const project = {
             name: 'demo',
             component: () => import('@/views/project/demo'),
             meta: { title: 'demo', icon: '' }
+        },
+        {
+            path: 'areasetting',
+            name: 'AreaSetting',
+            component: () => import('@/views/project/area/setting'),
+            meta: { title: '区域计划设置', icon: '' }
         }
+
         // {
         //     path: 'me',
         //     name: 'Me',
