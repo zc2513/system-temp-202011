@@ -9,23 +9,43 @@
         <span>辅导员姓名:</span>
         <span>{{ formInline.realname }}</span>
       </div>
-    </div>
-    <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-      <el-form-item class="ml10" prop="time">
-        <select-student ref="selectStu" :user-id="formInline.userId" :show-button="false" :selected="false" :mult="true" @changeUser="changeUser" />
-      </el-form-item>
+      <div>
+        <span>组别:</span>
+        <span style="width:200px">{{ formInline.groupName }}</span>
+      </div>
 
-      <el-form-item label="辅导时间:" class="ml10" prop="time">
-        <el-date-picker
-          v-model="formInline.startTime"
-          :disabled=" type != 1 "
-          type="date"
-          placeholder="请选择时间"
-        />
-      </el-form-item>
+    </div>
+    <div class="list fl">
+
+      <div>
+        <span>应届生姓名:</span>
+        <span>{{ formInline.realname }}</span>
+      </div>
+      <div>
+        <span>辅导时间:</span>
+        <span>{{ formInline.startTime }}</span>
+      </div>
+    </div>
+
+    <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
+      <div v-if=" type ===1">
+        <el-form-item :v-if=" !(type == 1) " class="ml10" prop="time"> {{ type==1 }}
+          <select-student ref="selectStu" :user-id="formInline.userId" :show-button="false" :selected="false" :mult="true" @changeUser="changeUser" />
+        </el-form-item>
+
+        <el-form-item :v-if=" type === 1 " label="辅导时间:" class="ml10" prop="time">
+          <el-date-picker
+            v-model="formInline.startTime"
+
+            type="date"
+            placeholder="请选择时间"
+          />
+        </el-form-item>
+      </div>
       <el-form-item label="辅导内容:" class="ml10" prop="content">
         <el-input
           v-model="formInline.content"
+          :disabled=" !(type === 1)"
           type="textarea"
           placeholder="请输入内容"
           maxlength="500"
@@ -34,9 +54,10 @@
         />
       </el-form-item>
     </el-form>
+
     <span slot="footer">
       <el-button @click="showDialogVisible = false">取 消</el-button>
-      <el-button @click="submitForm(false)">暂存</el-button>
+      <el-button v-if="type === 1" @click="submitForm(false)">暂存</el-button>
       <el-button type="primary" @click="submitForm(true)">确 定</el-button>
     </span>
   </el-dialog>
@@ -126,6 +147,7 @@ export default {
                         id: this.formInline.id,
                         content: this.formInline.content
                     }
+                    console.log('保存辅导-----修改--------------------------->', data)
                     this.saveCoach(data)
                     break
                 default:

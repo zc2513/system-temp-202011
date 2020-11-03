@@ -104,7 +104,8 @@ export default {
                 })
             }
             if (type === '详情') {
-                this.$refs.lock.show()
+                this.viewCoach(v)
+                // this.$refs.lock.show()
             }
         },
         // 进入页面首先加载的内容
@@ -159,12 +160,28 @@ export default {
                 content: v.data.content,
 
                 //  startTime: new Date(),
-                realname: v.data.realname, 
-                id: v.data.content.id,
-                startTime: v.data.content.startTime
+                realname: v.data.realname,
+                id: v.data.id,
+                groupName: v.data.areaName + ' ' + v.data.departName + ' ' + v.data.groupName,
+                startTime: v.data.startTime
 
             }
-            this.type = 1
+            this.type = 2
+            this.$refs.addAsEdit.show(formInline)
+        },
+        viewCoach(v) {
+            var formInline = {
+
+                content: v.data.content,
+
+                //  startTime: new Date(),
+                realname: v.data.realname,
+                id: v.data.id,
+                groupName: v.data.areaName + ' ' + v.data.departName + ' ' + v.data.groupName,
+                startTime: v.data.startTime
+
+            }
+            this.type = 3
             this.$refs.addAsEdit.show(formInline)
         },
         deleteCoach(v) {
