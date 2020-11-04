@@ -27,6 +27,7 @@ const project = {
         {
             path: 'ojt',
             name: 'OJT',
+            hidden: true,
             component: () => import('@/views/project/OJT/index'),
             meta: { title: 'OJT计划', icon: '' }
         },

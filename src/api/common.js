@@ -2,96 +2,50 @@
 import request from '@/utils/request'
 
 /**
- * @description 获取年
+ * @description 评论添加的
  * @author zc2513
- * @date 2020-09-19
+ * @date 04/11/2020
  * @export
  * @param {*} data
- * @returns
- */
-export function getDicYear(data) {
-    return request({
-        url: '/superviseBase/baseSvc/getDicYear',
-        method: 'get',
-        data
-    })
-}
-
-/**
- * @description 获取行业门类字典
- * @author zc2513
- * @date 2020-09-19
- * @export
- * @param {*} data
- * @returns
- */
-export function getDicIndustryClass() {
-    return request({
-        url: '/superviseBase/baseSvc/getDicIndustryClass',
-        method: 'get'
-    })
-}
-
-/**
- * @description 获取平台类型
- * @author zc2513
- * @date 2020-09-19
- * @export
- * @param {*} data
- * @returns
- */
-export function getPlatTypeList() {
-    return request({
-        url: '/superviseBase/baseSvc/getPlatTypeList',
-        method: 'get'
-    })
-}
-
-/**
- * @description 获取省
- * @author zc2513
- * @date 2020-09-19
- * @export
- * @param {*} data
- * @returns
- */
-export function getRegionList(data) {
-    return request({
-        url: '/superviseBase/baseSvc/getRegionList',
-        method: 'post',
-        data
-    })
-}
-
-/**
- * @description 获取市
- * @author zc2513
- * @date 2020-09-19
- * @export
- * @param {*} data
- * @returns
+ * @return {*}
  */
 export function getRegionFullName(data) {
     return request({
-        url: '/superviseBase/baseSvc/getRegionFullName',
+        url: '/com.thundersoft.studentreport/fstFreshStudentReportComment/add',
         method: 'post',
         data
     })
 }
 
 /**
- * @description 项目进度列表
+ * @description 通过用户ID查询 区域、部门、分组信息.
  * @author zc2513
- * @date 2020-09-19
+ * @date 04/11/2020
  * @export
- * @param {*} data
+ * @param {*} params
  * @returns
  */
-export function getProjProgressList(data) {
+export function queryArearDeptGroupById(params) {
     return request({
-        url: '/superviseBase/baseSvc/getProjProgressList',
+        url: '/com.thundersoft.system/sysGroupInfo/queryArearDeptGroupById',
         method: 'get',
-        data
+        params
+    })
+}
+
+/**
+ * @description 通过分组id查询用户id、账号、用户姓名.
+ * @author zc2513
+ * @date 04/11/2020
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function queryUserBaseByGroupId(params) {
+    return request({
+        url: '/com.thundersoft.system/sysGroupInfo/queryUserBaseByGroupId',
+        method: 'get',
+        params
     })
 }
 
