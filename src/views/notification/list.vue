@@ -1,6 +1,6 @@
 <template>
   <div class="list-page flcc">
-    <div class="mian">
+    <div class="mian" :class="{'wf':!isfull}">
       <div class="tabs-box box">
         <el-tabs v-model="activeName" class="el-tabs-cls">
           <el-tab-pane label="全部消息" name="all" />
@@ -97,6 +97,16 @@ export default {
         padding: 24px 40px 0;
         width: 80%;
         height: 96%;
+        &.wf{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            .content-list{
+                min-height:calc(100% - 93px);
+                margin: 0;
+            }
+        }
+
         .all-read-btn{
             width: 88px;
             height: 32px;

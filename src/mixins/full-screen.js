@@ -1,8 +1,14 @@
 export default {
+    props: {
+        isfull: {
+            type: Boolean,
+            default: true
+        }
+    },
     created() {
-        this.$store.dispatch('app/toggleLeft', 0)
+        if (this.isfull) this.$store.dispatch('app/toggleLeft', 0)
     },
     beforeDestroy() {
-        this.$store.dispatch('app/toggleLeft', 1)
+        if (this.isfull) this.$store.dispatch('app/toggleLeft', 1)
     }
 }
