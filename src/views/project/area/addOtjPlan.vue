@@ -50,7 +50,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="计划标题:" class="ml10" prop="content">
-        <el-input v-model="input" placeholder="请输入标题" />
+        <el-input v-model="formInline.content" placeholder="请输入标题" />
       </el-form-item>
       <el-form-item label="计划内容:" class="ml10" prop="content">
         <el-input
