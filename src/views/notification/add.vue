@@ -11,8 +11,8 @@
       <el-form-item label="计划内容:" class="ml10" prop="msgContent">
         <editor v-model="formInline.msgContent" />
       </el-form-item>
-      <el-form-item label="接收人:" class="ml10" prop="person">
-        <el-select v-model="formInline.person" multiple filterable reserve-keyword placeholder="请选择">
+      <el-form-item label="接收人:" class="ml10" prop="userIds">
+        <el-select v-model="formInline.userIds" multiple filterable reserve-keyword placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -32,6 +32,7 @@
 
 <script>
 import editor from '@/components/editor'
+import { mapState } from 'vuex'
 export default {
     components: { editor },
     props: {
@@ -44,13 +45,15 @@ export default {
             default: 'a'
         }
     },
+
     data() {
         return {
             showDialogVisible: false,
             formInline: {
                 title: '',
                 msgContent: '',
-                person: []
+                userIds: '',
+                createBy: ''
             },
             options: [
                 { value: '选项1', label: '黄金糕' },
@@ -73,6 +76,9 @@ export default {
             }
         }
     },
+    computed: {
+        ...mapState('user', ['userInfo'])
+    },
     methods: {
         show(data) {
             this.showDialogVisible = true
@@ -80,6 +86,7 @@ export default {
         submitForm(status) {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return
+                this.formInline.createBy = this.userInfo.updateBy
                 // 1.请求处理
                 // 2.刷新父组件页面数据
                 this.$parent.init(true)
