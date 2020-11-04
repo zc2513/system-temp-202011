@@ -140,7 +140,6 @@ export default {
             }
         },
         postData() {
-            console.log('被编辑')
             // 数据提交
             switch (this.type) {
                 case 1: // 新增

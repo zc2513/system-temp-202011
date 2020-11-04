@@ -36,7 +36,6 @@ export function save(data) {
  * @return {*}
  */
 export function list(params) {
-    params.periodId = '1'
     return request({
         url: url.list,
         method: 'get',

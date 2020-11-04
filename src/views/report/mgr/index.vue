@@ -105,7 +105,7 @@ export default {
             }
             if (type === '详情') {
                 this.view(v)
-                this.$refs.lock.show()
+                // this.$refs.lock.show()
             }
         },
         // 新建辅导记录
@@ -117,12 +117,12 @@ export default {
                 areaName: this.tsUserInfo.areaName,
 
                 month: parseTime(new Date(), '{m}'),
-
-                periodId: this.userInfo.periodId,
-                periodName: this.userInfo.periodName,
+                year: parseTime(new Date(), '{y}'),
+                periodId: this.userInfo.defaultPeriodId,
                 realname: this.userInfo.realname,
                 userId: this.userInfo.id,
-                username: this.userInfo.username
+                username: this.userInfo.username,
+                monthReportDate: new Date()
             }
             this.type = 1
             this.$refs.addAsEdit.show(formInline)
@@ -145,7 +145,8 @@ export default {
                     var param2 = {
                         userId: this.userInfo.id,
                         month: parseTime(new Date(), '{m}'),
-                        year: parseTime(new Date(), '{m}')
+                        year: parseTime(new Date(), '{y}'),
+                        periodId: this.userInfo.defaultPeriodId
 
                     }
                     console.log('mgr月报list参数', param2)

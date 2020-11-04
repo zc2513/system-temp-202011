@@ -7,31 +7,42 @@
     <div class="list fl">
       <div>
         <span>地区:</span>
-        <span>{{ formInline.address }}</span>
+        <span>{{ formInline.areaName }}</span>
       </div>
       <div>
-        <span>辅导员姓名:</span>
-        <span>{{ formInline.person }}</span>
+        <span>Mgr姓名:</span>
+        <span>{{ formInline.realname }}</span>
       </div>
     </div>
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-      <el-form-item label="时间:" class="ml10" prop="time">
+      <el-form-item label="汇报时间:" class="ml10" prop="time">
         <el-date-picker
-          v-model="formInline.time"
-          type="date"
+          v-model="formInline.monthReportDate"
+          type="month"
           placeholder="请选择时间"
           value-format="timestamp"
         />
       </el-form-item>
-      <el-form-item label="计划内容:" class="ml10" prop="content">
+      <el-form-item label="汇报标题:" class="ml10" prop="time">
         <el-input
-          v-model="formInline.content"
+          v-model="formInline.monthReportName"
+          type="textarea"
+          placeholder="请输入内容"
+          maxlength="50"
+          rows="2"
+          show-word-limit
+        />
+      </el-form-item>
+      <el-form-item label="计划内容:" class="ml10" prop="content">
+        <!-- <el-input
+          v-model="formInline.monthReportContent"
           type="textarea"
           placeholder="请输入内容"
           maxlength="500"
           rows="8"
           show-word-limit
-        />
+        /> -->
+        <editor v-model="formInline.monthReportContent" :disabled=" !(type === 1 || type === 2)" />
       </el-form-item>
     </el-form>
     <span slot="footer">
@@ -43,7 +54,14 @@
 </template>
 
 <script>
+import editor from '@/components/editor'
+import { save, list, queryById, deleteById, deleteBatch } from '@/api/mgr'
+import { parseTime } from '@/utils/filter'
+
 export default {
+    components: {
+        editor
+    },
     props: {
         type: {
             type: [String, Number],
@@ -59,29 +77,19 @@ export default {
             showDialogVisible: false,
             formInline: {
                 time: '',
-                person: '张三',
-                content: '',
-                address: '成都'
+                realname: '',
+                monthReportName: '',
+                monthReportContent: '',
+                areaName: '',
+                monthReportDate: ''
             },
-            options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双奶皮' },
-                { value: '选项4', label: '双皮奶' },
-                { value: '选项5', label: '皮双奶' },
-                { value: '选项3', label: '蚵仔煎' }
-            ],
             areaText: ''
         }
     },
     methods: {
         show(data) {
             if (data) {
-                this.formInline = {
-                    content: '范德萨发生',
-                    address: '成都',
-                    person: '张三',
-                    time: 1604332800000
-                }
+                Object.assign(this.formInline, data)
             }
             this.showDialogVisible = true
         },
@@ -90,11 +98,13 @@ export default {
             if (status) {
                 // 验证提交信息
                 this.$refs.ruleForm.validate((valid) => {
-                    if (valid) return false
+                    console.log('被编辑')
+
+                    // if (valid) return false   TODO
 
                     // 通过逻辑处理
-                    const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                    console.log(uri, '提交地址')
+                    // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                    // console.log(uri, '提交地址')
                     this.postData()
                 })
             } else {
@@ -103,10 +113,62 @@ export default {
             }
         },
         postData() {
+            switch (this.type) {
+                case 1: // 新增
+
+                    console.log('保存辅导-------------------------------->', this.formInline)
+                    this.save()
+                    break
+                case 2: // 编辑
+                    console.log('被编辑')
+                    var data = {
+                        id: this.formInline.id,
+                        content: this.formInline.content
+                    }
+                    console.log('保存辅导-----修改--------------------------->', data)
+                    this.save(data)
+                    break
+                default:
+                    this.showDialogVisible = false
+                    break
+            }
             // 数据提交
         },
+        save(data) {
+            if (data) {
+                console.log('被编辑')
+                save(data).then(res => {
+                    if (res.success) {
+                        console.log('返回结果000000000000000000000000', res)
+                        this.$message.success(res.message)
+                        this.showDialogVisible = false
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                        this.showDialogVisible = false
+                        this.$refs['ruleForm'].resetFields()
+                    }
+                })
+            } else {
+                this.formInline.id = null
+                save(this.formInline).then(res => {
+                    if (res.success) {
+                        this.$message.success(res.message)
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                    }
+                    this.showDialogVisible = false
+                    this.$refs['ruleForm'].resetFields()
+                    console.log('返回结果', res)
+                })
+            }
+        },
         resetForm(formName) {
-            this.$refs[formName].resetFields()
+            this.$refs['formName'].resetFields()
+        },
+        changeDate(e) {
+            console.log('换日期了', e)
         }
 
     }
