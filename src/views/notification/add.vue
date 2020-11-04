@@ -8,8 +8,8 @@
       <el-form-item label="通知标题:" class="ml10" prop="title">
         <el-input v-model="formInline.title" placeholder="请输入标题" />
       </el-form-item>
-      <el-form-item label="计划内容:" class="ml10" prop="content">
-        <editor v-model="formInline.content" />
+      <el-form-item label="计划内容:" class="ml10" prop="msgContent">
+        <editor v-model="formInline.msgContent" />
       </el-form-item>
       <el-form-item label="接收人:" class="ml10" prop="person">
         <el-select v-model="formInline.person" multiple filterable reserve-keyword placeholder="请选择">
@@ -49,7 +49,7 @@ export default {
             showDialogVisible: false,
             formInline: {
                 title: '',
-                content: '',
+                msgContent: '',
                 person: []
             },
             options: [
@@ -64,7 +64,7 @@ export default {
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
                     { min: 3, max: 5, message: '长度在 3 到 20 个字符', trigger: 'blur' }
                 ],
-                content: [
+                msgContent: [
                     { required: true, message: '请选择活动区域', trigger: 'change' }
                 ],
                 person: [
