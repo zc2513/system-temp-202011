@@ -20,7 +20,7 @@
           v-model="formInline.monthReportDate"
           type="month"
           placeholder="请选择时间"
-          value-format="timestamp"
+          @change="change"
         />
       </el-form-item>
       <el-form-item label="汇报标题:" class="ml10" prop="time">
@@ -55,7 +55,7 @@
 
 <script>
 import editor from '@/components/editor'
-import { save, list, queryById, deleteById, deleteBatch } from '@/api/mgr'
+import { save, list, queryById, deleteById, edit } from '@/api/mgr'
 import { parseTime } from '@/utils/filter'
 
 export default {
@@ -105,6 +105,8 @@ export default {
                     // 通过逻辑处理
                     // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
                     // console.log(uri, '提交地址')
+                    this.formInline.month = parseTime(this.formInline.monthReportDate, '{m}')
+                    this.formInline.year = parseTime(this.formInline.monthReportDate, '{y}')
                     this.postData()
                 })
             } else {
@@ -113,6 +115,7 @@ export default {
             }
         },
         postData() {
+            console.log('type-------------', this.type)
             switch (this.type) {
                 case 1: // 新增
 
@@ -120,12 +123,16 @@ export default {
                     this.save()
                     break
                 case 2: // 编辑
-                    console.log('被编辑')
+                    console.log('被编辑xxxxxxxxxxxxxxxxx', this.formInline)
                     var data = {
                         id: this.formInline.id,
-                        content: this.formInline.content
+                        onthReportName: this.formInline.onthReportName,
+                        monthReportContent: this.formInline.monthReportContent,
+                        month: this.formInline.month,
+                        year: this.formInline.year
                     }
-                    console.log('保存辅导-----修改--------------------------->', data)
+
+                    console.log('mgr-----修改--------------------------->', data)
                     this.save(data)
                     break
                 default:
@@ -136,12 +143,12 @@ export default {
         },
         save(data) {
             if (data) {
-                console.log('被编辑')
-                save(data).then(res => {
+                console.log('被编辑', data)
+                edit(data).then(res => {
                     if (res.success) {
-                        console.log('返回结果000000000000000000000000', res)
                         this.$message.success(res.message)
                         this.showDialogVisible = false
+                        this.$refs['ruleForm'].resetFields()
                         this.$emit('ok')
                     } else {
                         this.$message.warning(res.message)
@@ -167,8 +174,9 @@ export default {
         resetForm(formName) {
             this.$refs['formName'].resetFields()
         },
-        changeDate(e) {
+        change(e) {
             console.log('换日期了', e)
+            this.formInline.monthReportName = 'Ts-Force' + parseTime(e, '{y}年{m}月份月报')
         }
 
     }

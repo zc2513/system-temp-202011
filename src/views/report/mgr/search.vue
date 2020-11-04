@@ -5,7 +5,6 @@
         v-model="formInline.time"
         type="month"
         placeholder="请选择时间"
-        value-format="timestamp"
       />
     </el-form-item>
     <el-form-item>
@@ -27,12 +26,8 @@ export default {
         return {
             formInline: {
                 time: new Date()
-            },
-            options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双皮奶' },
-                { value: '选项3', label: '蚵仔煎' }
-            ]
+            }
+
         }
     },
     watch: {

@@ -32,7 +32,7 @@
     </div>
 
     <!-- 新增编辑页面 -->
-    <addAsEdit ref="addAsEdit" :title="diaTitle" />
+    <addAsEdit ref="addAsEdit" :type="type" :title="diaTitle" @ok="loadData" />
     <!-- 详情页面 -->
     <lock ref="lock" />
   </div>
@@ -63,7 +63,7 @@ export default {
                 { type: 'selection' },
                 { name: '地区', data: 'areaName' },
                 { name: '提交时间', data: 'createTime', type: 'time', time: '{y}-{m}-{d}' },
-                { name: '汇报标题', data: 'producer' }
+                { name: '汇报标题', data: 'monthReportName' }
 
             ],
             tableData: datas.slice(0, 8),
@@ -76,7 +76,9 @@ export default {
                 ]
             },
             tsUserInfo: {},
-            mgrlist: null
+            param: {},
+            mgrlist: null,
+            type: 1
         }
     },
     created() {
@@ -130,47 +132,47 @@ export default {
         // 进入页面首先加载的内容
         getPageUserInfo() {
             this.value = new Date()
-            console.log('当前用信息，注意是否为空：', this.userInfo)
             const params = {
                 userId: this.userInfo.id
             }
             getUserInfo(params).then(res => {
-                console.log(' 返回的用户信息-------------------------', res.result)
                 if (res.success) {
                     this.tsUserInfo = res.result[0]
-                    console.log(' 返回的用户信息', this.tsUserInfo)
                     this.tsUserInfo.realName = this.userInfo.realname
                     this.tsUserInfo.userId = this.userInfo.id
                     this.tsUserInfo.userName = this.userInfo.username
-                    var param2 = {
+                    this.param = {
                         userId: this.userInfo.id,
                         month: parseTime(new Date(), '{m}'),
                         year: parseTime(new Date(), '{y}'),
                         periodId: this.userInfo.defaultPeriodId
 
                     }
-                    console.log('mgr月报list参数', param2)
-                    list(param2).then(res1 => {
-                        if (res1.success === true) {
-                            console.log('mgr月报', res1)
-                            this.mgrlist = res1.result.records
-                        }
-                    })
+                    this.loadData()
                 } else {
                     this.$message.error({ title: '查询失败', content: res.message })
                 }
             })
         },
+        loadData() {
+            list(this.param).then(res1 => {
+                if (res1.success === true) {
+                    this.mgrlist = res1.result.records
+                    console.log('编辑mgmgrlistir月报', this.mgrlist)
+                }
+            })
+        },
         edit(v) {
+            console.log('编辑mgir月报', v)
             var formInline = {
 
-                content: v.data.content,
-
+                monthReportName: v.data.monthReportName,
+                areaName: v.data.areaName,
                 //  startTime: new Date(),
                 realname: v.data.realname,
                 id: v.data.id,
-                groupName: v.data.areaName + ' ' + v.data.departName + ' ' + v.data.groupName,
-                startTime: v.data.startTime
+                monthReportContent: v.data.monthReportContent,
+                monthReportDate: parseTime(new Date(v.data.year + '-' + v.data.month + '-' + '01'), '{y}-{m}-{d}')
 
             }
             this.type = 2
@@ -192,24 +194,15 @@ export default {
             this.$refs.addAsEdit.show(formInline)
         },
         delete(v) {
-            delete ({ id: v.data.id }).then(res => {
-                console.log('res--------------------', res)
+            deleteById({ id: v.data.id }).then(res => {
                 this.loadData()
             })
         },
-        seache(data) {
-            console.log('参数-------辅导', data)
-            this.params = {
-                areaId: data.selectorg[0],
-                departId: data.selectorg[1],
-                groupId: data.selectorg[2],
-                startTime: data.startTime,
-                userId: data.selectUser ? data.selectUser.id : null
-            }
-            this.loadData()
-        },
         change(data) {
             console.log('查询查询', data)
+            this.param.month = parseTime(data.time, '{m}')
+            this.param.year = parseTime(data.time, '{y}')
+            this.loadData()
         }
 
     }

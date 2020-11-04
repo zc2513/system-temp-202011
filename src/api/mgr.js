@@ -7,8 +7,8 @@ const url = {
     mgrQueryById: 'com.thundersoft.mrg/fstMrgMonthly/queryById', //  应届生培养-mrg月报-通过id查询, /
 
     delete: 'com.thundersoft.mrg/fstMrgMonthly/delete', //   应届生培养-mrg月报-通过id删除
-    deleteBatch: 'com.thundersoft.mrg/fstMrgMonthly/deleteBatch' //  应届生培养-mrg月报-批量删除
-
+    deleteBatch: 'com.thundersoft.mrg/fstMrgMonthly/deleteBatch', //  应届生培养-mrg月报-批量删除
+    edit: 'com.thundersoft.regionalreport/fstRegionalMonthlyReport/edit' // 应届生培养-地区月报-编辑'
 }
 
 /**
@@ -75,6 +75,14 @@ export function deleteById(params) {
     })
 }
 
+/**
+ * @description 批量删除
+ * @author laozhu
+ * @date 04/11/2020
+ * @export
+ * @param {*} params
+ * @return {*}
+ */
 export function deleteBatch(params) {
     return request({
         url: url.deleteBatch,
@@ -82,3 +90,20 @@ export function deleteBatch(params) {
         params
     })
 }
+
+/**
+ * @description 编辑mgr月报
+ * @author laozhu
+ * @date 04/11/2020
+ * @export
+ * @param {*} params
+ * @return {*}
+ */
+export function edit(data) {
+    return request({
+        url: url.edit,
+        method: 'put',
+        data
+    })
+}
+
