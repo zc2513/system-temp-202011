@@ -96,7 +96,6 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    console.log('here', v)
                     this.deleteCoach(v)
                     this.$message.success('删除成功!')
                 }).catch(() => {

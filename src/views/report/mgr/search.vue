@@ -26,7 +26,7 @@ export default {
     data() {
         return {
             formInline: {
-                time: ''
+                time: new Date()
             },
             options: [
                 { value: '选项1', label: '黄金糕' },
