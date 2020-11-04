@@ -9,13 +9,13 @@
         <span>辅导员姓名:</span>
         <span>{{ formInline.realname }}</span>
       </div>
-      <div>
+      <div v-if=" !(type===1)">
         <span>组别:</span>
         <span style="width:200px">{{ formInline.groupName }}</span>
       </div>
 
     </div>
-    <div class="list fl">
+    <div v-if=" !(type===1)" class="list fl">
 
       <div>
         <span>应届生姓名:</span>
@@ -29,7 +29,7 @@
 
     <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
       <div v-if=" type ===1">
-        <el-form-item :v-if=" !(type == 1) " class="ml10" prop="time"> {{ type==1 }}
+        <el-form-item :v-if=" !(type == 1) " class="ml10" prop="time">
           <select-student ref="selectStu" :user-id="formInline.userId" :show-button="false" :selected="false" :mult="true" @changeUser="changeUser" />
         </el-form-item>
 
@@ -43,15 +43,16 @@
         </el-form-item>
       </div>
       <el-form-item label="辅导内容:" class="ml10" prop="content">
-        <el-input
+        <!-- <el-input
           v-model="formInline.content"
-          :disabled=" !(type === 1)"
+          :disabled=" !(type === 1 || type === 2)"
           type="textarea"
           placeholder="请输入内容"
           maxlength="500"
           rows="8"
           show-word-limit
-        />
+        /> -->
+        <editor v-model="formInline.content" :disabled=" !(type === 1 || type === 2)" />
       </el-form-item>
     </el-form>
 
@@ -64,13 +65,15 @@
 </template>
 
 <script>
+import editor from '@/components/editor'
 import SelectStudent from '@/components/tsforce/SelectStudent.vue'
 import { saveCoach, listCoach, coachQueryById, deleteCoach } from '@/api/coach'
 import { parseTime } from '@/utils/filter'
 
 export default {
     components: {
-        SelectStudent
+        SelectStudent,
+        editor
     },
     props: {
         type: {
@@ -117,15 +120,18 @@ export default {
         },
         submitForm(status) {
             console.log(this.formInline)
+
             if (status) {
                 // 验证提交信息
                 this.$refs.ruleForm.validate((valid) => {
-                    if (valid) return false
-
-                    // // 通过逻辑处理
-                    // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                    // console.log(uri, '提交地址')
+                    console.log('被编辑')
                     this.postData()
+                    // if (valid) return false
+
+                    // // // 通过逻辑处理
+                    // // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                    // // console.log(uri, '提交地址')
+                    // this.postData()
                 })
             } else {
                 // 不验证
@@ -133,6 +139,7 @@ export default {
             }
         },
         postData() {
+            console.log('被编辑')
             // 数据提交
             switch (this.type) {
                 case 1: // 新增
@@ -143,6 +150,7 @@ export default {
                     this.saveCoach()
                     break
                 case 2: // 编辑
+                    console.log('被编辑')
                     var data = {
                         id: this.formInline.id,
                         content: this.formInline.content
@@ -151,11 +159,13 @@ export default {
                     this.saveCoach(data)
                     break
                 default:
+                    this.showDialogVisible = false
                     break
             }
         },
         saveCoach(data) {
             if (data) {
+                console.log('被编辑')
                 saveCoach(data).then(res => {
                     if (res.success) {
                         console.log('返回结果000000000000000000000000', res)
@@ -165,9 +175,11 @@ export default {
                     } else {
                         this.$message.warning(res.message)
                         this.showDialogVisible = false
+                        this.$refs['ruleForm'].resetFields()
                     }
                 })
             } else {
+                this.formInline.id = null
                 saveCoach(this.formInline).then(res => {
                     if (res.success) {
                         this.$message.success(res.message)
@@ -176,6 +188,7 @@ export default {
                         this.$message.warning(res.message)
                     }
                     this.showDialogVisible = false
+                    this.$refs['ruleForm'].resetFields()
                     console.log('返回结果', res)
                 })
             }
@@ -199,7 +212,7 @@ export default {
             if (selectUser != null && selectUser.length > 0) {
                 this.selectUser = []
                 selectUser.forEach(val => {
-                    this.selectUser.push({ userId: selectUser.id })
+                    this.selectUser.push({ userId: val.id })
                 })
             }
         }

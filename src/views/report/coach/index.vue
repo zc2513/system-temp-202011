@@ -116,7 +116,7 @@ export default {
                 console.log(' 返回的用户信息-------------------------', res.result)
                 if (res.success) {
                     console.log('返回结果', res)
-                    this.tableData = res.result
+                    this.tableData = res.result.records
                     this.tableData.forEach(val => {
                         val.newGroupName = val.areaName + ' ' + val.departName + ' ' + val.groupName
                         val.startTime = parseTime(val.startTime, '{y}-{m}-{d}')
