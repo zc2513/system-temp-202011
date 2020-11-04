@@ -6,33 +6,15 @@
 <script>
 import echarts from 'echarts'
 
-import { seriesMap, visualMap, provinces, geo } from './map/index'
+import { seriesMap, visualMap, geo } from './map/index'
 
 import resize from './mixins/resize'
 export default {
     mixins: [resize],
     props: {
-        // hotData: { // 热力图
-        //     type: Array,
-        //     default: _ => {
-        //         return provinces.filter(e => e.value)
-        //     }
-        // },
-        // bubble: { // 气泡图
-        //     type: Array,
-        //     default: _ => {
-        //         return provinces.filter(e => e.value).map(ele => {
-        //             return { value: ele.coordinates, number: (Math.random() * 10).toFixed(0) }
-        //         })
-        //     }
-        // },
         mapDatas: { // 地图相关数据
             type: Array,
-            default: _ => {
-                return provinces.filter(e => e.value).map(ele => {
-                    return { value: ele.coordinates, number: (Math.random() * 10).toFixed(0) }
-                })
-            }
+            default: _ => []
         },
         pieces: { // 右侧坐标标注
             type: Array,
@@ -56,38 +38,20 @@ export default {
     data() {
         return {
             chart: null,
-            china: require('./json/china.json'), // 引入中国地图
             bubble: [], // 气泡图
-            hotData: []// 热力图
+            hotData: [], // 热力图
+            registeName: 'china',
+            mapJson: require('./json/city/100000.json')
         }
     },
     watch: {
         mapDatas: {
             handler(v) {
-                if (!v) return
-
-                v = v.map(item => { // 返回地区与本地json地区数据混合
-                    for (const el of provinces) {
-                        if (item.ProvinceName.includes(el.name)) {
-                            return { ...item, base: el, lg: el.coordinates }
-                        }
-                    }
-                })
-
-                this.bubble = v.filter(e => e.TodayIsAdded).map(item => { // 气泡
-                    return { value: item.lg, number: item.BidSectionCount }
-                })
-
-                this.hotData = v.map(item => { // 热力值
-                // code 用来传递下钻参数
-                    return { code: item.base.code, value: item.BidSectionCount, name: item.ProvinceName }
-                })
-
+                if (!v.length) return
                 this.$nextTick(() => this.init())
             },
             immediate: true
         }
-
     },
     beforeDestroy() {
         if (!this.chart) return
@@ -96,61 +60,75 @@ export default {
     },
     methods: {
         redraw() {
+            // 1.挂载实例
             this.chart = echarts.init(this.$refs.myChartChina)
-
-            this.chart.on('click', item => { // 点击拿到当前图层series里面data的当前项数据，data不存在则为undefind
-                // if (!item.data) return
-                // console.log(item)
-                // this.init(item.data)
-                // echarts.init(this.$refs.myChartChina).dispose() // 清除上一次绘制的中国地图（防止死循环）
-                // this.myChartChina = echarts.init(this.$refs.myChartChina) // 挂载地图实例
-                // try {
-                //     // 防止岛屿获取name/value失败的情况
-                //     const { name, value } = $mod.data
-                //     switch ($mod.data.zoom) {
-                //         case 1: // 绘制城市地图
-                //             this.rendCity(name, value)
-                //             break
-                //         case 2: // 绘制县区地图
-                //             this.rendCounty(name, $mod.data.data.id)
-                //             break
-                //         case 3: // 最后一级、返回中国地图
-                //             this.rendChina()
-                //             break
-                //     }
-                // } catch (err) {
-                //     this.rendChina() // 获取不到name/value、返回中国地图
-                // }
+            // 2.绑定事件
+            this.chart.on('click', $mod => { // 点击拿到当前图层series里面data的当前项数据，data不存在则为undefind
+            // 2.1 非空（后期需要提示用户该区域没有数据-无法下钻）
+                if (!$mod.data || !$mod.data.code) return
+                this.init($mod.data)
             })
         },
         init(next) {
-            // 1.初始化
+            // 1.是否未挂载实例
             if (!this.chart) this.redraw()
+            // 下钻静态资源加载及数据请求
+            if (next) {
+                this.registeName = '中国'
+                this.mapJson = require(`./json/city/${next.code}.json`)
+                this.$parent.init(next.code)
+                this.$emit('input', next.code)
+                return
+            }
 
-            // 2.绘制地图
-            let mapJson = require('./json/china.json')
-            let registeName = 'china'
-            if (next) { // 下钻
-                registeName = '中国'
-                mapJson = require(`./json/province/${next.code}.json`)
-            }
-            if (registeName === 'china') { // 处理返回
-                this.$emit('input', false)
-            } else {
-                this.$emit('input', {})
-            }
-            echarts.registerMap(registeName, mapJson)
+            // 2.初始化地图
+            echarts.registerMap(this.registeName, this.mapJson)
+
+            // 处理地理坐标参数配置项
+            const json = echarts.getMap(this.registeName).geoJson.features
+            this.getMapJson(json)
 
             // 3.地图配置
             const options = { // 地图配置
-                geo: geo({ map: registeName, zoom: registeName === 'china' ? 1.1 : 0.95 }), // 地理坐标系组件
+                geo: geo({ map: this.registeName, zoom: this.registeName === 'china' ? 1.1 : 0.95 }), // 地理坐标系组件
                 visualMap: visualMap(this.pieces), // 右下角配置
                 series: seriesMap({ mapParams: { data: this.hotData }, bubble: this.bubble })
             }
-
             // 4.设置配置
             this.chart.setOption(options) // 设置配置项
+        },
+
+        getMapJson(json) { // 获取地理坐标系&&处理显示数据
+            // 1.提取经纬度及省市区编码
+            const nowCitys = json.map(item => {
+                const { id: code, properties: { cp, name }} = item
+                return { code, cp, name }
+            })
+
+            // 2.返回地区与本地json地区数据混合
+            const newData = []
+            for (let item of nowCitys) {
+                for (const el of this.mapDatas) {
+                    if (item.code === el.RegionCode) item = { ...item, ...el }
+                }
+                newData.push(item)
+            }
+
+            // 3. 过滤气泡数据
+            this.bubble = newData.filter(e => e.TodayIsAdded).map(item => {
+                return { value: item.cp, number: item.BidSectionCount }
+            })
+
+            // 4.过滤热力值数据
+            this.hotData = newData.map(item => {
+                return {
+                    code: item.code, // 查找文件名
+                    value: item.BidSectionCount,
+                    name: item.name
+                }
+            })
         }
+
     }
 }
 </script>
