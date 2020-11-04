@@ -1,6 +1,6 @@
 <template>
   <el-form ref="ruleForm" :inline="true" :model="formInline" class="form-box">
-    <el-form-item label="组别:" class="ml10" prop="group">
+    <el-form-item label="标题:" class="ml10" prop="group">
       <el-select v-model="formInline.group" placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -10,15 +10,8 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item label="辅导时间:" class="ml10" prop="time">
-      <el-date-picker
-        v-model="formInline.time"
-        type="date"
-        placeholder="请选择时间"
-      />
-    </el-form-item>
-    <el-form-item label="应届生:" class="ml10" prop="person">
-      <el-select v-model="formInline.person" placeholder="请选择应届生">
+    <el-form-item label="发布人:" class="ml10" prop="group">
+      <el-select v-model="formInline.group" placeholder="请选择">
         <el-option
           v-for="item in options"
           :key="item.value"
@@ -26,6 +19,13 @@
           :value="item.value"
         />
       </el-select>
+    </el-form-item>
+    <el-form-item label="发布时间:" class="ml10" prop="time">
+      <el-date-picker
+        v-model="formInline.time"
+        type="date"
+        placeholder="请选择时间"
+      />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" class="ml20" @click="submitForm('ruleForm')">查询</el-button>

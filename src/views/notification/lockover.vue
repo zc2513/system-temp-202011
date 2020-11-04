@@ -1,38 +1,18 @@
 <template>
-  <!-- 消息发布 -->
+  <!-- 消息查看 -->
   <div class="hfull notification-cls">
-    <z-header title="消息发布" />
+    <z-header title="消息查看" />
 
     <div class="box mt15 content">
-      <div v-if="!tableData.length" class="flcc" style="height:500px;">
-        <div class="cursor" @click="addSave">
-          <z-circle size="120" color="#F4F7FA" class="mb20">
-            <svg-icon icon-class="add" class="f30" style="color:#66f;" />
-          </z-circle>
-          <div class="t-c">添加通知</div>
-        </div>
-      </div>
-
-      <div v-else>
-        <search />
-        <div class="mb15">
-          <el-button type="primary" class="ml20" @click="addSave">新建</el-button>
-        </div>
-        <!-- <div class="selectedTitle plr24 flc-y mt15 c-56 f14">
-          已选择
-          <span class="c-66f pl5 pr5"> 0 </span>项
-          <span class="c-66f ml25 cursor">清空</span>
-        </div> -->
-
-        <z-table
-          :titles="titles"
-          :btns="btn"
-          :lists="tableData"
-          align="left"
-          class="mt15"
-          @sendVal="getVal"
-        />
-      </div>
+      <search />
+      <z-table
+        :titles="titles"
+        :btns="btn"
+        :lists="tableData"
+        align="left"
+        class="mt15"
+        @sendVal="getVal"
+      />
     </div>
 
     <add ref="add" />
@@ -50,18 +30,15 @@ export default {
         return {
             tableData: [],
             titles: [
-                { type: 'selection' },
-                { name: '工号', data: 'stateCode' },
-                { name: '应届生姓名', data: 'producer' },
-                { name: '辅导时间', data: 'lastUpdateTime', type: 'time', time: '{y}-{m}-{d}' },
-                { name: '发布状态', data: 'producer' }
+                { name: '标题', data: 'stateCode' },
+                { name: '发布人', data: 'producer' },
+                { name: '发布时间', data: 'lastUpdateTime', type: 'time', time: '{y}-{m}-{d}' },
+                { name: '阅读状态', data: 'producer' }
             ],
             btn: {
                 title: '操作',
                 btnlist: [
-                    { con: '查看', type: 'text' },
-                    { con: '编辑', type: 'text' },
-                    { con: '发布', type: 'text', style: { color: '#FF5633' }}
+                    { con: '查看', type: 'text' }
                 ]
             }
         }
@@ -71,9 +48,7 @@ export default {
     },
     methods: {
         init(type) {
-            if (type) {
-                this.tableData = datas.slice(0, 1)
-            }
+            this.tableData = datas.slice(0, 1)
             // 拉取页面初始化数据
         },
         addSave() {

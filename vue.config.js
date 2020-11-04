@@ -8,7 +8,7 @@ function resolve(dir) {
 
 const name = defaultSettings.title
 
-const port = process.env.port || process.env.npm_config_port || 9528
+const port = process.env.port || process.env.npm_config_port || 3333
 
 const isDev = process.env.NODE_ENV === 'development'
 
