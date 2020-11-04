@@ -49,6 +49,9 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="计划标题:" class="ml10" prop="content">
+        <el-input v-model="input" placeholder="请输入标题" />
+      </el-form-item>
       <el-form-item label="计划内容:" class="ml10" prop="content">
         <el-input
           v-model="formInline.content"
@@ -58,6 +61,23 @@
           rows="8"
           show-word-limit
         />
+      </el-form-item>
+      <el-form-item label="附件上传:" class="ml10" prop="content">
+        <el-upload
+          class="upload-demo"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          multiple
+          :limit="3"
+          :on-exceed="handleExceed"
+          :file-list="fileList"
+        >
+          <el-button size="mini" plain style="color:#909398;">
+            <i class="el-icon-upload mr5 el-icon--right" />上传文件
+          </el-button>
+        </el-upload>
       </el-form-item>
     </el-form>
     <span slot="footer">
@@ -101,7 +121,9 @@ export default {
                 { value: '选项2', label: '双皮奶' },
                 { value: '选项3', label: '蚵仔煎' }
             ],
-            areaText: ''
+            fileList: [
+                { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
+            ]
         }
     },
     methods: {
@@ -129,6 +151,19 @@ export default {
         },
         resetForm(formName) {
             this.$refs[formName].resetFields()
+        },
+
+        handleRemove(file, fileList) {
+            console.log(file, fileList)
+        },
+        handlePreview(file) {
+            console.log(file)
+        },
+        handleExceed(files, fileList) {
+            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+        },
+        beforeRemove(file, fileList) {
+            return this.$confirm(`确定移除 ${file.name}？`)
         }
 
     }
