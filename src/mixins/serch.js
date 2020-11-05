@@ -1,16 +1,15 @@
 export default {
     data() {
         return {
-            total:200,
+            total: 0,
+            tableData: [],
             baseData: {
                 pageNo: 1,
                 pageSize: 10
             },
-            querySearch: {
-
-            }
+            querySearch: { }
         }
-    }，
+    },
     methods: {
         getSize(size) {
             console.log(size, 111111111)
@@ -26,5 +25,5 @@ export default {
             this.querySearch = e
             this.init()
         }
-    },
+    }
 }

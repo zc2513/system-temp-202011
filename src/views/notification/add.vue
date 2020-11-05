@@ -5,21 +5,14 @@
       新建通知
     </div>
     <el-form ref="ruleForm" :model="formInline" :rules="rules" label-width="100px">
-      <el-form-item label="通知标题:" class="ml10" prop="title">
-        <el-input v-model="formInline.title" placeholder="请输入标题" />
+      <el-form-item label="通知标题:" class="ml10" prop="titile">
+        <el-input v-model="formInline.titile" placeholder="请输入标题" />
       </el-form-item>
       <el-form-item label="计划内容:" class="ml10" prop="msgContent">
         <editor v-model="formInline.msgContent" />
       </el-form-item>
       <el-form-item label="接收人:" class="ml10" prop="userIds">
-        <el-select v-model="formInline.userIds" multiple filterable reserve-keyword placeholder="请选择">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
+        <z-groud-person v-model="formInline.userIds" />
       </el-form-item>
     </el-form>
     <span slot="footer">
@@ -32,43 +25,27 @@
 
 <script>
 import editor from '@/components/editor'
+import { add } from '@/api/notification'
 import { mapState } from 'vuex'
 export default {
     components: { editor },
-    props: {
-        type: {
-            type: [String, Number],
-            default: 1
-        },
-        objTag: {
-            type: String,
-            default: 'a'
-        }
-    },
-
     data() {
         return {
             showDialogVisible: false,
             formInline: {
-                title: '',
+                titile: '',
                 msgContent: '',
+                msgType: 'USER',
                 userIds: '',
                 createBy: ''
             },
-            options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '龙须面2' },
-                { value: '选项3', label: '龙须面1' },
-                { value: '选项4', label: '龙须面' },
-                { value: '选项5', label: '北京烤鸭' }
-            ],
             rules: {
-                title: [
-                    { required: true, message: '请输入活动名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 20 个字符', trigger: 'blur' }
+                titile: [
+                    { required: true, message: '请输入通知标题', trigger: 'blur' },
+                    { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
                 ],
                 msgContent: [
-                    { required: true, message: '请选择活动区域', trigger: 'change' }
+                    { required: true, message: '请编辑计划内容', trigger: 'change' }
                 ],
                 person: [
                     { type: 'array', required: true, message: '请至少选择一个接收人', trigger: 'change' }
@@ -80,18 +57,23 @@ export default {
         ...mapState('user', ['userInfo'])
     },
     methods: {
-        show(data) {
+        show(type, data) {
+            if (type === 'edit') {
+                this.formInline = data
+            }
             this.showDialogVisible = true
         },
         submitForm(status) {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return
                 this.formInline.createBy = this.userInfo.updateBy
-                // 1.请求处理
-                // 2.刷新父组件页面数据
-                this.$parent.init(true)
-                // 3.关闭弹窗
-                this.showDialogVisible = false
+                add(this.formInline).then(res => {
+                    if (res.code === 200) {
+                        this.$message.success(res.message)
+                        this.$parent.init(true)
+                        this.showDialogVisible = false
+                    }
+                })
             })
         },
         resetForm(formName) {

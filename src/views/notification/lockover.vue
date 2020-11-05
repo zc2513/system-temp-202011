@@ -2,7 +2,6 @@
   <!-- 消息查看 -->
   <div class="hfull notification-cls">
     <list :isfull="false" />
-
     <add ref="add" />
   </div>
 </template>

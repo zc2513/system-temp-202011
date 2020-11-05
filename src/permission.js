@@ -27,7 +27,7 @@ router.beforeEach(async(to, from, next) => {
             } else {
                 store.dispatch('user/getInfo').then(res => { // 拉取user_info
                     store.dispatch('permission/generateRoutes', res).then(syncRouter => { // 根据roles权限生成可访问的路由表
-                        console.log(syncRouter, 6666)
+                        // console.log(syncRouter, 6666)
                         router.addRoutes(syncRouter) // 动态添加可访问路由表
                         next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,设置replace: true，这样导航就不会留下历史记录
                     })

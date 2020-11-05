@@ -36,12 +36,6 @@
 
 <script>
 export default {
-    props: {
-        type: {
-            type: [String, Number],
-            default: 1
-        }
-    },
     data() {
         return {
             formInline: {
@@ -56,18 +50,7 @@ export default {
             ]
         }
     },
-    watch: {
-        type: {
-            handler(val) {
-                this.inin()
-            },
-            immediate: true
-        }
-    },
     methods: {
-        inin() { // 初始化基本数据
-            //  根据类型拿对应数据this.type
-        },
         submitForm(formName) {
             this.$emit('change', this.formInline)
         },

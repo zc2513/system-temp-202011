@@ -43,7 +43,6 @@ const actions = {
     // 登录
     login({ commit }, userInfo) {
         const { userName, password, captcha, checkKey } = userInfo
-        console.log('登录表单信息', commit)
         return new Promise((resolve, reject) => {
             login({ username: userName.trim(), password, captcha, checkKey, remember_me: true }).then(response => {
                 const { success, message, result } = response
@@ -51,6 +50,7 @@ const actions = {
                 const { token, userInfo } = result
                 commit('SET_TOKEN', token)
                 commit('SET_USER_INFO', userInfo)
+                console.log('token', token)
                 setToken(token)
                 resolve(userInfo)
             }).catch(error => {

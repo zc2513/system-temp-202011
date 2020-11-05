@@ -4,8 +4,7 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 const service = axios.create({
-    // baseURL: process.env.VUE_APP_BASE_API
-    baseURL: 'http://119.45.143.217:9090/jeecg-boot'
+    baseURL: process.env.VUE_APP_BASE_API
     // withCredentials: true,
     // timeout: 5000
 })
@@ -13,7 +12,7 @@ const service = axios.create({
 service.interceptors.request.use(
     config => {
         if (store.getters.token) {
-            config.headers['X-Token'] = getToken()
+            config.headers['X-Access-Token'] = getToken()
         }
         return config
     },
@@ -24,7 +23,6 @@ service.interceptors.request.use(
 )
 
 service.interceptors.response.use(response => {
-    console.log('返回数据--------------', response)
     const res = response.data
     if (!res.success) {
         Message.error(res.message || '错误信息不详（接口未返回）')
