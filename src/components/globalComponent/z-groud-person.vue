@@ -64,7 +64,6 @@ export default {
                             })
                         }
                     })
-                    console.log(this.options, 23123131313)
                 }
             })
         },
