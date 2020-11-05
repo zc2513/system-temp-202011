@@ -30,9 +30,10 @@
         @sendVal="getVal"
       />
     </div>
+    <z-page :total="baseParams.total" :page-size="baseParams.pageSize" :current-page="baseParams.pageNo" @pagesend="getPageData" @pagesizes="pagesizes" />
 
     <!-- 新增编辑页面 -->
-    <addAsEdit ref="addAsEdit" :type="type" :title="diaTitle" @ok="loadData" />
+    <addAsEdit ref="addAsEdit" :type="type" :title="diaTitle" @ok="init" />
     <!-- 详情页面 -->
     <lock ref="lock" />
   </div>
@@ -49,12 +50,14 @@ import { mapState, mapGetters } from 'vuex'
 import { completeForWarning } from '@/api/supwarning'
 import { save, list, queryById, deleteById, deleteBatch } from '@/api/mgr'
 import { parseTime } from '@/utils/filter'
+import serachSave from '@/mixins/search'
+
 export default {
     name: 'Mgr',
     components: { search, addAsEdit, lock },
+    mixins: [serachSave],
     computed: {
-        ...mapState('user', ['token', 'userInfo']),
-        ...mapGetters(['token'])
+        ...mapState('user', ['token', 'userInfo'])
     },
     data() {
         return {
@@ -82,10 +85,19 @@ export default {
         }
     },
     created() {
-        console.log('user info mgr', this.userInfo)
         this.getPageUserInfo()
     },
     methods: {
+        init() {
+            console.log('user info mgr', this.userInfo)
+            this.searchData.periodId = this.userInfo.defaultPeriodId
+            const data = {
+                ...this.baseParams,
+                ...this.searchData
+            }
+            console.log('init 参数', data)
+            this.loadData(data)
+        },
         getVal(v) {
             console.log(v)
             const { type } = v
@@ -141,23 +153,24 @@ export default {
                     this.tsUserInfo.realName = this.userInfo.realname
                     this.tsUserInfo.userId = this.userInfo.id
                     this.tsUserInfo.userName = this.userInfo.username
-                    this.param = {
+                    this.searchData = {
                         userId: this.userInfo.id,
                         month: parseTime(new Date(), '{m}'),
                         year: parseTime(new Date(), '{y}'),
                         periodId: this.userInfo.defaultPeriodId
 
                     }
-                    this.loadData()
+                    this.init()
                 } else {
                     this.$message.error({ title: '查询失败', content: res.message })
                 }
             })
         },
-        loadData() {
-            list(this.param).then(res1 => {
+        loadData(data) {
+            list(data).then(res1 => {
                 if (res1.success === true) {
                     this.mgrlist = res1.result.records
+                    this.baseParams.total = res1.result.total
                     console.log('编辑mgmgrlistir月报', this.mgrlist)
                 }
             })
@@ -181,28 +194,27 @@ export default {
         view(v) {
             var formInline = {
 
-                content: v.data.content,
-
+                monthReportName: v.data.monthReportName,
+                areaName: v.data.areaName,
                 //  startTime: new Date(),
                 realname: v.data.realname,
                 id: v.data.id,
-                groupName: v.data.areaName + ' ' + v.data.departName + ' ' + v.data.groupName,
-                startTime: v.data.startTime
-
+                monthReportContent: v.data.monthReportContent,
+                monthReportDate: parseTime(new Date(v.data.year + '-' + v.data.month + '-' + '01'), '{y}-{m}-{d}')
             }
             this.type = 3
             this.$refs.addAsEdit.show(formInline)
         },
         delete(v) {
             deleteById({ id: v.data.id }).then(res => {
-                this.loadData()
+                this.init()
             })
         },
         change(data) {
             console.log('查询查询', data)
-            this.param.month = parseTime(data.time, '{m}')
-            this.param.year = parseTime(data.time, '{y}')
-            this.loadData()
+            this.searchData.month = parseTime(data.time, '{m}')
+            this.searchData.year = parseTime(data.time, '{y}')
+            this.init()
         }
 
     }

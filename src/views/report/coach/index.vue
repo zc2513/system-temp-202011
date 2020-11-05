@@ -22,9 +22,10 @@
         @sendVal="getVal"
       />
     </div>
+    <z-page :total="baseParams.total" :page-size="baseParams.pageSize" :current-page="baseParams.pageNo" @pagesend="getPageData" @pagesizes="pagesizes" />
 
     <!-- 新增编辑页面 -->
-    <addAsEdit ref="addAsEdit" :type="type" :title="diaTitle" @ok="loadCocah" />
+    <addAsEdit ref="addAsEdit" :type="type" :title="diaTitle" @ok="init" />
     <!-- 详情页面 -->
     <lock ref="lock" />
   </div>
@@ -39,11 +40,13 @@ import datas from '@/assets/json/data'
 import { getUserInfo } from '@/api/calendar'
 import { parseTime } from '@/utils/filter'
 import { mapState, mapGetters } from 'vuex'
+import serachSave from '@/mixins/search'
 
 import { saveCoach, listCoach, coachQueryById, deleteCoach } from '@/api/coach'
 export default {
     name: 'Coach',
     components: { search, addAsEdit, lock },
+    mixins: [serachSave],
     data() {
         return {
             diaTitle: '新建辅导记录',
@@ -83,6 +86,16 @@ export default {
         // this.getPageUserInfo()
     },
     methods: {
+        init() {
+            console.log('user info mgr', this.userInfo)
+            this.searchData.periodId = this.userInfo.defaultPeriodId
+            const data = {
+                ...this.baseParams,
+                ...this.searchData
+            }
+            console.log('init 参数', data)
+            this.loadData(data)
+        },
         getVal(v) {
             console.log(v)
             const { type } = v
@@ -108,14 +121,16 @@ export default {
             }
         },
         // 进入页面首先加载的内容
-        loadCocah() {
+        loadData(data) {
             console.log('当前用信息，注意是否为空：', this.userInfo, this.params)
 
-            listCoach(this.params).then(res => {
+            listCoach(data).then(res => {
                 console.log(' 返回的用户信息-------------------------', res.result)
                 if (res.success) {
                     console.log('返回结果', res)
                     this.tableData = res.result.records
+                    this.baseParams.total = res.result.total
+
                     this.tableData.forEach(val => {
                         val.newGroupName = val.areaName + ' ' + val.departName + ' ' + val.groupName
                         val.startTime = parseTime(val.startTime, '{y}-{m}-{d}')
@@ -186,19 +201,19 @@ export default {
         deleteCoach(v) {
             deleteCoach({ id: v.data.id }).then(res => {
                 console.log('res--------------------', res)
-                this.loadCocah()
+                this.init()
             })
         },
         seache(data) {
             console.log('参数-------辅导', data)
-            this.params = {
+            this.searchData = {
                 areaId: data.selectorg[0],
                 departId: data.selectorg[1],
                 groupId: data.selectorg[2],
                 startTime: data.startTime,
                 userId: data.selectUser ? data.selectUser.id : null
             }
-            this.loadCocah()
+            this.init()
         }
     }
 }

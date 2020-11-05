@@ -18,6 +18,7 @@
       <el-form-item label="汇报时间:" class="ml10" prop="time">
         <el-date-picker
           v-model="formInline.monthReportDate"
+          :disabled=" !(type === 1 || type === 2)"
           type="month"
           placeholder="请选择时间"
           @change="change"
@@ -26,6 +27,7 @@
       <el-form-item label="汇报标题:" class="ml10" prop="time">
         <el-input
           v-model="formInline.monthReportName"
+          :disabled=" !(type === 1 || type === 2)"
           type="textarea"
           placeholder="请输入内容"
           maxlength="50"

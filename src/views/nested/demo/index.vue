@@ -44,7 +44,8 @@ export default {
     data() {
         return {
             content: '<p>范德萨发fdsfkldjafkldsjfldjsflk</p>',
-            datas: []
+            datas: [],
+            pageSize: 10
 
         }
     },

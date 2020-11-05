@@ -1,7 +1,7 @@
 <template>
   <!-- 人员状态 -->
   <div class="coach">
-    <z-header title="人员状态" class="mb15 bold" />
+    <z-header title="人员状态填报" class="mb15 bold" />
     <div class="box content">
       <search />
       <z-table
@@ -13,6 +13,7 @@
         @sendVal="getVal"
       />
     </div>
+    <z-page :total="tableData.length" :page-size="baseParams.pageSize" :current-page="baseParams.pageNo" @pagesend="getPageData" @pagesizes="pagesizes" />
 
     <!-- 新增编辑页面 -->
     <edit ref="edit" :title="diaTitle" />
@@ -27,9 +28,12 @@ import search from './search'
 import edit from './edit'
 import lock from './lock'
 import datas from '@/assets/json/data'
+import serachSave from '@/mixins/search'
+
 export default {
-    name: 'Mgr',
+    name: 'Hr',
     components: { search, edit, lock },
+    mixins: [serachSave],
     data() {
         return {
             diaTitle: '新建辅导记录',
@@ -47,6 +51,10 @@ export default {
                 ]
             }
         }
+    },
+
+    created() {
+        this.init()
     },
     methods: {
         getVal(v) {
@@ -71,6 +79,16 @@ export default {
                 this.$refs.lock.show()
             }
         },
+        init() {
+            this.searchData.periodId = this.userInfo.defaultPeriodId
+            const data = {
+                ...this.baseParams,
+                ...this.searchData
+            }
+
+            console.log('查询条件--------》', data)
+        },
+
         // 新建辅导记录
         addCoach(data) {
             this.$refs.edit.show(data)
