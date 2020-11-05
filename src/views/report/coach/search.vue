@@ -63,7 +63,7 @@ export default {
             //  根据类型拿对应数据this.type
         },
         submitForm(formName) {
-            this.$emit('change', { selectOrg: this.selectOrg, startTime: this.formInline.time })
+            this.$emit('change', this.selectOrg, this.formInline.time)
         },
         resetForm(formName) {
             this.$refs[formName].resetFields()

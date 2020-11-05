@@ -37,12 +37,11 @@ import search from './search'
 import addAsEdit from './addAsEdit'
 import lock from './lock'
 import datas from '@/assets/json/data'
-import { getUserInfo } from '@/api/calendar'
 import { parseTime } from '@/utils/filter'
 import { mapState, mapGetters } from 'vuex'
 import serachSave from '@/mixins/search'
 
-import { saveCoach, listCoach, coachQueryById, deleteCoach } from '@/api/coach'
+import { listCoach, deleteCoach } from '@/api/coach'
 export default {
     name: 'Coach',
     components: { search, addAsEdit, lock },
@@ -52,8 +51,8 @@ export default {
             diaTitle: '新建辅导记录',
             titles: [
                 { type: 'selection' },
-                { name: '工号', data: 'stateCode' },
-                { name: '应届生姓名', data: 'realname' },
+                // { name: '工号', data: 'stateCode' },
+                { name: '应届生姓名', data: 'students' },
                 { name: '组别', data: 'newGroupName' },
                 { name: '辅导时间', data: 'startTime' }
             ],
@@ -79,7 +78,7 @@ export default {
     watch: {
         groupId() {
             //  this.valueId = this.value
-            this.loadCocah()
+            this.init()
         }
     },
     created() {
@@ -132,6 +131,7 @@ export default {
                     this.baseParams.total = res.result.total
 
                     this.tableData.forEach(val => {
+                        val.students = val.studentNames.join(',')
                         val.newGroupName = val.areaName + ' ' + val.departName + ' ' + val.groupName
                         val.startTime = parseTime(val.startTime, '{y}-{m}-{d}')
                     })

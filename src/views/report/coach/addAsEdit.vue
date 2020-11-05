@@ -67,7 +67,7 @@
 <script>
 import editor from '@/components/editor'
 import SelectStudent from '@/components/tsforce/SelectStudent.vue'
-import { saveCoach, listCoach, coachQueryById, deleteCoach } from '@/api/coach'
+import { saveCoach } from '@/api/coach'
 import { parseTime } from '@/utils/filter'
 
 export default {

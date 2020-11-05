@@ -4,93 +4,67 @@
     <div slot="title" class="flc-y dialog-header">
       {{ title }}
     </div>
-    <div class="list fl">
-      <div>
-        <span>研发经理:</span>
-        <span>{{ formInline.person }}</span>
-      </div>
-    </div>
-    <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-      <div class="fl">
-        <div class="w-50">
-          <el-form-item label="组别:" class="ml10" prop="group">
-            <el-select v-model="formInline.group" placeholder="请选择组别">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="汇报内容" name="first">
+        <div>
+          <span>研发经理:</span>
+          <span>{{ formInline.realname }}</span>
         </div>
-        <div class="w-50">
-          <el-form-item label="时间:" class="ml10" prop="time">
-            <el-date-picker
-              v-model="formInline.time"
-              type="date"
-              placeholder="请选择时间"
-              value-format="timestamp"
-            />
-          </el-form-item>
-        </div>
-      </div>
+        <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
+          <select-student ref="selectStu" :user-id="userInfo.userId" :show-button="false" :selected="false" :mult="false" @changeUser="changeUser" />
+          <div class="fl">
+            <div class="w-50">
+              <el-form-item label="提交时间:" class="ml10" prop="time">
+                <el-date-picker
+                  v-model="formInline.monthReportDate"
+                  type="date"
+                  placeholder="请选择时间"
+                  value-format="timestamp"
+                />
+              </el-form-item>
+            </div>
+            <div class="w-50">
+              <el-form-item label="完成状态:" class="ml10" prop="time">
+                <el-select v-model="formInline.status" reserve-keyword placeholder="请选择">
+                  <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </div>
+            <div class="w-50">
+              <el-form-item label="汇报内容:" class="ml10" prop="content">
 
-      <div class="fl">
-        <div class="w-50">
-          <el-form-item label="完成状态:" class="ml10" prop="student">
-            <el-select v-model="formInline.student" multiple filterable reserve-keyword placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </div>
-        <div class="w-50">
-          <el-form-item label="应届生:" class="ml10" prop="student">
-            <el-select v-model="formInline.student" multiple filterable reserve-keyword placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-        </div>
-      </div>
+                <editor v-model="formInline.monthReportContent" :disabled=" !(type === 1 || type === 2)" />
+              </el-form-item>
+            </div>
 
-      <div class="mb30">
-        <z-table
-          :titles="titles"
-          :btns="btn"
-          :lists="tableData"
-          align="left"
-          class="mt15"
-          @sendVal="getVal"
-        />
-        <z-page :total="50" class="zPage" />
-      </div>
+          </div>
+        </el-form>
+        <el-button @click="showDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm1(true)">确 定</el-button>
+      </el-tab-pane>
+      <el-tab-pane label="应届生绩效" name="second">
+        <div class="mb30">
+          <z-table
+            :titles="titles"
+            :btns="btn"
+            :lists="tableData"
+            align="left"
+            class="mt15"
+            @sendVal="getVal"
+          />
+          <z-page :total="50" class="zPage" />
+        </div>
+        <el-button @click="showDialogVisible = false">取 消</el-button>
+        <el-button @click="submitForm(false)">暂存</el-button>
+        <el-button type="primary" @click="submitForm(true)">确 定</el-button>
 
-      <el-form-item label="汇报内容:" class="ml10" prop="content">
-        <el-input
-          v-model="formInline.content"
-          type="textarea"
-          placeholder="请输入内容"
-          maxlength="500"
-          rows="8"
-          show-word-limit
-        />
-      </el-form-item>
-    </el-form>
-    <span slot="footer">
-      <el-button @click="showDialogVisible = false">取 消</el-button>
-      <el-button @click="submitForm(false)">暂存</el-button>
-      <el-button type="primary" @click="submitForm(true)">确 定</el-button>
-    </span>
+      </el-tab-pane>
+    </el-tabs>
 
     <scoreDrawer ref="scoreDrawer" />
   </el-dialog>
@@ -99,8 +73,18 @@
 <script>
 import datas from '@/assets/json/data'
 import scoreDrawer from './scoreDrawer'
+import { mapState } from 'vuex'
+import editor from '@/components/editor'
+
+import SelectStudent from '@/components/tsforce/SelectStudent.vue'
+import { save, list, list1, eidt } from '@/api/mgrMonthReport'
+import serachSave from '@/mixins/search'
+import { queryArearDeptGroupById, queryUserBaseByGroupId } from '@/api/systemOrg'
+
 export default {
-    components: { scoreDrawer },
+    components: { scoreDrawer, SelectStudent, editor },
+    mixins: [serachSave],
+
     props: {
         type: {
             type: [String, Number],
@@ -115,18 +99,18 @@ export default {
         return {
             showDialogVisible: false,
             formInline: {
-                group: '',
-                student: '',
-                time: '',
-                person: '张三',
-                content: ''
+                realname: '',
+                monthReportContent: '',
+                monthReportName: '',
+                monthReportDate: '',
+                status: '0'
+
             },
             options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双奶皮' },
-                { value: '选项4', label: '双皮奶' },
-                { value: '选项5', label: '皮双奶' },
-                { value: '选项3', label: '蚵仔煎' }
+                { value: '-1', label: '删除' },
+                { value: '0', label: '暂存' },
+                { value: '1', label: '已提交' }
+
             ],
             titles: [
                 { name: '工号', data: 'producer' },
@@ -146,32 +130,107 @@ export default {
                 btnlist: [
                     { con: '编辑', type: 'text' }
                 ]
-            }
+            },
+            mgrlist: [],
+            users: [],
+            activeName: 'first',
+            areaId: null,
+            areaName: null,
+            departId: null,
+            departName: null
         }
+    },
+    computed: {
+        ...mapState('user', ['token', 'userInfo'])
     },
     methods: {
         show(data) {
+            // if (data) {
+            //     this.formInline = {
+            //         content: '范德萨发生',
+            //         group: '选项2',
+            //         person: '张三',
+            //         student: ['选项5'],
+            //         time: 1603641600000
+            //     }
+            // }
             if (data) {
-                this.formInline = {
-                    content: '范德萨发生',
-                    group: '选项2',
-                    person: '张三',
-                    student: ['选项5'],
-                    time: 1603641600000
-                }
+                Object.assign(this.formInline, data)
             }
+            this.init()
             this.showDialogVisible = true
         },
+        init() {
+            console.log('user 查询绩效学生-------------->', this.userInfo)
+            this.searchData.periodId = this.userInfo.defaultPeriodId
+            const data = {
+                ...this.baseParams,
+                ...this.searchData
+            }
+            console.log('init 参数', data)
+            //  this.loadData(data)
+        },
+        loadData(data) {
+            list(data).then(res1 => {
+                console.log('编辑经理查询结过月报', res1)
+                if (res1.success === true) {
+                    this.mgrlist = res1.result.records
+                    this.baseParams.total = res1.result.total
+                    this.loadYJS(data)
+
+                    console.log('编辑经理tir月报', this.mgrlist)
+                }
+            })
+        },
+        loadYJS(data) {
+            var groupId = data.groupId
+            this.queryUserBaseByGroupId(groupId)
+        },
+        queryUserBaseByGroupId(groupId) {
+            const params = {
+                groupId: groupId
+            }
+            // dd
+            queryUserBaseByGroupId(params).then(res => {
+                if (res.success) {
+                    this.users = res.result
+                    this.processUser()
+                } else {
+                    this.$message.error({ title: '查询失败', content: res.message })
+                }
+            })
+        },
+        processUser() {
+            // 构建一个表
+        },
+
         submitForm(status) {
             console.log(this.formInline)
             if (status) {
                 // 验证提交信息
                 this.$refs.ruleForm.validate((valid) => {
-                    if (valid) return false
+                    // if (valid) return false
 
                     // 通过逻辑处理
-                    const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                    console.log(uri, '提交地址')
+                    //   const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                    //   console.log(uri, '提交地址')
+                    this.postData()
+                })
+            } else {
+                // 不验证
+                this.postData()
+            }
+        },
+        submitForm1(status) {
+            console.log(this.formInline)
+            if (status) {
+                // 验证提交信息
+                this.$refs.ruleForm.validate((valid) => {
+                    // if (valid) return false
+
+                    // // 通过逻辑处理
+                    // const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                    // console.log(uri, '提交地址')
                     this.postData()
                 })
             } else {
@@ -181,15 +240,88 @@ export default {
         },
         postData() {
             // 数据提交
+            switch (this.type) {
+                case 1: // 新增
+
+                    console.log('保存 一线经理月报-------------------------->', this.formInline)
+                    this.save()
+                    break
+                case 2: // 编辑
+                    console.log('被编辑')
+                    var data = {
+                        id: this.formInline.id,
+                        content: this.formInline.content
+                    }
+                    console.log('保存辅导-----修改--------------------------->', data)
+                    this.save(data)
+                    break
+                default:
+                    this.showDialogVisible = false
+                    break
+            }
         },
+        save(data) {
+            if (data) {
+                console.log('被编辑')
+                save(data).then(res => {
+                    if (res.success) {
+                        console.log('返回结果000000000000000000000000', res)
+                        this.$message.success(res.message)
+                        this.showDialogVisible = false
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                        this.showDialogVisible = false
+                        this.$refs['ruleForm'].resetFields()
+                    }
+                })
+            } else {
+                this.formInline.id = null
+                save(this.formInline).then(res => {
+                    if (res.success) {
+                        this.$message.success(res.message)
+                        this.$emit('ok')
+                    } else {
+                        this.$message.warning(res.message)
+                    }
+                    this.showDialogVisible = false
+                    this.$refs['ruleForm'].resetFields()
+                    console.log('返回结果', res)
+                })
+            }
+        },
+
         resetForm(formName) {
             this.$refs[formName].resetFields()
+        },
+        changeUser(selectorg, user, selectOrgName) {
+            //  this.$emit('changeUser', this.selectorg, user[0], this.selectOrgName, this.selectNode, this.users.length)
+            console.log('----------------------------', selectorg, user)
+            this.areaId = selectorg[0]
+            this.areaName = selectOrgName[0]
+            this.departId = selectorg[1]
+            this.departName = selectOrgName[1]
+            this.searchData.groupId = selectorg[2]
+            this.searchData.groupName = selectOrgName[2]
+            if (user != null) {
+                this.searchData.realname = user.realname
+            }
+            this.formInline.groupId = this.searchData.groupId
+            this.formInline.groupName = this.searchData.groupName
+            this.formInline.areaId = this.areaId
+            this.formInline.areaName = this.areaName
+            this.formInline.departId = this.departId
+            this.formInline.departName = this.departName
+            this.init()
         },
         getVal(v) {
             const { type } = v
             if (type === '编辑') {
                 this.$refs.scoreDrawer.show()
             }
+        },
+        handleClick(tab, event) {
+            console.log(tab, event)
         }
 
     }

@@ -57,7 +57,7 @@
 
 <script>
 import editor from '@/components/editor'
-import { save, list, queryById, deleteById, edit } from '@/api/mgr'
+import { save, edit } from '@/api/mgr'
 import { parseTime } from '@/utils/filter'
 
 export default {

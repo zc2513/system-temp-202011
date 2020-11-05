@@ -46,9 +46,8 @@ import addAsEdit from './addAsEdit'
 import lock from './lock'
 import datas from '@/assets/json/data'
 import { getUserInfo } from '@/api/calendar'
-import { mapState, mapGetters } from 'vuex'
-import { completeForWarning } from '@/api/supwarning'
-import { save, list, queryById, deleteById, deleteBatch } from '@/api/mgr'
+import { mapState } from 'vuex'
+import { list, deleteById } from '@/api/mgr'
 import { parseTime } from '@/utils/filter'
 import serachSave from '@/mixins/search'
 
@@ -56,9 +55,7 @@ export default {
     name: 'Mgr',
     components: { search, addAsEdit, lock },
     mixins: [serachSave],
-    computed: {
-        ...mapState('user', ['token', 'userInfo'])
-    },
+
     data() {
         return {
             diaTitle: '新建Mgr月报',
@@ -83,6 +80,9 @@ export default {
             mgrlist: null,
             type: 1
         }
+    },
+    computed: {
+        ...mapState('user', ['token', 'userInfo'])
     },
     created() {
         this.getPageUserInfo()
