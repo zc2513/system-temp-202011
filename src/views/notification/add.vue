@@ -25,7 +25,7 @@
 
 <script>
 import editor from '@/components/editor'
-import { add } from '@/api/notification'
+import { add, getInfo } from '@/api/notification'
 import { mapState } from 'vuex'
 export default {
     components: { editor },
@@ -61,8 +61,16 @@ export default {
         show(type, data) {
             if (type === 'edit') {
                 this.formInline = data
+                getInfo({ id: data.id }).then(res => {
+                    if (res.success) {
+                        this.formInline = res.result
+                        this.showDialogVisible = true
+                        console.log(res.result, 55555555)
+                    }
+                })
+            } else {
+                this.showDialogVisible = true
             }
-            this.showDialogVisible = true
         },
         submitForm(status) {
             this.$refs.ruleForm.validate((valid) => {

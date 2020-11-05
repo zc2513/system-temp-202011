@@ -32,3 +32,19 @@ export function getList(params) {
         params
     })
 }
+
+/**
+ * @description 通知添加接口
+ * @author zc2513
+ * @date 2020-11-05
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function getInfo(params) {
+    return request({
+        url: '/sys/annountCement/queryById',
+        method: 'get',
+        params
+    })
+}
