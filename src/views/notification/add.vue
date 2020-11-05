@@ -37,7 +37,8 @@ export default {
                 msgContent: '',
                 msgType: 'USER',
                 userIds: '',
-                createBy: ''
+                createBy: '',
+                enclosureIds: ''
             },
             rules: {
                 titile: [

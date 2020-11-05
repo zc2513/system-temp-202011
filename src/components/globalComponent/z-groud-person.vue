@@ -61,7 +61,8 @@ export default {
                                     value: ele.deptId,
                                     label: ele.deptName,
                                     children: ele.groupList.map(e => {
-                                        if (this.value.includes(e.groupId)) {
+                                        if (this.value && this.value.length && this.value.includes(e.groupId)) {
+                                            console.log(this.value)
                                             this.getPerson(e).then(res => {
                                                 return {
                                                     value: e.groupId,
