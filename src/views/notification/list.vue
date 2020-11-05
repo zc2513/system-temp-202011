@@ -16,11 +16,11 @@
           <li v-for="(item,key) in datas" :key="key">
             <div class="title" :class="{'active':!item.status}">
               【{{ item.type }}】
-              {{ item.title }}
-              <span v-if="item.des" class="cursor">《{{ item.des }}》</span>
+              {{ item.titile }}
+              <span v-if="item.msgContent" class="cursor">《{{ item.msgContent }}》</span>
             </div>
-            <div class="person">发布人：{{ item.person }}</div>
-            <div class="time">{{ item.time }}</div>
+            <div class="person">发布人：{{ item.sender }}</div>
+            <div class="time">{{ item.sendTime }}</div>
           </li>
           <li v-if="datas.length>=4" class="flcc c-66f cursor">
             <div @click="init('more')">查看更多 <i class="el-icon-arrow-down" /> </div>
@@ -33,6 +33,7 @@
 
 <script>
 import fullScreen from '@/mixins/full-screen'
+import { listByUser } from '@/api/notification'
 export default {
     name: 'NotificationList',
     mixins: [fullScreen],
@@ -53,21 +54,33 @@ export default {
     },
     methods: {
         init(type) {
-            const data = [
-                { status: false, type: '系统消息', title: 'XXX发布了应届生培训规则', des: '', person: 'HRXX', time: '2020-10-20 12:20:09' },
-                { status: true, type: '公告通知', title: 'XXX发布了应届生培训规则', des: '2020年10月3日工作汇报', person: 'HRXX', time: '2020-10-20 12:20:09' },
-                { status: true, type: '系统消息', title: 'XXX发布了应届生培训规则', des: '', person: 'HRXX', time: '2020-10-20 12:20:09' },
-                { status: false, type: '公告通知', title: 'XXX发布了应届生培训规则', des: '2020年10月3日工作汇报', person: 'HRXX', time: '2020-10-20 12:20:09' }
-            ]
             // 请求数据
             if (type === 'all') {
-                this.datas = data
+                listByUser().then(res => {
+                    res.result.anntMsgList.map(e => {
+                        e.type = '公告通知'
+                    })
+                    res.result.sysMsgList.map(e => {
+                        e.type = '系统通知'
+                    })
+                    this.datas = (res.result.anntMsgList).concat(res.result.sysMsgList)
+                })
             }
             if (type === 'tz') {
-                this.datas = data.filter(e => e.type === '公告通知')
+                listByUser().then(res => {
+                    res.result.anntMsgList.map(e => {
+                        e.type = '公告通知'
+                    })
+                    this.datas = res.result.anntMsgList
+                })
             }
             if (type === 'sys') {
-                this.datas = data.filter(e => e.type === '系统消息')
+                listByUser().then(res => {
+                    res.result.sysMsgList.map(e => {
+                        e.type = '系统通知'
+                    })
+                    this.datas = res.result.sysMsgList
+                })
             }
             if (type === 'read') {
                 this.datas = this.datas.map(e => {

@@ -18,7 +18,7 @@ export function add(data) {
 }
 
 /**
- * @description 通知添加接口
+ * @description 通知列表
  * @author zc2513
  * @date 2020-11-05
  * @export
@@ -34,7 +34,7 @@ export function getList(params) {
 }
 
 /**
- * @description 通知添加接口
+ * @description 通知详情
  * @author zc2513
  * @date 2020-11-05
  * @export
@@ -44,6 +44,38 @@ export function getList(params) {
 export function getInfo(params) {
     return request({
         url: '/sys/annountCement/queryById',
+        method: 'get',
+        params
+    })
+}
+
+/**
+ * @description 通知发布
+ * @author zc2513
+ * @date 2020-11-05
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function doReleaseData(params) {
+    return request({
+        url: '/sys/annountCement/doReleaseData',
+        method: 'get',
+        params
+    })
+}
+
+/**
+ * @description 通知列表全
+ * @author zc2513
+ * @date 2020-11-05
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function listByUser(params) {
+    return request({
+        url: '/sys/annountCement/listByUser',
         method: 'get',
         params
     })
