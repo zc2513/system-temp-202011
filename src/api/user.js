@@ -25,11 +25,11 @@ export function login(data) {
  * @param {*} token
  * @returns
  */
-export function getInfo(token) {
+export function getInfo(params) {
     return request({
-        url: '/base/userSvc/getUserModel',
+        url: '/sys/loginGetUserInfo',
         method: 'get',
-        params: { token }
+        params
     })
 }
 

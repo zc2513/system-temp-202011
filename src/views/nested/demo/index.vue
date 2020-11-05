@@ -13,6 +13,10 @@
         数据回显需要后台返回的数据包含父及id
       </div>
     </div>
+
+    <div class="mt30 mt30">
+      <z-upfile v-model="fileList" multiple limit="5" />
+    </div>
   </div>
 </template>
 
@@ -20,12 +24,15 @@
 import editor from '@/components/editor'
 import notificationPop from '@/layout/tblyout/notification-pop'
 
+import zUpfile from '@/components/z-upfile'
+
 export default {
-    components: { editor, notificationPop },
+    components: { editor, notificationPop, zUpfile },
     data() {
         return {
             content: '<p>范德萨发fdsfkldjafkldsjfldjsflk</p>',
-            ids: []
+            ids: [],
+            fileList: []
         }
     },
     watch: {
@@ -34,6 +41,9 @@ export default {
         },
         ids(newValue) {
             console.log(newValue, '选中的值')
+        },
+        fileList(newValue) {
+            console.log(newValue, '上传接收的文件')
         }
     },
     created() {

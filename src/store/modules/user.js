@@ -72,37 +72,38 @@ const actions = {
             resolve({ asyncRoutes: [], roles: ['admin'] })
             // resolve({ asyncRoutes: sysRouter, roles: ['admin'] })
 
-            // getInfo(state.token).then(response => {
-            //     const { data } = response
+            getInfo().then(response => {
+                const { result: { userInfo }} = response
+                console.log(userInfo, '获取用户信息---信息不全--暂未处理')
 
-            //     // 当前用户权限
-            //     const { roles, asyncRoutes } = data
+                // // 当前用户权限
+                // const { roles, asyncRoutes } = data
 
-            //     // 异步路由请求
-            //     // asyncRoutes = axios请求 异步路由获取
-            //     const loadingInstance = Loading.service({
-            //         lock: true,
-            //         text: '路由加载中',
-            //         spinner: 'el-icon-loading',
-            //         background: 'rgba(0, 0, 0, 0.7)'
-            //     })
-            //     setTimeout(() => {
-            //         loadingInstance.close()
-            //         dispatch('permission/generateRoutes', { roles, asyncRoutes }, { root: true })
-            //     }, 1000)
+                // // 异步路由请求
+                // // asyncRoutes = axios请求 异步路由获取
+                // const loadingInstance = Loading.service({
+                //     lock: true,
+                //     text: '路由加载中',
+                //     spinner: 'el-icon-loading',
+                //     background: 'rgba(0, 0, 0, 0.7)'
+                // })
+                // setTimeout(() => {
+                //     loadingInstance.close()
+                //     dispatch('permission/generateRoutes', { roles, asyncRoutes }, { root: true })
+                // }, 1000)
 
-            //     if (!data) {
-            //         return reject('Verification failed, please Login again.')
-            //     }
+                // if (!data) {
+                //     return reject('Verification failed, please Login again.')
+                // }
 
-            //     const { name, avatar } = data
+                // const { name, avatar } = data
 
-            //     commit('SET_NAME', name)
-            //     commit('SET_AVATAR', avatar)
-            //     resolve(data)
-            // }).catch(error => {
-            //     reject(error)
-            // })
+                // commit('SET_NAME', name)
+                // commit('SET_AVATAR', avatar)
+                // resolve(data)
+            }).catch(error => {
+                reject(error)
+            })
         })
     },
 
