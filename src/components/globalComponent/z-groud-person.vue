@@ -34,12 +34,7 @@ export default {
     watch: {
         value: {
             handler(v) {
-                if (Array.isArray(v)) {
-                // 回显处理
-                } else {
-                    this.selDatas = v ? v.split(',') : []
-                    console.log(this.selDatas, '编辑')
-                }
+                // 回显暂无处理....
             },
             immediate: true
         }
@@ -49,7 +44,6 @@ export default {
     },
     methods: {
         init() {
-            // console.log(this.value)
             queryArearDeptGroupById({ userId: this.userInfo.id }).then(res => {
                 if (res.code === 200) {
                     this.options = res.result.map(item => {
@@ -61,32 +55,15 @@ export default {
                                     value: ele.deptId,
                                     label: ele.deptName,
                                     children: ele.groupList.map(e => {
-                                        if (this.value.includes(e.groupId)) {
-                                            this.getPerson(e).then(res => {
-                                                return {
-                                                    value: e.groupId,
-                                                    label: e.groupName
-                                                }
-                                            })
-                                            // return this.getPerson(e)
-                                            // const arr = () => this.getPerson(e.groupId)
-                                            // console.log(arr, 99999999)
-                                            // return {
-                                            //     value: e.groupId,
-                                            //     label: e.groupName
-                                            // }
-                                        } else {
-                                            return {
-                                                value: e.groupId,
-                                                label: e.groupName
-                                            }
+                                        return {
+                                            value: e.groupId,
+                                            label: e.groupName
                                         }
                                     })
                                 }
                             })
                         }
                     })
-                    console.log(this.options, 23123131313)
                 }
             })
         },
@@ -111,25 +88,7 @@ export default {
             }
         },
         getkey(e) {
-            console.log(e, 6666666666666666666)
             this.$emit('input', e.join(','))
-        },
-        getPerson(e) {
-            return new Promise((resolve) => {
-                queryUserBaseByGroupId({ groupId: e.groupId }).then(res => {
-                    if (res.code === 200) {
-                        resolve(res.result.map(item => {
-                            return {
-                                value: item.id,
-                                label: item.realname,
-                                leaf: true
-                            }
-                        }))
-                    } else {
-                        this.$message.error(res.message || '未返回错误状态')
-                    }
-                })
-            })
         }
     }
 }

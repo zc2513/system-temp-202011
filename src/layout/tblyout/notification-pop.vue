@@ -6,19 +6,13 @@
     trigger="hover"
     popper-class="notification-pop fl-y-sb"
   >
-    <el-tabs v-model="activeName" class="el-tabs-cls" stretch>
+    <el-tabs v-model="activeName" class="el-tabs-cls" stretch @tab-click="handleClick">
       <el-tab-pane label="系统消息" name="sys" />
       <el-tab-pane label="公告通知" name="tz" />
     </el-tabs>
     <div class="fl1 con-list">
       <ul>
-        <li>导师张三评论了我的日报导师张三评论了我的日报导师张三评论了我的日报导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
-        <li>导师张三评论了我的日报</li>
+        <li v-for="(i,t) in notData" :key="t">{{ i.titile }}</li>
       </ul>
     </div>
     <div class="bottom flcc c-56">
@@ -30,10 +24,34 @@
 </template>
 
 <script>
+import { listByUser } from '@/api/notification'
 export default {
     data() {
         return {
-            activeName: 'sys'
+            activeName: 'sys',
+            notData: [],
+            sysMsgList: [],
+            anntMsgList: []
+        }
+    },
+    created() {
+        this.init()
+    },
+    methods: {
+        init(type) {
+            listByUser().then(res => {
+                this.anntMsgList = res.result.anntMsgList
+                this.sysMsgList = res.result.sysMsgList
+                this.notData = res.result.sysMsgList
+                console.log(this.anntMsgList, this.sysMsgList, this.notData)
+            })
+        },
+        handleClick(e) {
+            if (e.index === '1') {
+                this.notData = this.anntMsgList
+            } else {
+                this.notData = this.sysMsgList
+            }
         }
     }
 }
@@ -79,7 +97,7 @@ export default {
     .con-list{
         ul{
             padding: 0 16px;
-            max-height: 280px;
+            height: 280px;
             overflow-y: auto;
 
             li{

@@ -24,8 +24,9 @@
           <el-table-column prop="createTime" label="创建时间" />
           <el-table-column label="发布状态">
             <template slot-scope="{row}">
-              <div>
-                {{ row.sendStatus }} {{ row.sendStatus_dictText }}
+              <div class="flc-y">
+                <z-circle :color="row.sendStatus === '1'?'#76b200': '#ff5633'" :size="10" class="mr5" />
+                {{ row.sendStatus_dictText }}
               </div>
             </template>
           </el-table-column>
@@ -33,7 +34,7 @@
             <template slot-scope="{row}">
               <el-button type="text" size="mini" @click="check(row)">查看</el-button>
               <el-button v-if="row.sendStatus==='0'" type="text" size="mini" @click="addSave('edit', row )">编辑</el-button>
-              <el-button v-if="row.sendStatus==='0'" type="text" size="mini" @click="delItemMenu( row)">发布</el-button>
+              <el-button v-if="row.sendStatus==='0'" type="text" size="mini" @click="upData( row)">发布</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -48,8 +49,7 @@
 <script>
 import search from './search'
 import add from './add'
-
-import { getList } from '@/api/notification'
+import { getList, doReleaseData } from '@/api/notification'
 import searchJs from '@/mixins/serch'
 export default {
     name: 'Notification',
@@ -86,6 +86,28 @@ export default {
                     id: row.id
                 }
             })
+        },
+        upData(row) {
+            this.$confirm('是否发布此通知?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                doReleaseData({ id: row.id }).then(res => {
+                    if (res.code === 200) {
+                        this.$message({
+                            type: 'info',
+                            message: res.message
+                        })
+                        this.init()
+                    } else {
+                        this.$message({
+                            type: 'warning',
+                            message: res.message
+                        })
+                    }
+                })
+            }).catch(() => {})
         }
     }
 }
