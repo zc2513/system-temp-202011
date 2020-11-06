@@ -149,8 +149,8 @@ export default {
                 if (valid) {
                     this.loading = true
                     this.$store.dispatch('user/login', this.loginForm).then(res => {
-                        this.$s.setStorage('userInfo', res)
-                        this.$router.push({ path: this.redirect || '/' })
+                        // this.$s.setStorage('userInfo', res)
+                        this.$router.push({ path: this.redirect || '/login/tab' })
                         this.loading = false
                     }).catch(() => {
                         this.loading = false

@@ -7,14 +7,28 @@
 </template>
 
 <script>
+
+// 目前缺少自动跳转与类型选择接口
 export default {
-    name: 'Tab',
+    name: 'LoginTab',
     methods: {
         goToTab(id) {
-            this.$router.push({
-                path: '/login/index',
-                query: { id }
-            })
+            if (id === 1) {
+                const loading = this.$loading({
+                    lock: true,
+                    text: '应届生培养管理系统数据加载中,请稍等...',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                })
+                setTimeout(() => {
+                    this.$router.push({
+                        path: '/overview'
+                    })
+                    loading.close()
+                }, 1000)
+            } else {
+                this.$message('暂无在线系统')
+            }
         }
     }
 }

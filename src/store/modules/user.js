@@ -3,14 +3,15 @@ import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { Message } from 'element-ui'
-import { getStorage } from '@/utils/storage'
+// import { getStorage } from '@/utils/storage'
 // eslint-disable-next-line no-unused-vars
 import sysRouter from '@/api/syncRouters'
 const getDefaultState = () => {
     return {
         token: getToken(),
         roles: [],
-        userInfo: getStorage('userInfo') || '',
+        // userInfo: getStorage('userInfo') || '',
+        userInfo: '',
         name: '',
         avatar: ''
     }
@@ -66,15 +67,19 @@ const actions = {
             // 1.拉去用户信息
             // 2.拉取用户路由权限
             // 3.拉取用户角色权限
-            commit('SET_NAME', '张三')
-            commit('SET_AVATAR', 'https://dss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3646436076,201719204&fm=26&gp=0.jpg')
-            commit('SET_ROLES', ['admin'])
-            resolve({ asyncRoutes: [], roles: ['admin'] })
+
             // resolve({ asyncRoutes: sysRouter, roles: ['admin'] })
 
             getInfo().then(response => {
                 const { result: { userInfo }} = response
-                console.log(userInfo, '获取用户信息---信息不全--暂未处理')
+                console.log('获取用户信息------', userInfo)
+                const { avatar, username } = userInfo
+                commit('SET_NAME', username)
+                commit('SET_AVATAR', avatar)
+                commit('SET_USER_INFO', userInfo)
+
+                commit('SET_ROLES', ['admin'])
+                resolve({ asyncRoutes: [], roles: ['admin'] })
 
                 // // 当前用户权限
                 // const { roles, asyncRoutes } = data

@@ -13,16 +13,16 @@
       </div>
       <div class="box content-list mt15">
         <ul class="c-56">
-          <li v-for="(item,key) in datas" :key="key">
-            <div class="title" :class="{'active':!item.status}">
-              【{{ item.type }}】
+          <li v-for="(item,key) in datas.records" :key="key">
+            <div class="title" :class="{'active': !Number(item.readFlag)}" @click="goInfo(item.anntId)">
+              【{{ item.msgCategory_dictText }}】
               {{ item.titile }}
               <span v-if="item.msgContent" class="cursor">《{{ item.msgContent }}》</span>
             </div>
             <div class="person">发布人：{{ item.sender }}</div>
             <div class="time">{{ item.sendTime }}</div>
           </li>
-          <li v-if="datas.length>=4" class="flcc c-66f cursor">
+          <li v-if="datas.current<datas.pages" class="flcc c-66f cursor">
             <div @click="init('more')">查看更多 <i class="el-icon-arrow-down" /> </div>
           </li>
         </ul>
@@ -33,14 +33,21 @@
 
 <script>
 import fullScreen from '@/mixins/full-screen'
-import { listByUser } from '@/api/notification'
+import { list, readAll } from '@/api/notification'
 export default {
     name: 'NotificationList',
     mixins: [fullScreen],
     data() {
         return {
             activeName: 'all',
-            datas: []
+            msgCategory: '',
+            datas: [],
+            alldatas: [], // 全部消息
+            sysdatas: [], // 系统信息
+            tzdatas: [], // 通知信息
+            allindex: 1,
+            sysindex: 1,
+            tzindex: 1
         }
     },
     watch: {
@@ -50,50 +57,72 @@ export default {
         }
     },
     created() {
-        this.init('all')
+        this.initdata()
     },
     methods: {
+        initdata() {
+            // 全部消息
+            list().then(res => {
+                this.alldatas = res.result
+                this.datas = res.result
+            })
+            // 系统消息
+            list({ msgCategory: 1 }).then(res => {
+                this.sysdatas = res.result
+            })
+            // 通知消息
+            list({ msgCategory: 2 }).then(res => {
+                this.tzdatas = res.result
+            })
+        },
         init(type) {
-            // 请求数据
             if (type === 'all') {
-                listByUser().then(res => {
-                    res.result.anntMsgList.map(e => {
-                        e.type = '公告通知'
-                    })
-                    res.result.sysMsgList.map(e => {
-                        e.type = '系统通知'
-                    })
-                    this.datas = (res.result.anntMsgList).concat(res.result.sysMsgList)
-                })
+                this.datas = this.alldatas
             }
             if (type === 'tz') {
-                listByUser().then(res => {
-                    res.result.anntMsgList.map(e => {
-                        e.type = '公告通知'
-                    })
-                    this.datas = res.result.anntMsgList
-                })
+                this.datas = this.tzdatas
             }
             if (type === 'sys') {
-                listByUser().then(res => {
-                    res.result.sysMsgList.map(e => {
-                        e.type = '系统通知'
-                    })
-                    this.datas = res.result.sysMsgList
-                })
+                this.datas = this.sysdatas
             }
             if (type === 'read') {
-                this.datas = this.datas.map(e => {
-                    e.status = true
-                    return e
+                readAll().then(res => {
+                    this.$message(res.message)
                 })
             }
             if (type === 'more') {
-                this.datas = [...this.datas,
-                    { status: true, type: '系统消息', title: 'XXX发布了应届生培训规则', des: '', person: 'HRXX', time: '2020-10-20 12:20:09' },
-                    { status: false, type: '公告通知', title: 'XXX发布了应届生培训规则', des: '2020年10月3日工作汇报', person: 'HRXX', time: '2020-10-20 12:20:09' }
-                ]
+                console.log(this.activeName)
+                if (this.activeName === 'all') {
+                    this.allindex += 1
+                    list({ pageNo: this.allindex }).then(res => {
+                        this.alldatas.records = [...this.alldatas.records, ...res.result.records]
+                        this.alldatas.current = res.result.current
+                        this.datas = this.alldatas
+                    })
+                } else if (this.activeName === 'sys') {
+                    this.sysindex += 1
+                    list({ msgCategory: 1, pageNo: this.sysindex }).then(res => {
+                        this.sysdatas.records = [...this.sysdatas.records, ...res.result.records]
+                        this.sysdatas.current = res.result.current
+                        this.datas = this.sysdatas
+                    })
+                } else {
+                    this.tzindex += 1
+                    list({ msgCategory: 2, pageNo: this.tzindex }).then(res => {
+                        this.tzdatas.records = [...this.tzdatas.records, ...res.result.records]
+                        this.tzdatas.current = res.result.current
+                        this.datas = this.tzdatas
+                    })
+                }
             }
+        },
+        goInfo(id) {
+            this.$router.push({
+                path: 'info',
+                query: {
+                    id: id
+                }
+            })
         }
     }
 }
@@ -148,6 +177,7 @@ export default {
                         padding-left: 8px;
                     }
                     .title{
+                        cursor: pointer;
                         position: relative;
                         color: #5F6266;
                         &::after{

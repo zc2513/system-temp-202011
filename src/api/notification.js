@@ -80,3 +80,35 @@ export function listByUser(params) {
         params
     })
 }
+
+/**
+ * @description 通知列表全
+ * @author zc2513
+ * @date 2020-11-05
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function list(params) {
+    return request({
+        url: '/sys/sysAnnouncementSend/list',
+        method: 'get',
+        params
+    })
+}
+
+/**
+ * @description 一键已读
+ * @author zc2513
+ * @date 2020-11-05
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function readAll(data) {
+    return request({
+        url: '/sys/sysAnnouncementSend/readAll',
+        method: 'put',
+        data
+    })
+}

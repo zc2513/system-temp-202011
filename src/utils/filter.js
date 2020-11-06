@@ -6,6 +6,7 @@
  * @returns {string | null} 返回自定义的拼接字符
  */
 export function parseTime(time, cFormat) {
+    if (!time) return
     if (arguments.length === 0) {
         return null
     }
