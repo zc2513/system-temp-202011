@@ -32,6 +32,7 @@
  * {accept}     接收文件类型
  * {limit}      最大接收文件个数
  * {action}     直接上传文件地址
+ * @returns 返回选中文件列表
  */
 // 默认不实施上传
 export default {
