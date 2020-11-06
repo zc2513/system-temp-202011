@@ -15,14 +15,14 @@
         <ul class="c-56">
           <li v-for="(item,key) in datas" :key="key">
             <div class="title" :class="{'active':!item.status}">
-              【{{ item.type }}】
+              【{{ item.msgCategory_dictText }}】
               {{ item.titile }}
               <span v-if="item.msgContent" class="cursor">《{{ item.msgContent }}》</span>
             </div>
             <div class="person">发布人：{{ item.sender }}</div>
             <div class="time">{{ item.sendTime }}</div>
           </li>
-          <li v-if="datas.length>=4" class="flcc c-66f cursor">
+          <li v-if="datas.length>=10" class="flcc c-66f cursor">
             <div @click="init('more')">查看更多 <i class="el-icon-arrow-down" /> </div>
           </li>
         </ul>
@@ -33,14 +33,16 @@
 
 <script>
 import fullScreen from '@/mixins/full-screen'
-import { listByUser } from '@/api/notification'
+import { list, readAll } from '@/api/notification'
 export default {
     name: 'NotificationList',
     mixins: [fullScreen],
     data() {
         return {
             activeName: 'all',
-            datas: []
+            datas: [],
+            xtdatas: [],
+            tzdatas: []
         }
     },
     watch: {
@@ -50,43 +52,37 @@ export default {
         }
     },
     created() {
-        this.init('all')
+        this.initdata()
     },
     methods: {
-        init(type) {
+        initdata() {
             // 请求数据
-            if (type === 'all') {
-                listByUser().then(res => {
-                    res.result.anntMsgList.map(e => {
-                        e.type = '公告通知'
-                    })
-                    res.result.sysMsgList.map(e => {
-                        e.type = '系统通知'
-                    })
-                    this.datas = (res.result.anntMsgList).concat(res.result.sysMsgList)
+            list().then(res => {
+                this.datas = res.result.records
+                res.result.records.forEach((item, index) => {
+                    if (item.msgCategory_dictText === '系统消息') {
+                        this.xtdatas.push(item)
+                    } else {
+                        this.tzdatas.push(item)
+                    }
                 })
+            })
+        },
+        init(type) {
+            if (type === 'all') {
+                this.datas = [...this.xtdatas, ...this.tzdatas]
             }
             if (type === 'tz') {
-                listByUser().then(res => {
-                    res.result.anntMsgList.map(e => {
-                        e.type = '公告通知'
-                    })
-                    this.datas = res.result.anntMsgList
-                })
+                this.datas = this.tzdatas
             }
             if (type === 'sys') {
-                listByUser().then(res => {
-                    res.result.sysMsgList.map(e => {
-                        e.type = '系统通知'
-                    })
-                    this.datas = res.result.sysMsgList
-                })
+                this.datas = this.xtdatas
             }
             if (type === 'read') {
-                this.datas = this.datas.map(e => {
-                    e.status = true
-                    return e
+                readAll().then(res => {
+                    console.log(res)
                 })
+                console.log(999)
             }
             if (type === 'more') {
                 this.datas = [...this.datas,
