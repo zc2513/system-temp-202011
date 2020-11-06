@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             options: [],
-            selDatas: ['2']
+            selDatas: []
         }
     },
     computed: {
