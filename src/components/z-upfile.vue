@@ -24,6 +24,15 @@
 
 <script>
 
+/** @description 接收参数描述
+ * {multiple}   是否多选
+ * {drag}       是否拖拽
+ * {showFileList} 是显示选中项
+ * {listType}   选按钮样式类型
+ * {accept}     接收文件类型
+ * {limit}      最大接收文件个数
+ * {action}     直接上传文件地址
+ */
 // 默认不实施上传
 export default {
     props: {
