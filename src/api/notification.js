@@ -105,10 +105,10 @@ export function list(params) {
  * @param {*} params
  * @returns
  */
-export function readAll(params) {
+export function readAll(data) {
     return request({
-        url: '/sys/annountCement/readAll',
-        method: 'get',
-        params
+        url: '/sys/sysAnnouncementSend/readAll',
+        method: 'put',
+        data
     })
 }

@@ -74,7 +74,6 @@ const actions = {
                 const { result: { userInfo }} = response
                 console.log('获取用户信息------', userInfo)
                 const { avatar, username } = userInfo
-                debugger
                 commit('SET_NAME', username)
                 commit('SET_AVATAR', avatar)
                 commit('SET_USER_INFO', userInfo)

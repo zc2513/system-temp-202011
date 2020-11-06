@@ -13,8 +13,8 @@
       </div>
       <div class="box content-list mt15">
         <ul class="c-56">
-          <li v-for="(item,key) in datas" :key="key">
-            <div class="title" :class="{'active':!item.status}">
+          <li v-for="(item,key) in datas.records" :key="key">
+            <div class="title" :class="{'active': !Number(item.readFlag)}">
               【{{ item.msgCategory_dictText }}】
               {{ item.titile }}
               <span v-if="item.msgContent" class="cursor">《{{ item.msgContent }}》</span>
@@ -22,7 +22,7 @@
             <div class="person">发布人：{{ item.sender }}</div>
             <div class="time">{{ item.sendTime }}</div>
           </li>
-          <li v-if="datas.length>=10" class="flcc c-66f cursor">
+          <li v-if="datas.current<datas.pages" class="flcc c-66f cursor">
             <div @click="init('more')">查看更多 <i class="el-icon-arrow-down" /> </div>
           </li>
         </ul>
@@ -40,9 +40,14 @@ export default {
     data() {
         return {
             activeName: 'all',
+            msgCategory: '',
             datas: [],
-            xtdatas: [],
-            tzdatas: []
+            alldatas: [], // 全部消息
+            sysdatas: [], // 系统信息
+            tzdatas: [], // 通知信息
+            allindex: 1,
+            sysindex: 1,
+            tzindex: 1
         }
     },
     watch: {
@@ -56,39 +61,59 @@ export default {
     },
     methods: {
         initdata() {
-            // 请求数据
+            // 全部消息
             list().then(res => {
-                this.datas = res.result.records
-                res.result.records.forEach((item, index) => {
-                    if (item.msgCategory_dictText === '系统消息') {
-                        this.xtdatas.push(item)
-                    } else {
-                        this.tzdatas.push(item)
-                    }
-                })
+                this.alldatas = res.result
+                this.datas = res.result
+            })
+            // 系统消息
+            list({ msgCategory: 1 }).then(res => {
+                this.sysdatas = res.result
+            })
+            // 通知消息
+            list({ msgCategory: 2 }).then(res => {
+                this.tzdatas = res.result
             })
         },
         init(type) {
             if (type === 'all') {
-                this.datas = [...this.xtdatas, ...this.tzdatas]
+                this.datas = this.alldatas
             }
             if (type === 'tz') {
                 this.datas = this.tzdatas
             }
             if (type === 'sys') {
-                this.datas = this.xtdatas
+                this.datas = this.sysdatas
             }
             if (type === 'read') {
                 readAll().then(res => {
-                    console.log(res)
+                    this.$message(res.message)
                 })
-                console.log(999)
             }
             if (type === 'more') {
-                this.datas = [...this.datas,
-                    { status: true, type: '系统消息', title: 'XXX发布了应届生培训规则', des: '', person: 'HRXX', time: '2020-10-20 12:20:09' },
-                    { status: false, type: '公告通知', title: 'XXX发布了应届生培训规则', des: '2020年10月3日工作汇报', person: 'HRXX', time: '2020-10-20 12:20:09' }
-                ]
+                console.log(this.activeName)
+                if (this.activeName === 'all') {
+                    this.allindex += 1
+                    list({ pageNo: this.allindex }).then(res => {
+                        this.alldatas.records = [...this.alldatas.records, ...res.result.records]
+                        this.alldatas.current = res.result.current
+                        this.datas = this.alldatas
+                    })
+                } else if (this.activeName === 'sys') {
+                    this.sysindex += 1
+                    list({ msgCategory: 1, pageNo: this.sysindex }).then(res => {
+                        this.sysdatas.records = [...this.sysdatas.records, ...res.result.records]
+                        this.sysdatas.current = res.result.current
+                        this.datas = this.sysdatas
+                    })
+                } else {
+                    this.tzindex += 1
+                    list({ msgCategory: 2, pageNo: this.tzindex }).then(res => {
+                        this.tzdatas.records = [...this.tzdatas.records, ...res.result.records]
+                        this.tzdatas.current = res.result.current
+                        this.datas = this.tzdatas
+                    })
+                }
             }
         }
     }
