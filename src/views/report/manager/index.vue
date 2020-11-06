@@ -7,11 +7,11 @@
       <div>
         <el-button type="primary" class="ml20" @click="add">新建</el-button>
       </div>
-      <div class="selectedTitle plr24 flc-y mt15 c-56 f14">
+      <!-- <div class="selectedTitle plr24 flc-y mt15 c-56 f14">
         已选择
         <span class="c-66f pl5 pr5"> 0 </span>项
         <span class="c-66f ml25 cursor">清空</span>
-      </div>
+      </div> -->
 
       <z-table
         :titles="titles"
@@ -25,7 +25,7 @@
     <z-page :total="baseParams.total" :page-size="baseParams.pageSize" :current-page="baseParams.pageNo" @pagesend="getPageData" @pagesizes="pagesizes" />
 
     <!-- 新增编辑页面 -->
-    <addAsEdit ref="addAsEdit" :title="diaTitle" @ok="init" />
+    <addAsEdit ref="addAsEdit" :type="type" :areas="areas" :title="diaTitle" @ok="init" />
     <!-- 详情页面 -->
     <info ref="info" />
   </div>
@@ -40,7 +40,7 @@ import datas from '@/assets/json/data'
 import { getUserInfo } from '@/api/calendar'
 import { mapState } from 'vuex'
 import { completeForWarning } from '@/api/supwarning'
-import { list, list1, eidt } from '@/api/mgrMonthReport'
+import { list, list1, eidt, deleteById } from '@/api/mgrMonthReport'
 import { parseTime } from '@/utils/filter'
 import serachSave from '@/mixins/search'
 
@@ -55,7 +55,8 @@ export default {
         return {
             diaTitle: '新建研发经理月报',
             titles: [
-                { type: 'selection' },
+                // { type: 'selection' },
+                { name: '序号', type: 'index' },
                 { name: '组别', data: 'newGroupName' },
                 { name: '提交时间', data: 'createTime', type: 'time', time: '{y}-{m}-{d}' },
                 { name: '月报标题', data: 'monthReportName' }
@@ -74,7 +75,8 @@ export default {
             param: {},
             mgrlist: null,
             selectOrg: null,
-            type: 1
+            type: 1,
+            areas: []
         }
     },
     watch: {
@@ -105,7 +107,8 @@ export default {
             const { type } = v
             if (type === '编辑') {
                 this.diaTitle = type
-                this.addCoach('编辑')
+                console.log('vvvvvvvvvvvv66666666666666v', v)
+                this.edit(v)
             }
             if (type === '删除') {
                 this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
@@ -113,13 +116,14 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
+                    this.delete(v)
                     this.$message.success('删除成功!')
                 }).catch(() => {
                     this.$message.info('已取消删除')
                 })
             }
             if (type === '详情') {
-                this.$refs.info.show()
+                this.view(v)
             }
         },
         // 新建月报记录
@@ -139,6 +143,7 @@ export default {
             this.type = 1
             this.$refs.addAsEdit.show(formInline)
         },
+
         // 进入页面首先加载的内容
         getPageUserInfo() {
             this.value = new Date()
@@ -177,34 +182,20 @@ export default {
             })
         },
         edit(v) {
-            console.log('编辑mgir月报', v)
-            var formInline = {
-
-                monthReportName: v.data.monthReportName,
-                areaName: v.data.areaName,
-                //  startTime: new Date(),
-                realname: v.data.realname,
-                id: v.data.id,
-                monthReportContent: v.data.monthReportContent,
-                monthReportDate: parseTime(new Date(v.data.year + '-' + v.data.month + '-' + '01'), '{y}-{m}-{d}')
-
-            }
+            console.log('index-----------------月报', v)
+            var data = v.data
+            var formInline = {}
+            Object.assign(formInline, data)
+            formInline.newGroupName = v.data.areaName + '/' + v.data.departName + '/' + v.data.groupName
             this.type = 2
-            this.$refs.addAsEdit.show(formInline)
+            this.$refs.addAsEdit.show(formInline, 2)
         },
         view(v) {
-            var formInline = {
-
-                monthReportName: v.data.monthReportName,
-                areaName: v.data.areaName,
-                //  startTime: new Date(),
-                realname: v.data.realname,
-                id: v.data.id,
-                monthReportContent: v.data.monthReportContent,
-                monthReportDate: parseTime(new Date(v.data.year + '-' + v.data.month + '-' + '01'), '{y}-{m}-{d}')
-            }
-            this.type = 3
-            this.$refs.addAsEdit.show(formInline)
+            var data = v.data
+            var formInline = {}
+            Object.assign(formInline, data)
+            formInline.newGroupName = v.data.areaName + '/' + v.data.departName + '/' + v.data.groupName
+            this.$refs.info.show(formInline)
         },
         delete(v) {
             deleteById({ id: v.data.id }).then(res => {
@@ -217,10 +208,11 @@ export default {
             this.searchData.year = parseTime(data.time, '{y}')
             this.init()
         },
-        search(selectorg, formInline) {
-            console.log('hello------------', selectorg, formInline)
+        search(selectorg, formInline, areas) {
+            console.log('hello------------', selectorg, formInline, areas)
             this.selectOrg = selectorg
             this.searchData.groupId = this.selectOrg[2]
+            this.areas = areas
             if (!(formInline.time === null || formInline.time === '')) {
                 this.searchData.createTime = parseTime(formInline.time, '{y}-{m}-{d}')
             } else {

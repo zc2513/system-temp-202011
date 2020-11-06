@@ -3,12 +3,13 @@ import request from '@/utils/request'
 const url = {
     add: 'com.thundersoft.fm/fstFmMonthly/add', // 应届生培养-一线经理月报-添加,
     list: 'com.thundersoft.fm/fstFmMonthlyUserMerits/queryList', //  应届生培养-一线经理月报，人员绩效-列表查询', /
-    list1: '/com.thundersoft.fm/fstFmMonthly/list', //  应届生培养-一线经理月报-分页列表查询
-    mgrQueryById: 'com.thundersoft.mrg/fstMrgMonthly/queryById', //  应届生培养-mrg月报-通过id查询, /
+    list1: 'com.thundersoft.fm/fstFmMonthly/list', //  应届生培养-一线经理月报-分页列表查询
 
-    delete: 'com.thundersoft.mrg/fstMrgMonthly/delete', //   应届生培养-mrg月报-通过id删除
-    deleteBatch: 'com.thundersoft.mrg/fstMrgMonthly/deleteBatch', //  应届生培养-mrg月报-批量删除
-    edit: 'com.thundersoft.fm/fstFmMonthlyUserMerits/edit' // 应届生培养-一线经理月报，人员绩效-编辑
+    delete: 'com.thundersoft.fm/fstFmMonthly/delete', //   应届生培养-一线经理月报-通过id删除 /com.thundersoft.fm/fstFmMonthly/delete
+
+    edit: 'com.thundersoft.fm/fstFmMonthlyUserMerits/edit', // 应届生培养-一线经理月报，人员绩效-编辑
+    editMonth: 'com.thundersoft.fm/fstFmMonthly/edit' // 应届生培养-一线经理月报-编辑'
+
 }
 
 /**
@@ -35,11 +36,11 @@ export function save(data) {
  * @param {*}
  * @return {*}
  */
-export function list(data) {
+export function list(params) {
     return request({
         url: url.list,
         method: 'get',
-        data
+        params
     })
 }
 
@@ -84,22 +85,6 @@ export function deleteById(params) {
 }
 
 /**
- * @description 批量删除
- * @author laozhu
- * @date 04/11/2020
- * @export
- * @param {*} params
- * @return {*}
- */
-export function deleteBatch(params) {
-    return request({
-        url: url.deleteBatch,
-        method: 'delete',
-        params
-    })
-}
-
-/**
  * @description 编辑mgr月报
  * @author laozhu
  * @date 04/11/2020
@@ -110,6 +95,14 @@ export function deleteBatch(params) {
 export function edit(data) {
     return request({
         url: url.edit,
+        method: 'put',
+        data
+    })
+}
+
+export function editMonth(data) {
+    return request({
+        url: url.editMonth,
         method: 'put',
         data
     })

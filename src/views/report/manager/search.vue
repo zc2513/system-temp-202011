@@ -93,6 +93,7 @@ export default {
             this.selectOrgName = []
             // 读取组里边的应届生
         },
+
         getPageGroupInfo() {
             // const params = {
             //     userId: !this.userId ? this.userInfo.id : this.userId
@@ -149,7 +150,7 @@ export default {
                         this.selectNode = this.areas[0]
                         console.log('区域--------------------ffff---', this.areas)
 
-                        this.$emit('searche', this.selectorg, this.formInline)
+                        this.$emit('searche', this.selectorg, this.formInline, this.areas)
                     } else {
                         this.$message.error({ title: '查询失败', content: res.message })
                     }
@@ -158,7 +159,7 @@ export default {
         },
 
         submitForm(formName) {
-            this.$emit('searche', this.selectorg, this.formInline)
+            this.$emit('searche', this.selectorg, this.formInline, this.areas)
         },
         resetForm(formName) {
             this.$refs[formName].resetFields()

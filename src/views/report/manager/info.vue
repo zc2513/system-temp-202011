@@ -9,7 +9,7 @@
     :show-close="false"
   >
     <div slot="title" class="info-page-title flc-y flsb">
-      <div>查看计划</div>
+      <div>查看计汇报</div>
       <div class="cursor" style="color:#6666FF;" @click="dialogVisible=false">返回</div>
     </div>
     <div class="info-page-content fl">
@@ -18,7 +18,7 @@
           <h4 class="f18">基本信息</h4>
           <div class="con-item fl f14 mb25">
             <div>研发经理</div>
-            <div class="pl10">张三</div>
+            <div class="pl10">{{ formInline.realname }}</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>汇报类型</div>
@@ -26,15 +26,15 @@
           </div>
           <div class="con-item fl f14 mb25">
             <div>汇报组别</div>
-            <div class="pl10">成都 二部 第1小组</div>
+            <div class="pl10">{{ formInline.newGroupName }}</div>
           </div>
           <div class="con-item fl f14 mb15">
             <div>汇报标题</div>
-            <div class="pl10">TS-Force2020年10月份月报</div>
+            <div class="pl10">{{ formInline.monthReportName }}</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>提交时间</div>
-            <div class="pl10">2020-10-23</div>
+            <div class="pl10">{{ formInline.createTime }}</div>
           </div>
         </div>
       </div>
@@ -68,37 +68,28 @@
             <z-table
               :titles="titles"
               :btns="btn"
-              :lists="tableData"
+              :lists="jxlist"
               align="left"
               class="mt15"
             />
-            <z-page :total="50" />
+
           </smallTitle>
           <smallTitle title="月报内容">
             <div>
               <div class="c-56 mb30">
-                <p>(1)目标。这是计划的灵魂。计划就是为了完成一定任务而制订的。目标是计划产生的导因，也是计划奋斗方向。因此，计划应根据需要与可能，规定出在一定时间内所完成的任务和应达到的要求。任务和要求应该具体明确，有的还要定出数量、质量和时间要求。</p>
-                <p>(2)措施。要明确何时实现目标和完成任务，就必须制定出相应的措施和办法，这是实现计划的保证。措施和方法主要指达到既定目标需要采取什么手段，动员哪些力量，创造什么条件，排除哪些困难等。总之，要根据客观条件，统筹安排，将“怎么做”写得明确具体，切实可行。</p>
-                <p>(3)步骤。这是指执行计划的工作程序和时间安排。每项任务，在完成过程中都有阶段性，而每个阶段又有许多环节，它们之间常常是互相交错的。因此，订计划必须胸有全局，妥善安排，哪些先干，哪些后干，应合理安排。(1)目标。这是计划的灵魂。计划就是为了完成一定任务而制订的。目标是计划产生的导因，也是计划奋斗方向。因此，计划应根据需要与可能，规定出在一定时间内所完成的任务和应达到的要求。任务和要求应该具体明确，有的还要定出数量、质量和时间要求。</p>
-                <p>(2)措施。要明确何时实现目标和完成任务，就必须制定出相应的措施和办法，这是实现计划的保证。措施和方法主要指达到既定目标需要采取什么手段，动员哪些力量，创造什么条件，排除哪些困难等。总之，要根据客观条件，统筹安排，将“怎么做”写得明确具体，切实可行。</p>
-                <p>(3)步骤。这是指执行计划的工作程序和时间安排。每项任务，在完成过程中都有阶段性，而每个阶段又有许多环节，它们之间常常是互相交错的。因此，订计划必须胸有全局，妥善安排，哪些先干，哪些后干，应合理安排。</p>
+                <p v-html="formInline.monthReportContent" />
               </div>
             </div>
           </smallTitle>
-          <smallTitle title="计划评论" style="padding-bottom:50px;">
-            <el-input
-              v-model="textarea"
-              type="textarea"
-              placeholder="请输入内容"
-              maxlength="500"
-              rows="8"
-              show-word-limit
-            />
-            <div class="t-r mt15">
+          <smallTitle title="汇报评论" style="padding-bottom:50px;">
+
+            <Commentv2 :comment-param="commentParam" @ok="freshCommentList" />
+            <!-- <div class="t-r mt15">
               <el-button size="mini" type="primary">提交</el-button>
-            </div>
+            </div> -->
           </smallTitle>
-          <commentList />
+
+          <commentList ref="clist" :reportid="formInline.id" />
         </div>
       </div>
     </div>
@@ -109,35 +100,92 @@
 import smallTitle from '@/components/smallTitle'
 import commentList from '@/components/commentList'
 import datas from '@/assets/json/data'
+import { list } from '@/api/mgrMonthReport'
+import Commentv2 from '@/components/tsforce/Commentv2'
+
 export default {
-    components: { smallTitle, commentList },
+    components: { smallTitle, commentList, Commentv2 },
     data() {
         return {
             dialogVisible: false,
             textarea: '',
             titles: [
-                { name: '工号', data: 'producer' },
-                { name: '姓名', data: 'producer' },
-                { name: '基础活动', data: 'producer' },
-                { name: '软件编码', data: 'producer' },
-                { name: '软件维护', data: 'producer' },
-                { name: '软件验证', data: 'producer' },
-                { name: '软件设计', data: 'producer' },
-                { name: '软件需求', data: 'producer' }
+                { name: '序号', type: 'index' },
+                { name: '工号', data: 'username' },
+                { name: '姓名', data: 'realname' },
+                { name: '基础活动', data: 'basicActivities' },
+                { name: '软件编码', data: 'softwareCoding' },
+                { name: '软件维护', data: 'softwareMaintenance' },
+                { name: '软件验证', data: 'softwareVerification' },
+                { name: '软件设计', data: 'softwareDesign' },
+                { name: '软件需求', data: 'softwareDemand' },
+                { name: '组别', data: 'newGroupName' },
+                { name: '提交时间', data: 'createTime', type: 'time', time: '{y}-{m}-{d}' }
             ],
             tableData: datas.slice(0, 8),
-            btn: false
+            btn: false,
+            formInline: {
+
+            },
+            commentParam: {
+                commentType: 2
+
+            },
+            jxlist: []
         }
     },
     methods: {
+
         async init(data) {
-            console.log(data, 9999)
+            console.log(data, 99666699)
+            this.loadData(data)
+            this.dialogVisible = true
+            this.$nextTick(() => {
+                this.$refs.clist.show(data.id)
+            })
+
             // 发送请求拿到用户数据
         },
         async show(data) {
+            if (data) {
+                console.log('in 详情 show', data)
+                Object.assign(this.formInline, data)
+                this.commentParam.reportid = this.formInline.id
+                this.commentParam.realname = this.formInline.realname
+                this.commentParam.userId = this.formInline.userId
+                this.commentParam.username = this.formInline.username
+                this.commentParam.commentPeopleType = 3
+            }
             await this.init(data)
-            this.dialogVisible = true
+        },
+        loadData(data) {
+            var param = {
+                monthlyReportId: this.formInline.id,
+                groupId: this.formInline.groupId
+            }
+
+            list(param).then(res1 => {
+                console.log('编辑经理查询结过月报', res1)
+                if (res1.success === true) {
+                    this.jxlist = res1.result
+                    if (this.jxlist.length > 0) {
+                        this.jxlist.forEach(val => {
+                            val.monthlyReportId = this.formInline.id
+                            val.newGroupName = this.formInline.newGroupName
+                            if (val.createTime == null) {
+                                val.createTime = new Date()
+                            }
+                        })
+                    }
+
+                    console.log('编辑经理tir月报', this.jxlist)
+                }
+            })
+        },
+        freshCommentList() {
+            this.$refs.clist.loadComment(this.formInline.id)
         }
+
     }
 }
 </script>

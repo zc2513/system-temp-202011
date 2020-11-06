@@ -40,42 +40,42 @@
       </div> -->
       <div class="flcc hfull">
         <el-form ref="ruleForm" :model="formInline" :rules="rules" style="margin-bottom:100px;" class="form-box" label-width="100px">
-          <el-form-item label="姓名:" class="ml10"> 张三 </el-form-item>
-          <el-form-item label="工号:" class="ml10"> 03 </el-form-item>
-          <el-form-item label="组别:" class="ml10"> 成都 二部 第一小组 </el-form-item>
+          <el-form-item label="姓名:" class="ml10"> {{ formInline.realname }} </el-form-item>
+          <el-form-item label="工号:" class="ml10"> {{ formInline.username }}  </el-form-item>
+          <el-form-item label="组别:" class="ml10">  {{ formInline.newGroupName }} </el-form-item>
           <el-form-item label="基础活动:" class="ml10" prop="activity">
             <div class="fl">
-              <el-input v-model="formInline.activity" maxlength="1" />
+              <el-input v-model="formInline.basicActivities" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
           <el-form-item label="软件编码:" class="ml10" prop="code">
             <div class="fl">
-              <el-input v-model="formInline.code" maxlength="1" />
+              <el-input v-model="formInline.softwareCoding" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
           <el-form-item label="软件维护:" class="ml10" prop="maintain">
             <div class="fl">
-              <el-input v-model="formInline.maintain" maxlength="1" />
+              <el-input v-model="formInline.softwareMaintenance" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
           <el-form-item label="软件验证:" class="ml10" prop="verify">
             <div class="fl">
-              <el-input v-model="formInline.verify" maxlength="1" />
+              <el-input v-model="formInline.softwareVerification" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
           <el-form-item label="软件设计:" class="ml10" prop="design">
             <div class="fl">
-              <el-input v-model="formInline.design" maxlength="1" />
+              <el-input v-model="formInline.softwareDesign" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
           <el-form-item label="软件需求:" class="ml10" prop="need">
             <div class="fl">
-              <el-input v-model="formInline.need" maxlength="1" />
+              <el-input v-model="formInline.softwareDemand" maxlength="1" />
               <span style="width:30px;" class="t-c">  分</span>
             </div>
           </el-form-item>
@@ -90,18 +90,20 @@
 </template>
 
 <script>
+import { edit } from '@/api/mgrMonthReport'
+
 export default {
     name: 'PlankDrawer',
     data() {
         return {
             drawer: false,
             formInline: {
-                activity: '',
-                code: '',
-                maintain: '',
-                verify: '',
-                design: '',
-                need: ''
+                basicActivities: '',
+                softwareCoding: '',
+                softwareMaintenance: '',
+                softwareVerification: '',
+                softwareDesign: '',
+                softwareDemand: ''
             },
             rules: {
                 activity: [
@@ -132,18 +134,38 @@ export default {
         }
     },
     methods: {
-        show() {
+        show(data) {
             this.drawer = true
+            if (data) {
+                Object.assign(this.formInline, data)
+            }
         },
         submitForm(status) {
             console.log(this.formInline)
             this.$refs.ruleForm.validate((valid) => {
-                if (valid) {
-                    this.$message('待接口')
-                    this.drawer = false
-                } return false
+                // if (valid) {    TODO
+                //     this.$message('待接口')
+                //     this.drawer = false
+                // } return false
 
                 // 通过逻辑处理
+                this.save()
+            })
+        },
+        save() {
+            console.log('保存评分000000000000000000000', this.formInline)
+            this.formInline.createTime = null
+            edit(this.formInline).then(res => {
+                if (res.success) {
+                    console.log('返回结果000000000000000000000000', res)
+                    this.$message.success(res.message)
+                    this.drawer = false
+                    this.$emit('ok')
+                } else {
+                    this.$message.warning(res.message)
+                    this.drawer = false
+                    this.$refs['ruleForm'].resetFields()
+                }
             })
         }
     }

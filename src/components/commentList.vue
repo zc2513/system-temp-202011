@@ -51,7 +51,7 @@ export default {
         }
     },
     created() {
-        this.loadComment()
+        //  this.loadComment()
     },
     methods: {
         ImgType(type) {
@@ -60,17 +60,17 @@ export default {
         },
         async init(data) {
             console.log(data, 9999)
-            this.loadComment()
+            this.loadComment(data)
             // 发送请求拿到用户数据
         },
         async show(data) {
             await this.init(data)
             this.dialogVisible = true
         },
-        loadComment() {
+        loadComment(data) {
             // 加载数据 若传入参数1则加载第一页的内容
             var params = {
-                reportId: this.reportid
+                reportId: data
             } // 查询条件
             console.log(' 评论 id 00000000000', params)
 
@@ -83,7 +83,7 @@ export default {
                     //   text: element.carno,
                     //   value: element.carno,
                     // }))
-                    console.log('reoirt id 000000000jieguo00', this.comments)
+                    console.log(' 查询得评论列表', this.comments)
                     this.comments = res.result
                     // }
                 }
