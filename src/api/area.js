@@ -4,6 +4,8 @@ import request from '@/utils/request'
 
 // 根据用户id获取区域
 
+export { queryArearDeptGroupById } from './common'
+
 /**
  * @description 时间阶段    查看  （是否设置设置阶段）
  * @author zc2513
