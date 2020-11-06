@@ -369,7 +369,8 @@ export default {
             this.$emit('ok')
         },
         handleClick(tab, event) {
-            console.log(tab, event)
+            this.activeName = tab
+            console.log(tab)
         }
 
     }

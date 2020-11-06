@@ -159,6 +159,7 @@ export default {
                 }
             })
         },
+
         queryUserBaseByGroupId(groupId) {
             const params = {
                 groupId: groupId
