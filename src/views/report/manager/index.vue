@@ -80,7 +80,6 @@ export default {
         }
     },
     watch: {
-
         selectOrg: {
             handler(val) {
                 console.log('初始化查询----车出现----------xxxx', this.selectOrg)
@@ -145,30 +144,7 @@ export default {
         },
 
         // 进入页面首先加载的内容
-        getPageUserInfo() {
-            this.value = new Date()
-            const params = {
-                userId: this.userInfo.id
-            }
-            getUserInfo(params).then(res => {
-                if (res.success) {
-                    this.tsUserInfo = res.result[0]
-                    this.tsUserInfo.realName = this.userInfo.realname
-                    this.tsUserInfo.userId = this.userInfo.id
-                    this.tsUserInfo.userName = this.userInfo.username
-                    this.searchData = {
-                        userId: this.userInfo.id,
-                        month: parseTime(new Date(), '{m}'),
-                        year: parseTime(new Date(), '{y}'),
-                        periodId: this.userInfo.defaultPeriodId
 
-                    }
-                    this.init()
-                } else {
-                    this.$message.error({ title: '查询失败', content: res.message })
-                }
-            })
-        },
         loadData(data) {
             list1(data).then(res1 => {
                 console.log('编辑经理查询结过月报', res1)
