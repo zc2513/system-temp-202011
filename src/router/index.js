@@ -48,23 +48,6 @@ export const constantRoutes = [
         component: () => import('@/views/nested/demo/index'),
         hidden: true
     },
-    {
-        path: '/login',
-        component: () => import('@/views/user/index'),
-        hidden: true,
-        children: [
-            {
-                path: '',
-                name: 'Tab',
-                component: () => import('@/views/user/tab')
-            },
-            {
-                path: 'index',
-                name: 'Login',
-                component: () => import('@/views/user/login')
-            }
-        ]
-    },
 
     {
         path: '/404',
@@ -73,7 +56,7 @@ export const constantRoutes = [
     },
     {
         path: '/',
-        redirect: '/overview'
+        redirect: '/login/tab'
     },
     {
         path: '/overview',
@@ -85,6 +68,23 @@ export const constantRoutes = [
                 name: 'Overview',
                 component: () => import('@/views/overview/index'),
                 meta: { title: '培训情况概览', icon: 'overview' }
+            }
+        ]
+    },
+    {
+        path: '/login',
+        component: () => import('@/views/user/index'),
+        hidden: true,
+        children: [
+            {
+                path: '',
+                name: 'Login',
+                component: () => import('@/views/user/login')
+            },
+            {
+                path: 'tab',
+                name: 'Tab',
+                component: () => import('@/views/user/tab')
             }
         ]
     },

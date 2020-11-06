@@ -75,7 +75,7 @@ export default {
         submitForm(status) {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return
-                this.formInline.createBy = this.userInfo.updateBy
+                this.formInline.createBy = this.userInfo.username
                 add(this.formInline).then(res => {
                     if (res.code === 200) {
                         this.$message.success(res.message)

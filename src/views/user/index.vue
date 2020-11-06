@@ -10,6 +10,9 @@
 </template>
 
 <script>
+export default {
+    name: 'LoginLayout'
+}
 </script>
 <style lang="scss" scoped>
 .loginlayut{
