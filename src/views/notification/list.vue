@@ -14,7 +14,7 @@
       <div class="box content-list mt15">
         <ul class="c-56">
           <li v-for="(item,key) in datas.records" :key="key">
-            <div class="title" :class="{'active': !Number(item.readFlag)}">
+            <div class="title" :class="{'active': !Number(item.readFlag)}" @click="goInfo(item.anntId)">
               【{{ item.msgCategory_dictText }}】
               {{ item.titile }}
               <span v-if="item.msgContent" class="cursor">《{{ item.msgContent }}》</span>
@@ -115,6 +115,14 @@ export default {
                     })
                 }
             }
+        },
+        goInfo(id) {
+            this.$router.push({
+                path: 'info',
+                query: {
+                    id: id
+                }
+            })
         }
     }
 }
@@ -169,6 +177,7 @@ export default {
                         padding-left: 8px;
                     }
                     .title{
+                        cursor: pointer;
                         position: relative;
                         color: #5F6266;
                         &::after{
