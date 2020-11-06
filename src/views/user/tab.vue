@@ -25,7 +25,7 @@ export default {
                         path: '/overview'
                     })
                     loading.close()
-                }, 2000)
+                }, 1000)
             } else {
                 this.$message('暂无在线系统')
             }
