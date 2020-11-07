@@ -5,12 +5,11 @@
     <el-tabs v-model="activeName" @tab-click="handleClick">
 
       <el-tab-pane v-for="(item ,index ) in areas " :key="index" :label="item.areaName" :name="index + ''" style="width:100%;height:100%">
-        <el-form :ref="'ruleForm' + index" :model="'formData'+index" :rules="rules" class="form-box plr24 mt15" label-width="120px">
+        <el-form :ref="item.ruleForm" :model="item.temlock" :rules="rules" class="form-box plr24 mt15" label-width="120px">
           <div v-for="(tem ,index2) in item.temlock" :key="index2">
-            <el-form-item :label="tem.stageName" class="ml10" prop="long">
+            <el-form-item :label="tem.stageName" class="ml10" prop="startEnd">
               <el-date-picker
-                v-model="formData.long"
-                value-format="timestamp"
+                v-model="tem.startEnd"
                 type="daterange"
                 range-separator="~"
                 start-placeholder="开始日期"
@@ -18,8 +17,9 @@
               />
             </el-form-item>
           </div>
+
           <el-form-item label="" class="mt30 pt10">
-            <el-button type="primary" class="ml20" size="mini" @click="submitForm('ruleForm',item)">提交</el-button>
+            <el-button type="primary" class="ml20" size="mini" @click="submitForm(item.ruleForm,item)">提交</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -82,7 +82,21 @@ export default {
     },
     data() {
         return {
-            formData: {
+            formData0: {
+                startEnd: '',
+                entry: '',
+                practise: '',
+                ojt: '',
+                official: ''
+            },
+            formData1: {
+                long: '',
+                entry: '',
+                practise: '',
+                ojt: '',
+                official: ''
+            },
+            formData3: {
                 long: '',
                 entry: '',
                 practise: '',
@@ -90,11 +104,8 @@ export default {
                 official: ''
             },
             rules: {
-                long: [{ required: true, message: '请选择远程学习阶段', trigger: 'change' }],
-                entry: [{ required: true, message: '请选择入职集训阶段', trigger: 'change' }],
-                practise: [{ required: true, message: '请选择实训阶段', trigger: 'change' }],
-                ojt: [{ required: true, message: '请选择OJT计划阶段', trigger: 'change' }],
-                official: [{ required: true, message: '请选择正式入项阶段', trigger: 'change' }]
+                startEnd: [{ required: true, message: '请输入日期', trigger: 'change' }]
+
             },
             activeName: '0',
             areas: new Array()
@@ -117,6 +128,9 @@ export default {
             //     periodId: this.userInfo.defaultPeriodId
             // })
         },
+        changeDate(e) {
+            console.log('99999999999999999999000000000000', e, this.formData0.long)
+        },
         async  getPageGroupInfo() {
             this.value = new Date()
             // const params = {
@@ -130,11 +144,13 @@ export default {
                 console.log('当前用信息，注意是否为空1111：', res)
                 if (res.success) {
                     const userinfo = res.result
+
                     if (userinfo.length > 0) {
-                        userinfo.forEach(element => {
+                        userinfo.forEach((element, index) => {
                             var area = {
                                 areaId: element.areaId,
-                                areaName: element.areaName
+                                areaName: element.areaName,
+                                ruleForm: 'ruleForm' + index
                             }
                             getTmeLock({
                                 areaId: element.areaId,
@@ -143,16 +159,30 @@ export default {
                                 console.log('判断是否设置了jig阶段', res1)
                                 if (res1.success === true) {
                                     var stus = res1.result
-                                    console.log('000000000000000', stus, area)
-                                    area.temlock = stus
+                                    stus.forEach(val => {
+                                        val.startEnd = [
+                                            val.startTime,
+                                            val.endTime
+                                        ]
+                                    })
+                                    area.temlock = { ...stus }
                                     console.log('00000000000000660', stus, area)
-                                    // this.stus.forEach(val => {
-                                    //     val.newGroupName = val.areaName + ' ' + val.departName + ' ' + val.groupName
-                                    // })
+                                    this.areas.push(area)
                                 }
-                            })
-                            this.areas.push(area)
-                            console.log('99999999999999999999999999999', this.areas)
+                            }).finally(
+                                () => {
+                                    this.areas.sort((a, b) => {
+                                        var obj1 = a.areaId
+                                        var obj2 = b.areaId
+                                        if (obj1 < obj2) {
+                                            return -1
+                                        } else {
+                                            return 1
+                                        }
+                                    })
+                                    console.log('99999999999999999999999999999', this.areas)
+                                }
+                            )
                         })
                     } else {
                         this.$message.error({ title: '查询失败', content: res.message })
@@ -186,21 +216,22 @@ export default {
                 }
             })
         },
-        submitForm(formName) {
-            this.$refs[formName].validate((valid) => {
-                if (valid) {
-                    // 1.提交成功后跳转 区域计划页面
-                    this.$router.push({
-                        name: 'Area',
-                        params: {
-                            istrue: true
-                        }
-                    })
-                } else {
-                    console.log(this.formData, '111')
-                    return false
-                }
-            })
+        submitForm(formName, e) {
+            console.log('dddddddddddddddddddddd', formName, e)
+            // this.$refs[formName].validate((valid) => {
+            //     if (valid) {
+            //         // 1.提交成功后跳转 区域计划页面
+            //         this.$router.push({
+            //             name: 'Area',
+            //             params: {
+            //                 istrue: true
+            //             }
+            //         })
+            //     } else {
+            //         console.log(this.formData, '111')
+            //         return false
+            //     }
+            // })
         },
         handleClick(tab) {
             console.log(tab)
