@@ -9,7 +9,6 @@ import request from '@/utils/request'
  * @returns
  */
 export function login(data) {
-    console.log('登录前', data)
     return request({
         url: '/sys/login',
         method: 'post',

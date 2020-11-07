@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import { login, logout, getInfo } from '@/api/user'
+import { queryArearDeptGroupById } from '@/api/common'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { Message } from 'element-ui'
@@ -47,11 +48,11 @@ const actions = {
         return new Promise((resolve, reject) => {
             login({ username: userName.trim(), password, captcha, checkKey, remember_me: true }).then(response => {
                 const { success, message, result } = response
+                console.log('登录信息', response)
                 if (!success) return Message.error(message)
                 const { token, userInfo } = result
                 commit('SET_TOKEN', token)
-                commit('SET_USER_INFO', userInfo)
-                console.log('token', token)
+                commit('token', token)
                 setToken(token)
                 resolve(userInfo)
             }).catch(error => {
@@ -72,14 +73,19 @@ const actions = {
 
             getInfo().then(response => {
                 const { result: { userInfo }} = response
-                console.log('获取用户信息------', userInfo)
-                const { avatar, username } = userInfo
-                commit('SET_NAME', username)
-                commit('SET_AVATAR', avatar)
-                commit('SET_USER_INFO', userInfo)
-
-                commit('SET_ROLES', ['admin'])
-                resolve({ asyncRoutes: [], roles: ['admin'] })
+                const { avatar, username, id } = userInfo
+                queryArearDeptGroupById({ userId: id }).then(res => {
+                    if (res.success) {
+                        const area = res.result[0]
+                        commit('SET_USER_INFO', { ...userInfo, ...area })
+                        commit('SET_NAME', username)
+                        commit('SET_AVATAR', avatar)
+                        commit('SET_ROLES', ['admin'])
+                        console.log('token', state.token)
+                        console.log('获取用户信息------', state.userInfo)
+                        resolve({ asyncRoutes: [], roles: ['admin'] })
+                    }
+                })
 
                 // // 当前用户权限
                 // const { roles, asyncRoutes } = data

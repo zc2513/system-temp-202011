@@ -65,7 +65,7 @@ export default {
             objTag: 'a',
             time: '2020年1月-2020年6月', // 判断是否显示新增时间段的关键 2020年1月-2020年6月
             titles: [],
-            tableData: datas.slice(0, 5),
+            tableData: [] || datas.slice(0, 5),
             btn: {
                 title: '操作',
                 btnlist: [
@@ -92,7 +92,7 @@ export default {
     },
     methods: {
         init(val) {
-            const istrue = val
+            const istrue = true
             // 1.请求数据 判断是否存在时间段 如果不存在则跳转时间段添加页面
             if (!istrue) { this.$router.push('areasetting') }
         },
