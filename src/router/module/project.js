@@ -46,6 +46,7 @@ const project = {
         {
             path: 'areasetting',
             name: 'AreaSetting',
+            hidden: true,
             component: () => import('@/views/project/area/setting'),
             meta: { title: '区域计划设置', icon: '' }
         }

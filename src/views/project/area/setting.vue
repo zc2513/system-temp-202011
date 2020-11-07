@@ -2,60 +2,30 @@
   <!-- 时间段设置1-->
   <div class="hfull">
     <z-header title="时间阶段设置" class="mb15" />
-    <el-form ref="ruleForm" :model="formData" :rules="rules" class="form-box plr24 mt15" label-width="120px">
-      <el-form-item label="计划区域:" class="ml10 area" prop="team">
-        成都
+    <el-form ref="ruleForm" :model="formData" class="form-box plr24 mt15" label-width="120px">
+      <el-form-item label="计划区域:" class="ml10 area">
+        {{ userInfo.areaName }}
       </el-form-item>
-      <el-form-item label="远程学习阶段:" class="ml10" prop="long">
-        <el-date-picker
-          v-model="formData.long"
-          value-format="timestamp"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-      <el-form-item label="入职集训阶段:" class="ml10" prop="entry">
-        <el-date-picker
-          v-model="formData.entry"
-          value-format="timestamp"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-      <el-form-item label="实训阶段:" class="ml10" prop="practise">
-        <el-date-picker
-          v-model="formData.practise"
-          value-format="timestamp"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-      <el-form-item label="OJT计划阶段:" class="ml10" prop="ojt">
-        <el-date-picker
-          v-model="formData.ojt"
-          value-format="timestamp"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
-      <el-form-item label="正式入项阶段:" class="ml10" prop="official">
-        <el-date-picker
-          v-model="formData.official"
-          value-format="timestamp"
-          type="daterange"
-          range-separator="~"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        />
-      </el-form-item>
+      <template v-for="(item,index) in formData.subDatas">
+        <el-form-item
+          :key="item.id"
+          :label="item.stageName"
+          class="ml10"
+          :prop="'subDatas.'+ index + '.time'"
+          :rules="{
+            required: true, message: `请选择${item.stageName}`, trigger: 'change'
+          }"
+        >
+          <el-date-picker
+            v-model="item.time"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="daterange"
+            range-separator="~"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          />
+        </el-form-item>
+      </template>
       <el-form-item label="" class="mt30 pt10">
         <el-button type="primary" class="ml20" size="mini" @click="submitForm('ruleForm')">提交</el-button>
       </el-form-item>
@@ -64,44 +34,54 @@
 </template>
 
 <script>
+import { getTempletList, addTimeStep } from '@/api/area'
+import { mapGetters } from 'vuex'
 export default {
     data() {
         return {
             formData: {
-                long: '',
-                entry: '',
-                practise: '',
-                ojt: '',
-                official: ''
-            },
-            rules: {
-                long: [{ required: true, message: '请选择远程学习阶段', trigger: 'change' }],
-                entry: [{ required: true, message: '请选择入职集训阶段', trigger: 'change' }],
-                practise: [{ required: true, message: '请选择实训阶段', trigger: 'change' }],
-                ojt: [{ required: true, message: '请选择OJT计划阶段', trigger: 'change' }],
-                official: [{ required: true, message: '请选择正式入项阶段', trigger: 'change' }]
+                subDatas: []
             }
         }
+    },
+    computed: {
+        ...mapGetters(['userInfo'])
     },
     created() {
         this.init()
     },
     methods: {
-        init() {
-            // 初始化地区数据
+        init() { // 初始化地区数据
+            const data = {
+                periodId: this.userInfo.defaultPeriodId,
+                areaName: this.userInfo.areaName
+            }
+            getTempletList().then(res => {
+                if (res.success) {
+                    this.formData.subDatas = res.result.map(item => {
+                        return { ...data, ...item }
+                    })
+                }
+            })
         },
         submitForm(formName) {
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    // 1.提交成功后跳转 区域计划页面
-                    this.$router.push({
-                        name: 'Area',
-                        params: {
-                            istrue: true
+                    const data = this.formData.subDatas.map(item => {
+                        item['startTime'] = item.time[0]
+                        item['endTime'] = item.time[1]
+                        return item
+                    })
+                    addTimeStep(data).then(res => {
+                        const { success, message } = res
+                        if (success) {
+                            this.$message.success(message)
+                            this.$router.push({
+                                name: 'Area'
+                            })
                         }
                     })
                 } else {
-                    console.log(this.formData, '111')
                     return false
                 }
             })
