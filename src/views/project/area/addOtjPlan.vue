@@ -68,20 +68,6 @@ import editor from '@/components/editor'
 import { mapGetters } from 'vuex'
 export default {
     components: { zUpfile, editor },
-    props: {
-        type: {
-            type: [String, Number],
-            default: 1
-        },
-        title: {
-            type: String,
-            default: '默认标题'
-        },
-        objTag: {
-            type: String,
-            default: 'a'
-        }
-    },
     data() {
         return {
             showDialogVisible: false,
@@ -95,23 +81,12 @@ export default {
                 planContent: '',
                 enclosureIds: '',
                 areaId: '',
-                areaName: '',
-
-                team: '',
-                department: '',
-                time: '',
-                person: '张三',
-                content: '',
-                rank: '项目经理',
-                address: '成都'
+                areaName: ''
             },
             options: [
                 { value: '选项1', label: '黄金糕' },
                 { value: '选项2', label: '双皮奶' },
                 { value: '选项3', label: '蚵仔煎' }
-            ],
-            fileList: [
-                { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
             ],
             rules: {
                 planContent: [
@@ -135,31 +110,11 @@ export default {
             console.log(this.formInline)
             this.$refs.ruleForm.validate((valid) => {
                 if (valid) return false
-
                 // 通过逻辑处理
                 const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
                 console.log(uri, '提交地址')
                 this.postData()
             })
-        },
-        postData() {
-            // 数据提交
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields()
-        },
-
-        handleRemove(file, fileList) {
-            console.log(file, fileList)
-        },
-        handlePreview(file) {
-            console.log(file)
-        },
-        handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
-        },
-        beforeRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${file.name}？`)
         }
 
     }
