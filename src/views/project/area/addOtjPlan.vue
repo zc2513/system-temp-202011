@@ -1,45 +1,29 @@
 <template>
   <!-- OTJ新建计划/区域、部门、团队 -->
-  <el-dialog :visible.sync="showDialogVisible" class="addPlan">
+  <el-dialog :visible.sync="showDialogVisible" class="addPlan" top="10vh">
     <div slot="title" class="flc-y dialog-header">
-      新建{{ title }}
+      新建{{ formInline.stageName }}
+      （{{ formInline.stageType === '1' ? '区域计划':(formInline.stageType === '2' ? '部门计划':'团队计划') }}）
     </div>
-    <el-form ref="ruleForm" :model="formInline" label-width="80px" class="form-box">
-
+    <el-form ref="ruleForm" :rules="rules" :model="formInline" label-width="84px" class="form-box">
       <el-form-item label="计划时间:" class="ml10" prop="time">
-        2020-01-20～2020-02-20
+        {{ formInline.startTime | parseTime('{y}-{m}-{d}') }}
+        ~
+        {{ formInline.endTime | parseTime('{y}-{m}-{d}') }}
       </el-form-item>
 
-      <div class="list fl">
-        <div>
-          <span>地区:</span>
-          <span>{{ formInline.address }}</span>
-        </div>
-        <div>
-          <span>提交人职级:</span>
-          <span>{{ formInline.rank }}</span>
-        </div>
-        <div>
-          <span>提交人:</span>
-          <span>{{ formInline.person }}</span>
-        </div>
+      <div class="fl">
+        <el-form-item label="地区:" label-width="94px" prop="time">
+          {{ userInfo.areaName }}
+        </el-form-item>
+        <el-form-item label="提交人职级:" label-width="190px" prop="time">
+          {{ userInfo.post }}
+        </el-form-item>
+        <el-form-item label="提交人:" label-width="190px" prop="time">
+          {{ userInfo.username }}
+        </el-form-item>
       </div>
-      <el-form-item v-if="title==='OJT团队计划'" label="团队:" class="ml10" prop="team">
-        <el-select v-model="formInline.team" placeholder="请选择团队">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item
-        v-if="title==='实训计划' || title==='正式入项计划' || title==='OJT部门计划' || title==='OJT团队计划' "
-        label="组别:"
-        class="ml10"
-        prop="time"
-      >
+      <el-form-item v-if="formInline.stageType === '2' || formInline.stageType === '3'" label="部门:" class="ml10" prop="time">
         <el-select v-model="formInline.team" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -49,47 +33,41 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="计划标题:" class="ml10" prop="content">
-        <el-input v-model="formInline.content" placeholder="请输入标题" />
+      <el-form-item v-if="formInline.stageType === '3'" class="ml10" prop="team" label="团队:">
+        <el-select v-model="formInline.team" placeholder="请选择团队">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="计划内容:" class="ml10" prop="content">
-        <el-input
-          v-model="formInline.content"
-          type="textarea"
-          placeholder="请输入内容"
-          maxlength="500"
-          rows="8"
-          show-word-limit
-        />
+
+      <el-form-item label="计划标题:" class="ml10" prop="planTitle">
+        <el-input v-model="formInline.planTitle" placeholder="请输入标题" />
       </el-form-item>
-      <el-form-item label="附件上传:" class="ml10" prop="content">
-        <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-        >
-          <el-button size="mini" plain style="color:#909398;">
-            <i class="el-icon-upload mr5 el-icon--right" />上传文件
-          </el-button>
-        </el-upload>
+      <el-form-item label="计划内容:" class="ml10" prop="planContent">
+        <editor v-model="formInline.planContent" />
+      </el-form-item>
+      <el-form-item label="附件上传:" class="ml10" prop="enclosureIds">
+        <z-upfile v-model="formInline.enclosureIds" />
       </el-form-item>
     </el-form>
     <span slot="footer">
       <el-button @click="showDialogVisible = false">取 消</el-button>
-      <el-button @click="submitForm(false)">暂存</el-button>
+      <!-- <el-button @click="submitForm(false)">暂存</el-button> -->
       <el-button type="primary" @click="submitForm(true)">确 定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
+import zUpfile from '@/components/z-upfile'
+import editor from '@/components/editor'
+import { mapGetters } from 'vuex'
 export default {
+    components: { zUpfile, editor },
     props: {
         type: {
             type: [String, Number],
@@ -108,6 +86,17 @@ export default {
         return {
             showDialogVisible: false,
             formInline: {
+                stageType: '',
+                stageId: '',
+                stageName: '',
+                startTime: '',
+                endTime: '',
+                planTitle: '',
+                planContent: '',
+                enclosureIds: '',
+                areaId: '',
+                areaName: '',
+
                 team: '',
                 department: '',
                 time: '',
@@ -123,28 +112,35 @@ export default {
             ],
             fileList: [
                 { name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100' }
-            ]
+            ],
+            rules: {
+                planContent: [
+                    { required: true, message: '请输入计划内容', trigger: 'blur' }
+                ],
+                planTitle: [
+                    { required: true, message: '请输入计划标题', trigger: 'blur' }
+                ]
+            }
         }
+    },
+    computed: {
+        ...mapGetters(['userInfo'])
     },
     methods: {
         show(data) {
+            this.formInline = data
             this.showDialogVisible = true
         },
         submitForm(status) {
-            if (status) {
-                // 验证提交信息
-                this.$refs.ruleForm.validate((valid) => {
-                    if (valid) return false
+            console.log(this.formInline)
+            this.$refs.ruleForm.validate((valid) => {
+                if (valid) return false
 
-                    // 通过逻辑处理
-                    const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                    console.log(uri, '提交地址')
-                    this.postData()
-                })
-            } else {
-                // 不验证
+                // 通过逻辑处理
+                const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
+                console.log(uri, '提交地址')
                 this.postData()
-            }
+            })
         },
         postData() {
             // 数据提交
@@ -192,22 +188,6 @@ export default {
         height: 54px;
         color: #303133;
         border-bottom: 1px solid #E0E4EB;
-    }
-    .list {
-        div {
-            width: 220px;
-            margin-bottom: 22px;
-            span {
-                color: #303133;
-            }
-            >span:nth-of-type(1) {
-                display: inline-block;
-                width: 80px;
-                text-align: right;
-                margin-right: 10px;
-                color: #5F6266;
-            }
-        }
     }
 }
 </style>

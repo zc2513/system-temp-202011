@@ -2,9 +2,7 @@
 import request from '@/utils/request'
 // 时间设置阶段查看
 
-// 根据用户id获取区域
-
-export { queryArearDeptGroupById } from './common'
+// 1.根据用户id获取区域
 
 /**
  * @description 时间阶段    查看  （是否设置设置阶段）
@@ -51,6 +49,22 @@ export function addTimeStep(data) {
         url: '/com.thundersoft.stage/fstStageTime/add',
         method: 'post',
         data
+    })
+}
+
+/**
+ * @description 获取阶段列表
+ * @author zc2513
+ * @date 2020-11-06
+ * @export
+ * @param {*} params
+ * @returns
+ */
+export function getPlanList(params) {
+    return request({
+        url: '/com.thundersoft.stage/fstStageTimePlan/list',
+        method: 'get',
+        params
     })
 }
 
@@ -102,18 +116,3 @@ export function planlock(params) {
     })
 }
 
-/**
- * @description 获取阶段列表
- * @author zc2513
- * @date 2020-11-06
- * @export
- * @param {*} params
- * @returns
- */
-export function getPlanList(params) {
-    return request({
-        url: '/com.thundersoft.stage/fstStageTimePlan/list',
-        method: 'get',
-        params
-    })
-}
