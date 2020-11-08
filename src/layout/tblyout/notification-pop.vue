@@ -1,5 +1,5 @@
 <template>
-
+  <!-- 系统通知弹出层 -->
   <el-popover
     placement="bottom"
     width="320"
@@ -43,7 +43,6 @@ export default {
                 this.anntMsgList = res.result.anntMsgList
                 this.sysMsgList = res.result.sysMsgList
                 this.notData = res.result.sysMsgList
-                console.log(this.anntMsgList, this.sysMsgList, this.notData)
             })
         },
         handleClick(e) {

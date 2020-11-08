@@ -2,7 +2,7 @@
 /**
  * @description  时间戳转时间格式
  * @param {(Object|string|number)} time 时间戳
- * @param {string} cFormat '{y}-{m}-{d} {h}:{i}:{s}' ymdhis对应被替换的参数，- : 等为拼接字符
+ * @param {string} cFormat '{y}-{m}-{d} {a} {h}:{i}:{s}' ymdhis对应被替换的参数，- : 等为拼接字符  a为星期
  * @returns {string | null} 返回自定义的拼接字符
  */
 export function parseTime(time, cFormat) {

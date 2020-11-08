@@ -13,17 +13,18 @@
       </el-form-item>
 
       <div class="fl">
-        <el-form-item label="地区:" label-width="94px" prop="time">
+        <el-form-item label="地区:" class="mr30" label-width="94px" prop="time">
           {{ userInfo.areaName }}
         </el-form-item>
-        <el-form-item label="提交人职级:" label-width="190px" prop="time">
+        <el-form-item label="提交人职级:" class="mr30" label-width="90px" prop="time">
           {{ userInfo.post }}
         </el-form-item>
-        <el-form-item label="提交人:" label-width="190px" prop="time">
+        <el-form-item label="提交人:" label-width="90px" prop="time">
           {{ userInfo.username }}
         </el-form-item>
       </div>
-      <el-form-item v-if="formInline.stageType === '2' || formInline.stageType === '3'" label="部门:" class="ml10" prop="time">
+
+      <!-- <el-form-item v-if="formInline.stageType === '2' || formInline.stageType === '3'" label="部门:" class="ml10" prop="time">
         <el-select v-model="formInline.team" placeholder="请选择">
           <el-option
             v-for="item in options"
@@ -42,7 +43,7 @@
             :value="item.value"
           />
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="计划标题:" class="ml10" prop="planTitle">
         <el-input v-model="formInline.planTitle" placeholder="请输入标题" />
@@ -51,7 +52,7 @@
         <editor v-model="formInline.planContent" />
       </el-form-item>
       <el-form-item label="附件上传:" class="ml10" prop="enclosureIds">
-        <z-upfile v-model="formInline.enclosureIds" />
+        <z-upfile v-model="formInline.enclosureIds" multiple />
       </el-form-item>
     </el-form>
     <span slot="footer">
@@ -65,6 +66,8 @@
 <script>
 import zUpfile from '@/components/z-upfile'
 import editor from '@/components/editor'
+import { addStepPlan, addStepEdit } from '@/api/area'
+import { uploadFile } from '@/api/file'
 import { mapGetters } from 'vuex'
 export default {
     components: { zUpfile, editor },
@@ -79,7 +82,7 @@ export default {
                 endTime: '',
                 planTitle: '',
                 planContent: '',
-                enclosureIds: '',
+                enclosureIds: [],
                 areaId: '',
                 areaName: ''
             },
@@ -95,26 +98,57 @@ export default {
                 planTitle: [
                     { required: true, message: '请输入计划标题', trigger: 'blur' }
                 ]
-            }
+            },
+            pageType: 'add'
         }
     },
     computed: {
         ...mapGetters(['userInfo'])
     },
     methods: {
-        show(data) {
+        show(data, type) {
+            this.pageType = type
             this.formInline = data
             this.showDialogVisible = true
         },
         submitForm(status) {
-            console.log(this.formInline)
-            this.$refs.ruleForm.validate((valid) => {
-                if (valid) return false
-                // 通过逻辑处理
-                const uri = this.type === 1 ? 'path' : (this.type === 2 ? 'url' : 'url')
-                console.log(uri, '提交地址')
-                this.postData()
+            this.$refs.ruleForm.validate(async(valid) => {
+                if (valid) {
+                    if (this.formInline.enclosureIds.length) { // 图片上传内容处理
+                        const files = this.formInline.enclosureIds.map(item => item.raw)
+                        const formData = new FormData()
+                        for (const item of files) {
+                            formData.append('files', item)
+                        }
+                        await uploadFile(formData).then(res => {
+                            if (res.success) {
+                                this.$message.success(res.message)
+                                this.formInline.enclosureIds = res.result.map(item => item.id).join(',')
+                            } else {
+                                this.$message.error(res.message)
+                            }
+                        })
+                    }
+                    if (this.pageType === 'add') {
+                        addStepPlan(this.formInline).then(result => {
+                            this.Response(result)
+                        })
+                    } else {
+                        addStepEdit(this.formInline).then(result => {
+                            this.Response(result)
+                        })
+                    }
+                }
             })
+        },
+        Response(result) { // 相应数据处理
+            if (result.success) {
+                this.$message.success(result.message)
+                this.$parent.initTable()
+                this.showDialogVisible = false
+            } else {
+                this.$message.error(result.message)
+            }
         }
 
     }
@@ -127,6 +161,9 @@ export default {
         .el-form-item__label{
             color: #5F6266;
             font-weight: 400;
+        }
+        .el-dialog{
+            min-width: 500px;
         }
         .el-dialog__header {
             padding: 0;
