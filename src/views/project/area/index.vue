@@ -9,9 +9,9 @@
         :name="item.id"
       >
         <div v-if="item.isArea || item.isDept || item.isGroup" class="obj-tag flc-y" style="height:70px;">
-          <el-tag v-if="item.isArea" class="mr20 cursor" size="medium" :effect=" objTag === '1' ? 'dark':'plain'" @click="objTag='1'">区域计划</el-tag>
-          <el-tag v-if="item.isDept" class="mr20 cursor" size="medium" :effect=" objTag === '2' ? 'dark':'plain'" @click="objTag='2'">部门计划</el-tag>
-          <el-tag v-if="item.isGroup" class="mr20 cursor" size="medium" :effect=" objTag === '3' ? 'dark':'plain'" @click="objTag='3'">团队计划</el-tag>
+          <el-tag v-if="item.isArea" class="mr20 cursor" size="medium" :effect=" objTag === '1' ? 'dark':'plain'" @click="objTag='1'">区域计划{{ item.isArea }}</el-tag>
+          <el-tag v-if="item.isDept" class="mr20 cursor" size="medium" :effect=" objTag === '2' ? 'dark':'plain'" @click="objTag='2'">部门计划{{ item.isDept }}</el-tag>
+          <el-tag v-if="item.isGroup" class="mr20 cursor" size="medium" :effect=" objTag === '3' ? 'dark':'plain'" @click="objTag='3'">团队计划{{ item.isGroup }}</el-tag>
         </div>
 
         <div class="main" :class="{'mt25':!(item.isArea || item.isDept || item.isGroup)}">
@@ -86,6 +86,12 @@ export default {
     computed: {
         ...mapGetters(['userInfo'])
     },
+    watch: {
+        objTag(val) {
+            this.initTable()
+            this.tableTitle()
+        }
+    },
     created() {
         this.init()
     },
@@ -102,7 +108,7 @@ export default {
                         this.iStepTimes = result.filter(item => item.createTime.startsWith('2020-11-07 17:09:17')).slice(0, 5)
                         this.planType = this.iStepTimes[0]
                         this.activeName = this.iStepTimes[0].id // 初始化选中项
-                        this.tableTitle(this.iStepTimes[0])
+                        this.tableTitle()
                     } else {
                         this.$router.push('areasetting')
                     }
@@ -114,8 +120,11 @@ export default {
             const baseParams = {
                 areaId: this.userInfo.areaId,
                 createUserId: this.userInfo.id,
-                createRole: this.userInfo.realname
+                createRole: this.userInfo.realname,
+                stageId: this.planType.id,
+                stageType: this.objTag
             }
+            console.log(baseParams)
             getPlanList(baseParams).then(res => {
                 if (res.success) {
                     this.tableData = res.result.records
@@ -124,9 +133,7 @@ export default {
             })
         },
         tableTitle() { // 表格数据处理
-            // console.log(this.planType, 777777)
             const { isArea, isDept, isGroup } = this.planType
-            console.log(isArea, isDept, isGroup, this.objTag, 12345)
             let titles = [
                 { name: '计划标题', data: 'planTitle' },
                 { name: '提交人角色', data: 'createRole' },
@@ -137,7 +144,10 @@ export default {
                 titles = [{ name: '区域', data: 'areaName' }, ...titles]
             }
             if (isDept && this.objTag === '2') {
-                titles = [{ name: '部门', data: 'areaName' }, ...titles]
+                titles = [{ name: '部门', data: 'departName' }, ...titles]
+            }
+            if (isGroup && this.objTag === '3') {
+                titles = [{ name: '组别', data: 'groupName' }, ...titles]
             }
             this.titles = titles
         },
@@ -162,8 +172,12 @@ export default {
             }
             console.log(data)
         },
-        handleClick(id) {
-            this.tableTitle(this.iStepTimes.filter(item => item.id === id)[0])
+        handleClick(vm) {
+            const params = this.iStepTimes.filter(item => item.id === vm.name)[0]
+            this.planType = params
+            const { isArea, isDept } = params
+            this.objTag = isArea ? '1' : (isDept ? '2' : '3')
+            this.tableTitle()
             this.initTable()
         }
 

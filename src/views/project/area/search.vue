@@ -1,6 +1,6 @@
 <template>
   <el-form ref="ruleForm" :inline="true" :model="formInline" class="form-box">
-    <el-form-item v-if="type==='实训计划'" label="组别:" class="ml10" prop="time">
+    <el-form-item label="区域:" class="ml10" prop="time">
       <el-select v-model="formInline.department" placeholder="请选择部门">
         <el-option
           v-for="item in options"
@@ -10,7 +10,8 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item v-if="type==='远程学习计划' || type==='集训计划' || type==='OJT计划' || type==='正式入项计划' " label="区域:" class="ml10" prop="time">
+    {{ verify }}
+    <el-form-item label="部门:" class="ml10" prop="time">
       <el-select v-model="formInline.department" placeholder="请选择部门">
         <el-option
           v-for="item in options"
@@ -20,7 +21,18 @@
         />
       </el-select>
     </el-form-item>
-    <el-form-item v-if="type==='实训计划' || type==='OJT计划' || type==='正式入项计划' " label="提交人角色:" class="ml10" prop="person">
+    <el-form-item label="组别:" class="ml10" prop="time">
+      <el-select v-model="formInline.department" placeholder="请选择部门">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        />
+      </el-select>
+    </el-form-item>
+
+    <el-form-item label="提交人角色:" class="ml10" prop="person">
       <el-select v-model="formInline.person" placeholder="请选择提交人">
         <el-option
           v-for="item in options"
@@ -50,9 +62,9 @@
 <script>
 export default {
     props: {
-        type: {
-            type: [String, Number],
-            default: 1
+        verify: {
+            type: Object,
+            default: () => { return {} }
         }
     },
     data() {
@@ -96,7 +108,6 @@ export default {
 
 <style lang="scss" scoped>
 .form-box{
-
     border-radius: 15px;
     background-color: #fff;
     padding:20px 0px;
@@ -109,6 +120,5 @@ export default {
             // width: 280px;
         }
     }
-
 }
 </style>

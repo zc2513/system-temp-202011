@@ -207,7 +207,7 @@ export default {
         .el-dialog__footer {
             border-top: 1px solid #E0E4EB;
         }
-        .el-select {
+        .el-select,.el-cascader {
             width: 100%;
         }
     }
