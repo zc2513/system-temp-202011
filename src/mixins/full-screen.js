@@ -1,3 +1,4 @@
+// 隐藏左侧菜单项配置
 export default {
     props: {
         isfull: {

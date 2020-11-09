@@ -134,7 +134,7 @@ export default {
                         lineStyle: { // 线条颜色
                             color: '#D697FF'
                         },
-                        areaStyle: { //
+                        areaStyle: { // 区域颜色...渐变色
                             color: {
                                 type: 'linear',
                                 x: 0,
