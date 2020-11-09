@@ -104,12 +104,12 @@ export default {
         },
         getPageGroupInfo() {
             this.value = new Date()
-            // const params = {
-            //     userId: !this.userId ? this.userInfo.id : this.userId
-            // } TODO 替换
             const params = {
-                userId: 'e3517f1ca22245e897077a25b5a8c328'
-            }
+                userId: !this.userId ? this.userInfo.id : this.userId
+            } // TODO 替换
+            // const params = {
+            //     userId: 'e3517f1ca22245e897077a25b5a8c328'
+            // }
             console.log('当前用信息，注意是否为空：', this.userInfo)
             queryArearDeptGroupById(params).then(res => {
                 if (res.success) {
@@ -166,6 +166,7 @@ export default {
             }
             // dd
             queryUserBaseByGroupId(params).then(res => {
+                console.log('查到应届生没有', res)
                 if (res.success) {
                     this.users = res.result
                     if (this.mult) {
