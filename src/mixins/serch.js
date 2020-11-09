@@ -13,6 +13,7 @@ export default {
     methods: {
         getSize(size) {
             console.log(size, 111111111)
+            this.baseData.pageNo = 1
             this.baseData.pageSize = size
             this.init()
         },
@@ -22,6 +23,7 @@ export default {
             this.init()
         },
         getSearch(e) {
+            this.baseData.pageNo = 1
             this.querySearch = e
             this.init()
         }
