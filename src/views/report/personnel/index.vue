@@ -37,9 +37,6 @@ export default {
     name: 'Hr',
     components: { search, edit, lock },
     mixins: [serachSave],
-    computed: {
-        ...mapState('user', ['token', 'userInfo'])
-    },
     data() {
         return {
             diaTitle: '新建辅导记录',
@@ -59,6 +56,9 @@ export default {
                 ]
             }
         }
+    },
+    computed: {
+        ...mapState('user', ['token', 'userInfo'])
     },
     watch: {
         selectOrg: {

@@ -25,7 +25,7 @@ export default {
     data() {
         return {
             title: '水利部水利工程建设电子招标投标监管系统',
-            logo: require('@/assets/logo.png')
+            logo: '' // require('@/assets/logo.png')
         }
     }
 }
