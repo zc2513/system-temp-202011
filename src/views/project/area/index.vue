@@ -8,7 +8,6 @@
         :label="item.stageName"
         :name="item.id"
       >
-
         <div v-if="item.isArea || item.isDept || item.isGroup" class="obj-tag flc-y" style="height:70px;">
           <el-tag v-if="item.isArea" class="mr20 cursor" size="medium" :effect=" objTag === '1' ? 'dark':'plain'" @click="objTag='1'">区域计划</el-tag>
           <el-tag v-if="item.isDept" class="mr20 cursor" size="medium" :effect=" objTag === '2' ? 'dark':'plain'" @click="objTag='2'">部门计划</el-tag>
@@ -46,7 +45,7 @@
     </el-tabs>
 
     <!-- 新增弹出层 -->
-    <addOtjPlan ref="addOtjPlan" />
+    <addOtjPlan v-if="isShow" ref="addOtjPlan" />
     <!-- 详情弹出层 -->
     <lock ref="lock" />
     <planDrawer ref="planDrawer" />
@@ -80,8 +79,8 @@ export default {
                 ]
             },
             iStepTimes: [], // 当前是否存在阶段时间设置信息
-            planType: {}
-
+            planType: {},
+            isShow: false
         }
     },
     computed: {
@@ -143,15 +142,18 @@ export default {
             this.titles = titles
         },
         addPlan(item, type) { // 新建/编辑---计划
-            const data = {
-                startTime: item.startTime,
-                endTime: item.endTime,
-                stageId: item.id,
-                stageType: this.objTag,
-                areaId: item.areaId,
-                areaName: item.areaName,
-                stageName: item.stageName }
-            this.$refs.addOtjPlan.show(data, type)
+            this.isShow = true
+            this.$nextTick(() => {
+                const data = {
+                    startTime: item.startTime,
+                    endTime: item.endTime,
+                    stageId: item.id,
+                    stageType: this.objTag,
+                    areaId: item.areaId,
+                    areaName: item.areaName,
+                    stageName: item.stageName }
+                this.$refs.addOtjPlan.show(data, type)
+            })
         },
         getVal(res) {
             const { type, data } = res
@@ -174,7 +176,7 @@ export default {
 .area-cls{
     height: 100%;
     .el-tabs-cls{
-        height: calc(100% - 24px);
+        min-height: calc(100% - 24px);
     }
     ::v-deep{
         .el-tabs__header{
@@ -182,7 +184,7 @@ export default {
             border-radius: 6px;
         }
         .el-tabs__content{
-            height: calc(100% - 68px);
+            min-height: calc(100% - 68px);
             .el-tab-pane{
                 height: 100%;
             }
