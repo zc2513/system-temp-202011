@@ -1,30 +1,18 @@
 <template>
   <el-form ref="ruleForm" :inline="true" :model="formInline" class="form-box">
-    <el-form-item label="标题:" class="ml10" prop="group">
-      <el-select v-model="formInline.group" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+    <el-form-item label="标题:" class="ml10" prop="titile">
+      <el-input v-model="formInline.titile" placeholder="请输入标题" />
     </el-form-item>
-    <el-form-item label="发布人:" class="ml10" prop="group">
-      <el-select v-model="formInline.group" placeholder="请选择">
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-        />
-      </el-select>
+    <el-form-item label="发布人:" class="ml10" prop="sender">
+      <el-input v-model="formInline.sender" placeholder="请输入发布人" />
     </el-form-item>
-    <el-form-item label="发布时间:" class="ml10" prop="time">
+    <el-form-item label="发布时间:" class="ml10" prop="sendTime">
       <el-date-picker
-        v-model="formInline.time"
+        v-model="formInline.sendTime"
         type="date"
         placeholder="请选择时间"
+        format="yyyy 年 MM 月 dd 日"
+        value-format="yyyy-MM-dd"
       />
     </el-form-item>
     <el-form-item>
@@ -39,15 +27,10 @@ export default {
     data() {
         return {
             formInline: {
-                group: '',
-                time: '',
-                person: ''
-            },
-            options: [
-                { value: '选项1', label: '黄金糕' },
-                { value: '选项2', label: '双皮奶' },
-                { value: '选项3', label: '蚵仔煎' }
-            ]
+                titile: '',
+                sendTime: '',
+                sender: ''
+            }
         }
     },
     methods: {

@@ -14,14 +14,14 @@
       </div>
 
       <div v-else>
-        <search />
+        <search @change="change" />
         <div class="mb15">
           <el-button type="primary" class="ml20" @click="addSave('add')">新建</el-button>
         </div>
         <el-table :data="tableData">
           <el-table-column prop="titile" label="标题" />
-          <el-table-column prop="createBy" label="创建人" />
-          <el-table-column prop="createTime" label="创建时间" />
+          <el-table-column prop="sender" label="发布人" />
+          <el-table-column prop="sendTime" label="发布时间" />
           <el-table-column label="发布状态">
             <template slot-scope="{row}">
               <div class="flc-y">
@@ -38,7 +38,7 @@
             </template>
           </el-table-column>
         </el-table>
-        <z-page :total="total" />
+        <z-page :total="total" @pagesend="init" @pagesizes="pagesizes" />
       </div>
     </div>
 
@@ -57,14 +57,25 @@ export default {
     mixins: [searchJs],
     data() {
         return {
-
+            listdatas: []
         }
     },
     created() {
         this.init()
     },
     methods: {
-        init() {
+        change(v) {
+            this.querySearch = v
+            this.init()
+        },
+        pagesizes(size) {
+            this.baseData.pageSize = size
+            this.init()
+        },
+        init(v) {
+            if (v) {
+                this.baseData.pageNo = v
+            }
             const data = {
                 ...this.baseData,
                 ...this.querySearch
@@ -73,7 +84,6 @@ export default {
                 const { total, records } = res.result
                 this.total = total
                 this.tableData = records
-                console.log(records)
             })
         },
         addSave(type, data) {
