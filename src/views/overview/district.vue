@@ -99,7 +99,7 @@ export default {
                     max: 200
                 },
                 series: [
-                    this.setTJ(
+                    this.setTJLine(
                         {
                             data: [170 * Math.random(), 180 * Math.random(), 191 * Math.random(), 154 * Math.random(),
                                 129 * Math.random(), 130 * Math.random(), 180 * Math.random()]
@@ -122,7 +122,7 @@ export default {
                             data: [140, 140, 140, 140, 140, 140, 140]
                         }
                     ),
-                    this.setTJ(
+                    this.setTJLine(
                         {
                             name: '统计名次测试',
                             data: [170 * Math.random(), 180 * Math.random(), 191 * Math.random(), 154 * Math.random(),
@@ -132,7 +132,7 @@ export default {
                 ]
             }
         },
-        setTargetLine(data) {
+        setTargetLine(data) { // 平均值线
             const option = { //  线条一
                 data: [],
                 type: 'line',
@@ -146,7 +146,7 @@ export default {
             }
             return { ...option, ...data }
         },
-        setTJ(data = {}) {
+        setTJLine(data = {}) { // 统计线
             const option = { // 线条二
                 data: [],
                 type: 'line',
