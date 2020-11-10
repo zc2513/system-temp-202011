@@ -112,6 +112,12 @@ const demo = {
             component: () => import('@/views/nested/showEcharts/line'),
             name: 'simulationLine',
             meta: { title: '折线图数据模拟' }
+        },
+        {
+            path: 'showBar',
+            component: () => import('@/views/nested/showEcharts/bar'),
+            name: 'showBar',
+            meta: { title: '柱状图数据模拟' }
         }
     ]
 }
