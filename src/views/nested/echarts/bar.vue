@@ -179,7 +179,11 @@ export default {
                         color: '#A2F07B', // 柱状色
                         barGap: '10%', // 不同系列的柱间距离
                         barCategoryGap: '25%', // 同一系列的柱间距离
-                        animationEasing: 'quinticIn' // 初始动画的缓动效果
+                        animationEasing: 'quinticIn', // 初始动画的缓动效果
+                        itemStyle: {
+                            barBorderRadius: [7, 7, 0, 0]
+                        },
+                        barWidth: 14
                     },
                     {
                         type: 'bar',
@@ -188,7 +192,11 @@ export default {
                         color: '#FFE021',
                         barGap: '10%', // 不同系列的柱间距离
                         barCategoryGap: '25%', // 同一系列的柱间距离
-                        animationEasing: 'quinticIn' // 初始动画的缓动效果
+                        animationEasing: 'quinticIn', // 初始动画的缓动效果
+                        itemStyle: {
+                            barBorderRadius: [7, 7, 0, 0]
+                        },
+                        barWidth: 14
                     }
 
                 ]
