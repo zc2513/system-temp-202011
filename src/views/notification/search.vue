@@ -8,11 +8,12 @@
     </el-form-item>
     <el-form-item label="发布时间:" class="ml10" prop="sendTime">
       <el-date-picker
-        v-model="formInline.sendTime"
-        type="date"
-        placeholder="请选择时间"
-        format="yyyy 年 MM 月 dd 日"
-        value-format="yyyy-MM-dd"
+        v-model="Time"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        type="daterange"
+        range-separator="~"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
       />
     </el-form-item>
     <el-form-item>
@@ -26,15 +27,21 @@
 export default {
     data() {
         return {
+            Time: '',
             formInline: {
                 titile: '',
-                sendTime: '',
+                startTime: '',
+                endTime: '',
                 sender: ''
             }
         }
     },
     methods: {
         submitForm(formName) {
+            if (this.Time) {
+                this.formInline.startTime = this.Time[0]
+                this.formInline.endTime = this.Time[1]
+            }
             this.$emit('change', this.formInline)
         },
         resetForm(formName) {
