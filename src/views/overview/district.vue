@@ -84,7 +84,7 @@ export default {
         this.init()
         setInterval(() => {
             this.init()
-        }, 1000)
+        }, 5000)
     },
     methods: {
         init() {
@@ -99,7 +99,12 @@ export default {
                     max: 200
                 },
                 series: [
-                    this.setTJ()
+                    this.setTJ(
+                        {
+                            data: [170 * Math.random(), 180 * Math.random(), 191 * Math.random(), 154 * Math.random(),
+                                129 * Math.random(), 130 * Math.random(), 180 * Math.random()]
+                        }
+                    )
                 ]
             }
 
@@ -111,14 +116,25 @@ export default {
                     max: 200
                 },
                 series: [
-                    this.setTargetLine(),
-                    this.setTJ()
+                    this.setTargetLine(
+                        {
+                            name: '测试平均值',
+                            data: [140, 140, 140, 140, 140, 140, 140]
+                        }
+                    ),
+                    this.setTJ(
+                        {
+                            name: '统计名次测试',
+                            data: [170 * Math.random(), 180 * Math.random(), 191 * Math.random(), 154 * Math.random(),
+                                129 * Math.random(), 130 * Math.random(), 180 * Math.random()]
+                        }
+                    )
                 ]
             }
         },
-        setTargetLine() {
-            return { //  线条一
-                data: [140, 140, 140, 140, 140, 140, 140],
+        setTargetLine(data) {
+            const option = { //  线条一
+                data: [],
                 type: 'line',
                 symbol: 'none',
                 name: '应交数量',
@@ -128,11 +144,11 @@ export default {
                     width: 3
                 }
             }
+            return { ...option, ...data }
         },
-        setTJ() {
-            return { // 线条二
-                data: [170 * Math.random(), 180 * Math.random(), 191 * Math.random(), 154 * Math.random(),
-                    129 * Math.random(), 130 * Math.random(), 180 * Math.random()],
+        setTJ(data = {}) {
+            const option = { // 线条二
+                data: [],
                 type: 'line',
                 name: '实际提交数量',
                 color: '#D697FF',
@@ -158,6 +174,7 @@ export default {
                     }
                 }
             }
+            return { ...option, ...data }
         }
 
     }
