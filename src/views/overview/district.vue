@@ -87,7 +87,14 @@ export default {
         }, 5000)
     },
     methods: {
-        init() {
+        init(params) {
+            // let params = {}
+            // this.one(params)
+            // this.one(params)
+            // this.one(params)
+            // this.one(params)
+            // this.one(params)
+            // this.one(params)
             this.totalPerson = {
                 legend: {
                     show: false
