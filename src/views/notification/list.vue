@@ -89,6 +89,7 @@ export default {
                 readAll().then(res => {
                     this.$message(res.message)
                 })
+                this.initdata()
             }
             if (type === 'more') {
                 console.log(this.activeName)
