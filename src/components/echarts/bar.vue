@@ -84,6 +84,16 @@ export default {
             return { ...setting, ...config }
         },
 
+        /*
+        setLegend: {//个性化legend
+            itemHeight: 8,
+            data: [
+                { name: '中标金额', icon: 'pin' },
+                { name: '项目数', icon: 'rect' },
+                { name: '标段数', icon: 'rect' }
+            ]
+        } */
+
         setTooltip(config = {/* 其它配置*/}) { // 提示框组件
             const setting = {
                 show: true,
