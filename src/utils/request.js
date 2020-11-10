@@ -35,8 +35,9 @@ service.interceptors.response.use(response => {
     // Message.error(showStatus(error.response))
 
     if (error.response.data.status === 500) {
-        debugger
-        store.dispatch('user/logout')
+        store.dispatch('user/resetToken').then(res => {
+            location.reload()
+        })
         Message.error(error.response.data.message)
     }
 
