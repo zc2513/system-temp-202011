@@ -32,6 +32,10 @@ export default {
             type: Object,
             default: _ => { return {} }
         },
+        legend: {
+            type: Object,
+            default: _ => { return {} }
+        },
         width: {
             type: String,
             default: '100%'
@@ -82,14 +86,13 @@ export default {
         init() {
             if (!this.chart) this.redraw()
             const option = {
-                legend: {
-                    orient: 'vertical',
-                    right: 0,
-                    icon: 'roundRect',
-                    itemHeight: '8',
-                    textStyle: { // 小图标字体颜色
-                        color: '#5F6266'
-                    }
+                legend: this.setLegend(),
+                grid: {
+                    show: false, // 是否显示直角坐标系网格
+                    bottom: '10px',
+                    left: 0,
+                    right: '3%',
+                    containLabel: true
                 },
                 xAxis: this.setXAxis(),
                 yAxis: this.setYAxis(),
@@ -136,6 +139,19 @@ export default {
                 // ]
             }
             this.chart.setOption(option, true)
+        },
+        setLegend(data) {
+            data = this.legend
+            const option = {
+                orient: 'vertical',
+                right: 0,
+                icon: 'roundRect',
+                itemHeight: '8',
+                textStyle: { // 小图标字体颜色
+                    color: '#5F6266'
+                }
+            }
+            return { ...option, ...data }
         },
         setXAxis(data) { // x轴相关
             data = this.xAxis

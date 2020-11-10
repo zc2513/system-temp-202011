@@ -4,7 +4,7 @@
     <h4 v-if="showTitle" class="f16 flc-y ">
       {{ title }} <slot name="title" />
     </h4>
-    <div class="fl1 content green">
+    <div class="fl1 content">
       <slot />
     </div>
   </div>
