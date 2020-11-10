@@ -159,7 +159,13 @@ export default {
                             }
                         })
                     }
+
                     if (this.pageType === 'add') {
+                        this.formInline.createRole = this.userInfo.post
+                        this.formInline.createUser = this.userInfo.realname
+                        this.formInline.craeteUserId = this.userInfo.id
+
+                        console.log('提交数据', this.formInline)
                         addStepPlan(this.formInline).then(result => {
                             this.Response(result)
                         })

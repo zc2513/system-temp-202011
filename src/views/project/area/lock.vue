@@ -18,43 +18,45 @@
           <h4 class="f18">基本信息</h4>
           <div class="con-item fl f14 mb25">
             <div>区域</div>
-            <div class="pl10">成都</div>
+            <div class="pl10">{{ plan.areaName }}</div>
           </div>
-          <div v-if="type==='OJT部门计划' || type==='OJT团队计划'" class="con-item fl f14 mb25">
-            <div>部门</div>
-            <div class="pl10">成都二部</div>
+          <div class="con-item fl f14 mb25">
+            <div>阶段</div>
+            <div class="pl10">{{ plan.stageName }}</div>
           </div>
-          <div v-if="type==='OJT团队计划'" class="con-item fl f14 mb25">
-            <div>团队</div>
-            <div class="pl10">梦想权鉴</div>
+          <div v-if="plan.stageType === 1" class="con-item fl f14 mb25">
+            <div>计划类型</div>
+            <div class="pl10">区域计划</div>
           </div>
+          <div v-if="plan.stageType === 2" class="con-item fl f14 mb25">
+            <div>计划类型</div>
+            <div class="pl10">部门计划({{ plan.departName }})</div>
+          </div>
+          <div v-if="plan.stageType === 3" class="con-item fl f14 mb25">
+            <div>计划类型</div>
+            <div class="pl10">小组计划({{ plan.departName }}/{{ plan.groupName }})</div>
+          </div>
+
           <div class="con-item fl f14 mb25">
             <div>提交人</div>
-            <div class="pl10">张三</div>
-          </div>
-          <div class="con-item fl f14 mb25">
-            <div>计划类型</div>
-            <div class="pl10">{{ type }}</div>
+            <div class="pl10">{{ plan.createUser }}({{ plan.createRole }})</div>
           </div>
           <div class="con-item fl f14 mb25">
             <div>计划时间</div>
-            <div class="pl10">2020年第47周</div>
+            <div class="pl10">{{ plan.createTime }}</div>
           </div>
         </div>
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header :title="type" />
+        <z-header :title=" plan.stageType === 1 ?'区域计划（'+plan.planTitle+')' :( plan.stageType === 2 ?'部门计划（'+plan.planTitle+')':'小组计划（'+plan.planTitle+')')" />
         <div class="student-info box mt15">
           <smallTitle title="计划详情">
             <div>
-              <h4 class="f22 t-c mt20 mb30">我是标题标题标题</h4>
+              <h4 class="f22 t-c mt20 mb30">{{ plan.planTitle }}</h4>
               <div class="c-56 mb30">
-                <p>(1)目标。这是计划的灵魂。计划就是为了完成一定任务而制订的。目标是计划产生的导因，也是计划奋斗方向。因此，计划应根据需要与可能，规定出在一定时间内所完成的任务和应达到的要求。任务和要求应该具体明确，有的还要定出数量、质量和时间要求。</p>
-                <p>(2)措施。要明确何时实现目标和完成任务，就必须制定出相应的措施和办法，这是实现计划的保证。措施和方法主要指达到既定目标需要采取什么手段，动员哪些力量，创造什么条件，排除哪些困难等。总之，要根据客观条件，统筹安排，将“怎么做”写得明确具体，切实可行。</p>
-                <p>(3)步骤。这是指执行计划的工作程序和时间安排。每项任务，在完成过程中都有阶段性，而每个阶段又有许多环节，它们之间常常是互相交错的。因此，订计划必须胸有全局，妥善安排，哪些先干，哪些后干，应合理安排。(1)目标。这是计划的灵魂。计划就是为了完成一定任务而制订的。目标是计划产生的导因，也是计划奋斗方向。因此，计划应根据需要与可能，规定出在一定时间内所完成的任务和应达到的要求。任务和要求应该具体明确，有的还要定出数量、质量和时间要求。</p>
-                <p>(2)措施。要明确何时实现目标和完成任务，就必须制定出相应的措施和办法，这是实现计划的保证。措施和方法主要指达到既定目标需要采取什么手段，动员哪些力量，创造什么条件，排除哪些困难等。总之，要根据客观条件，统筹安排，将“怎么做”写得明确具体，切实可行。</p>
-                <p>(3)步骤。这是指执行计划的工作程序和时间安排。每项任务，在完成过程中都有阶段性，而每个阶段又有许多环节，它们之间常常是互相交错的。因此，订计划必须胸有全局，妥善安排，哪些先干，哪些后干，应合理安排。</p>
+                <p v-html="plan.planContent" />
+
               </div>
             </div>
           </smallTitle>
@@ -86,18 +88,20 @@ export default {
     props: {
         type: {
             type: [String, Number],
-            default: 1
+            default: '1'
         }
     },
     data() {
         return {
             dialogVisible: false,
-            textarea: ''
+            textarea: '',
+            plan: {}
         }
     },
     methods: {
         async init(data) {
             console.log(data, 9999)
+            Object.assign(this.plan, data)
             // 发送请求拿到用户数据
         },
         async show(data) {

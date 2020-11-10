@@ -52,13 +52,17 @@ export default {
     },
     methods: {
         init() { // 初始化地区数据
+            console.log('用户信息', this.userInfo)
             const data = {
                 periodId: this.userInfo.defaultPeriodId,
-                areaName: this.userInfo.areaName
+                areaName: this.userInfo.areaName,
+                areaId: this.userInfo.areaId
             }
             getTempletList().then(res => {
+                console.log('用户信息模板', res)
                 if (res.success) {
                     this.formData.subDatas = res.result.map(item => {
+                        data.stageId = item.id
                         return { ...data, ...item }
                     })
                 }
@@ -72,9 +76,11 @@ export default {
                         item['endTime'] = item.time[1]
                         return item
                     })
+                    console.log(data, 3333333333)
                     addTimeStep(data).then(res => {
                         const { success, message } = res
                         if (success) {
+                            console.log(res, 777777777)
                             this.$message.success(message)
                             this.$router.push({
                                 name: 'Area'

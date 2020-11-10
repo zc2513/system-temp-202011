@@ -19,12 +19,12 @@
             <div slot="title" class="f14" style="color:#5F6266;">
               {{ item.stageName }}时间：{{ item.startTime | parseTime('{y}-{m}-{d}') }} ~ {{ item.endTime | parseTime('{y}-{m}-{d}') }}
             </div>
-            <div v-if="tableData.length">
-              <search :verify="planType" />
+            <div v-if="(tableData.length || search) && showSearch ">
+              <search ref="search" :verify="planType" @change="change" @reset="reset" />
             </div>
           </z-header>
 
-          <div v-if="tableData.length" class="plr24 mb30">
+          <div v-if="tableData.length || search" class="plr24 mb30">
             <el-button
               size="mini"
               type="primary"
@@ -32,7 +32,7 @@
             >新建</el-button>
             <z-table :titles="titles" :btns="btn" :lists="tableData" align="left" class="mt15" @sendVal="getVal" />
           </div>
-          <div v-else class="flcc c-66f" style="margin-top:200px;">
+          <div v-else-if="!search" class="flcc c-66f" style="margin-top:200px;">
             <div style="margin-bottom:60px;" class="cursor" @click="addPlan(item,'add')">
               <z-circle size="120" color="#F4F7FA" class="mb20">
                 <svg-icon icon-class="add" class="f30" style="color:#66f;" />
@@ -47,7 +47,7 @@
     <!-- 新增弹出层 -->
     <addOtjPlan v-if="isShow" ref="addOtjPlan" />
     <!-- 详情弹出层 -->
-    <lock ref="lock" />
+    <lock ref="lock" type="1" />
     <planDrawer ref="planDrawer" />
   </div>
 </template>
@@ -80,20 +80,25 @@ export default {
             },
             iStepTimes: [], // 当前是否存在阶段时间设置信息
             planType: {},
-            isShow: false
+            isShow: false,
+            search: false,
+            showSearch: false
         }
     },
     computed: {
         ...mapGetters(['userInfo'])
     },
     watch: {
-        objTag(val) {
+        objTag(val, val2) {
             this.initTable()
             this.tableTitle()
+            this.planType.stageType = val
+            this.planType = { ...this.planType }
         }
     },
     created() {
         this.init()
+        this.showSearch = true
     },
     methods: {
         async init(val) {
@@ -105,8 +110,9 @@ export default {
                 const { success, result } = res
                 if (success) {
                     if (result.length) {
-                        this.iStepTimes = result.filter(item => item.createTime.startsWith('2020-11-07 17:09:17')).slice(0, 5)
+                        this.iStepTimes = result
                         this.planType = this.iStepTimes[0]
+                        this.planType.stageType = this.objTag
                         this.activeName = this.iStepTimes[0].id // 初始化选中项
                         this.tableTitle()
                     } else {
@@ -116,18 +122,34 @@ export default {
             })
             this.initTable()
         },
-        initTable() {
+        initTable(data) {
             const baseParams = {
                 areaId: this.userInfo.areaId,
-                createUserId: this.userInfo.id,
-                createRole: this.userInfo.realname,
+
+                // createRole: this.userInfo.realname,
                 stageId: this.planType.id,
-                stageType: this.objTag
+                stageType: this.objTag,
+                createRole: data ? data.role : null,
+                groupId: data ? data.groupId : null,
+                departId: data ? data.departId : null,
+                createUser: data ? data.person : null,
+                planTitle: data ? data.planTitle : null
             }
-            console.log(baseParams)
+            console.log(baseParams, '查询条件')
             getPlanList(baseParams).then(res => {
                 if (res.success) {
                     this.tableData = res.result.records
+                    if (this.tableData.length > 0) {
+                        this.showSearch = true
+                    } else {
+                        if (data) {
+                            this.search = true
+                        } else {
+                            this.search = false
+                        }
+                    }
+
+                    // this.search = true
                     console.log('表格数据', res.result.records)
                 }
             })
@@ -167,17 +189,31 @@ export default {
         },
         getVal(res) {
             const { type, data } = res
+            console.log('data plan', data)
             if (type === '查看') {
-                this.$refs.lock.show()
+                this.$refs.lock.show(data)
             }
             console.log(data)
         },
         handleClick(vm) {
+            this.showSearch = false
             const params = this.iStepTimes.filter(item => item.id === vm.name)[0]
             this.planType = params
+            this.planType.stageType = this.objTag
             const { isArea, isDept } = params
             this.objTag = isArea ? '1' : (isDept ? '2' : '3')
+            this.showSearch = true
             this.tableTitle()
+            this.initTable()
+        },
+        change(data) {
+            if (data.groups.length > 0) {
+                data.groupId = data.groups[1]
+            }
+
+            this.initTable(data)
+        },
+        reset() {
             this.initTable()
         }
 
