@@ -9,7 +9,7 @@
     </div>
 
     <echartLayout title="整体培养日程阶段展示图-北京">
-      折线图
+      <xline id="xline1" :x-axis="xAxis" :y-axis="yAxis" :series="series" />
     </echartLayout>
 
     <div class="list-main flsb flw">
