@@ -117,14 +117,19 @@ export default {
                         color: '#C2CCF2',
                         stack: '总量1',
                         label: {
-                            show: true,
-                            position: 'insideRight'
+                            normal: {
+                                show: true,
+                                color: '#000',
+                                position: 'right',
+                                formatter: function(params) {
+                                    return params.seriesName
+                                }
+                            }
                         },
                         itemStyle: {
                             normal: {
-                                color: 'yellow',
-                                borderColor: '#fff',
-                                borderWidth: 2
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
                             }
                         },
                         data: [0, 0, 0, 0, 0],
@@ -139,7 +144,31 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [20, 0, 0, 0, 0],
+                        data: [50, 0, 0, 0, 0],
+                        xAxisIndex: 1
+                    },
+                    {
+                        name: '远程学习阶段',
+                        type: 'bar',
+                        color: '#45AEFF',
+                        stack: '总量2',
+                        label: {
+                            normal: {
+                                show: true,
+                                color: '#000',
+                                position: 'right',
+                                formatter: function(params) {
+                                    return params.seriesName
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
+                            }
+                        },
+                        data: [0, 50, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -151,19 +180,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 20, 0, 0, 0],
-                        xAxisIndex: 1
-                    },
-                    {
-                        name: '远程学习阶段',
-                        type: 'bar',
-                        color: '#45AEFF',
-                        stack: '总量2',
-                        label: {
-                            show: true,
-                            position: 'insideRight'
-                        },
-                        data: [0, 150, 0, 0, 0],
+                        data: [0, 100, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -172,8 +189,20 @@ export default {
                         color: '#61F8DB',
                         stack: '总量3',
                         label: {
-                            show: true,
-                            position: 'insideRight'
+                            normal: {
+                                show: true,
+                                color: '#000',
+                                position: 'right',
+                                formatter: function(params) {
+                                    return params.seriesName
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
+                            }
                         },
                         data: [0, 0, 150, 0, 0],
                         xAxisIndex: 1
@@ -187,7 +216,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 0, 180, 0, 0],
+                        data: [0, 0, 30, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -196,8 +225,20 @@ export default {
                         color: '#FFE021',
                         stack: '总量4',
                         label: {
-                            show: true,
-                            position: 'insideRight'
+                            normal: {
+                                show: true,
+                                color: '#000',
+                                position: 'right',
+                                formatter: function(params) {
+                                    return params.seriesName
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
+                            }
                         },
                         data: [0, 0, 0, 180, 0],
                         xAxisIndex: 1
@@ -211,17 +252,29 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 0, 0, 200, 0],
+                        data: [0, 0, 0, 20, 0],
                         xAxisIndex: 1
                     },
                     {
                         name: 'OJT阶段',
                         type: 'bar',
                         color: '#FFE021',
-                        stack: '总量4',
+                        stack: '总量5',
                         label: {
-                            show: true,
-                            position: 'insideRight'
+                            normal: {
+                                show: true,
+                                color: '#000',
+                                position: 'right',
+                                formatter: function(params) {
+                                    return params.seriesName
+                                }
+                            }
+                        },
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: 'rgba(0,0,0,0)'
+                            }
                         },
                         data: [0, 0, 0, 0, 200],
                         xAxisIndex: 1
@@ -230,12 +283,12 @@ export default {
                         name: 'OJT阶段',
                         type: 'bar',
                         color: '#FFE021',
-                        stack: '总量4',
+                        stack: '总量5',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 0, 0, 0, 360],
+                        data: [0, 0, 0, 0, 160],
                         xAxisIndex: 1
                     }
                 ]
