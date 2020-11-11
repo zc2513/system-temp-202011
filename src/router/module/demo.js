@@ -96,6 +96,12 @@ const demo = {
             meta: { title: '水平柱状图' }
         },
         {
+            path: 'bar2',
+            component: () => import('@/views/nested/echarts/bar2'),
+            name: 'Bar2',
+            meta: { title: '水平柱状图2' }
+        },
+        {
             path: 'line',
             component: () => import('@/views/nested/echarts/line'),
             name: 'Line',
