@@ -127,7 +127,7 @@ export default {
                                 borderWidth: 2
                             }
                         },
-                        data: [20],
+                        data: [0, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -139,7 +139,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [50, 51],
+                        data: [20, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -151,7 +151,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 51],
+                        data: [0, 20, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -163,7 +163,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0, 100],
+                        data: [0, 150, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -175,7 +175,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [0],
+                        data: [0, 0, 150, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -187,7 +187,7 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [150],
+                        data: [0, 0, 180, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -199,19 +199,43 @@ export default {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [150],
+                        data: [0, 0, 0, 180, 0],
                         xAxisIndex: 1
                     },
                     {
-                        name: '正式进入项目',
+                        name: 'OJT阶段',
                         type: 'bar',
-                        color: '#D697FF',
+                        color: '#FFE021',
                         stack: '总量4',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [200],
+                        data: [0, 0, 0, 200, 0],
+                        xAxisIndex: 1
+                    },
+                    {
+                        name: 'OJT阶段',
+                        type: 'bar',
+                        color: '#FFE021',
+                        stack: '总量4',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [0, 0, 0, 0, 200],
+                        xAxisIndex: 1
+                    },
+                    {
+                        name: 'OJT阶段',
+                        type: 'bar',
+                        color: '#FFE021',
+                        stack: '总量4',
+                        label: {
+                            show: true,
+                            position: 'insideRight'
+                        },
+                        data: [0, 0, 0, 0, 360],
                         xAxisIndex: 1
                     }
                 ]
