@@ -1,6 +1,6 @@
 
 <template>
-  <div :ref="id" style="background:#ccc;height:98%;" />
+  <div :ref="id" style="height:98%;" />
 </template>
 
 <script>
@@ -86,7 +86,7 @@ export default {
                     }
                 },
                 legend: {
-                    data: ['无辅导', '远程学习阶段', '入职集训阶段', 'OJT1阶段', 'OJT2阶段', '正式进入项目']
+                    data: ['无辅导', '远程学习阶段', '入职集训阶段', 'OJT阶段', '正式进入项目']
                 },
                 grid: {
                     left: '3%',
@@ -94,9 +94,18 @@ export default {
                     bottom: '3%',
                     containLabel: true
                 },
-                xAxis: {
-                    type: 'value'
-                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['01月', '02月', '03月', '04月', '05月', '06月', '07月', '08月', '09月', '10月', '11月', '12月']
+                    },
+                    {
+                        show: false,
+                        type: 'value',
+                        min: '1',
+                        max: '365'
+                    }
+                ],
                 yAxis: {
                     type: 'category',
                     data: ['上海', '天津', '重庆', '西安', '武汉', '南京', '深圳', '大连', '沈阳', '成都', '北京']
@@ -105,62 +114,62 @@ export default {
                     {
                         name: '无辅导',
                         type: 'bar',
+                        color: '#C2CCF2',
                         stack: '总量',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [320, 302, 301, 334, 390, 330, 320]
+                        data: [31, 22, 33, 44, 55, 66, 90],
+                        xAxisIndex: 1
                     },
                     {
                         name: '远程学习阶段',
                         type: 'bar',
+                        color: '#45AEFF',
                         stack: '总量',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [120, 132, 101, 134, 90, 230, 210]
+                        data: [20, 21, 21, 21, 21, 21, 21],
+                        xAxisIndex: 1
                     },
                     {
                         name: '入职集训阶段',
                         type: 'bar',
+                        color: '#61F8DB',
                         stack: '总量',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [220, 182, 191, 234, 290, 330, 310]
+                        data: [31, 31, 31, 31, 31, 31, 31],
+                        xAxisIndex: 1
                     },
                     {
-                        name: 'OJT1阶段',
+                        name: 'OJT阶段',
                         type: 'bar',
+                        color: '#FFE021',
                         stack: '总量',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [150, 212, 201, 154, 190, 330, 410]
-                    },
-                    {
-                        name: 'OJT2阶段',
-                        type: 'bar',
-                        stack: '总量',
-                        label: {
-                            show: true,
-                            position: 'insideRight'
-                        },
-                        data: [820, 832, 901, 934, 1290, 1330, 1320]
+                        data: [41, 41, 41, 41, 41, 41, 41],
+                        xAxisIndex: 1
                     },
                     {
                         name: '正式进入项目',
                         type: 'bar',
+                        color: '#D697FF',
                         stack: '总量',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [820, 832, 901, 934, 1290, 1330, 1320]
+                        data: [81, 81, 81, 81, 81, 81, 81],
+                        xAxisIndex: 1
                     }
                 ]
             }
