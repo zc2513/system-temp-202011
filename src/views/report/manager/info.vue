@@ -102,6 +102,7 @@ import commentList from '@/components/commentList'
 import datas from '@/assets/json/data'
 import { list } from '@/api/mgrMonthReport'
 import Commentv2 from '@/components/tsforce/Commentv2'
+import { mapState } from 'vuex'
 
 export default {
     components: { smallTitle, commentList, Commentv2 },
@@ -128,11 +129,14 @@ export default {
 
             },
             commentParam: {
-                commentType: 2
+                commentType: 4
 
             },
             jxlist: []
         }
+    },
+    computed: {
+        ...mapState('user', ['userInfo'])
     },
     methods: {
 

@@ -9,9 +9,9 @@
         :name="item.id"
       >
         <div v-if="item.isArea || item.isDept || item.isGroup" class="obj-tag flc-y" style="height:70px;">
-          <el-tag v-if="item.isArea" class="mr20 cursor" size="medium" :effect=" objTag === '1' ? 'dark':'plain'" @click="objTag='1'">区域计划{{ item.isArea }}</el-tag>
-          <el-tag v-if="item.isDept" class="mr20 cursor" size="medium" :effect=" objTag === '2' ? 'dark':'plain'" @click="objTag='2'">部门计划{{ item.isDept }}</el-tag>
-          <el-tag v-if="item.isGroup" class="mr20 cursor" size="medium" :effect=" objTag === '3' ? 'dark':'plain'" @click="objTag='3'">团队计划{{ item.isGroup }}</el-tag>
+          <el-tag v-if="item.isArea" class="mr20 cursor" size="medium" :effect=" objTag === '1' ? 'dark':'plain'" @click="objTag='1'">区域计划</el-tag>
+          <el-tag v-if="item.isDept" class="mr20 cursor" size="medium" :effect=" objTag === '2' ? 'dark':'plain'" @click="objTag='2'">部门计划</el-tag>
+          <el-tag v-if="item.isGroup" class="mr20 cursor" size="medium" :effect=" objTag === '3' ? 'dark':'plain'" @click="objTag='3'">团队计划</el-tag>
         </div>
 
         <div class="main" :class="{'mt25':!(item.isArea || item.isDept || item.isGroup)}">

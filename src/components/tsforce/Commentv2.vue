@@ -24,6 +24,8 @@
 <script>
 import moment from 'moment'
 import { addPlanComment } from '@/api/project'
+import { mapState } from 'vuex'
+
 export default {
     name: 'Commentv2',
     components: {},
@@ -49,6 +51,9 @@ export default {
                 comment: [{ required: true, message: '请输入评论内容', trigger: 'blur' }]
             }
         }
+    },
+    computed: {
+        ...mapState('user', ['userInfo'])
     },
     created() {
 

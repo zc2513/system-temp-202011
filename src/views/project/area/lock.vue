@@ -49,7 +49,7 @@
       </div>
 
       <div class="info-con-right fl1 ml15 pb30">
-        <z-header :title=" plan.stageType === 1 ?'区域计划（'+plan.planTitle+')' :( plan.stageType === 2 ?'部门计划（'+plan.planTitle+')':'小组计划（'+plan.planTitle+')')" />
+        <z-header :title="plan.stageName + '---'+ ( plan.stageType === 1 ?'区域计划（'+plan.planTitle+')' :( plan.stageType === 2 ?'部门计划（'+plan.planTitle+')':'小组计划（'+plan.planTitle+')') )" />
         <div class="student-info box mt15">
           <smallTitle title="计划详情">
             <div>
@@ -61,19 +61,9 @@
             </div>
           </smallTitle>
           <smallTitle title="计划评论" style="padding-bottom:50px;">
-            <el-input
-              v-model="textarea"
-              type="textarea"
-              placeholder="请输入内容"
-              maxlength="500"
-              rows="8"
-              show-word-limit
-            />
-            <div class="t-r mt15">
-              <el-button size="mini" type="primary">提交</el-button>
-            </div>
+            <Commentv2 :comment-param="commentParam" @ok="freshCommentList" />
           </smallTitle>
-          <commentList />
+          <commentList ref="clist" :reportid="plan.id" />
         </div>
       </div>
     </div>
@@ -83,8 +73,11 @@
 <script>
 import smallTitle from '../component/smallTitle'
 import commentList from '@/components/commentList'
+import Commentv2 from '@/components/tsforce/Commentv2'
+import { mapState } from 'vuex'
+
 export default {
-    components: { smallTitle, commentList },
+    components: { smallTitle, commentList, Commentv2 },
     props: {
         type: {
             type: [String, Number],
@@ -95,18 +88,36 @@ export default {
         return {
             dialogVisible: false,
             textarea: '',
-            plan: {}
+            plan: {},
+            commentParam: {
+                commentType: 3
+
+            }
         }
+    },
+    computed: {
+        ...mapState('user', ['userInfo'])
     },
     methods: {
         async init(data) {
-            console.log(data, 9999)
-            Object.assign(this.plan, data)
+            if (data) {
+                console.log(data, 9999)
+                Object.assign(this.plan, data)
+                this.commentParam.reportid = this.plan.id
+                this.commentParam.realname = this.userInfo.realname
+                this.commentParam.userId = this.userInfo.id
+                this.commentParam.username = this.userInfo.username
+                this.commentParam.commentPeopleType = 3
+            }
+
             // 发送请求拿到用户数据
         },
         async show(data) {
             await this.init(data)
             this.dialogVisible = true
+        },
+        freshCommentList() {
+            this.$refs.clist.loadComment(this.plan.id)
         }
     }
 }
