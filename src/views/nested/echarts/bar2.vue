@@ -80,10 +80,11 @@ export default {
             if (!this.chart) this.redraw()
             const option = {
                 tooltip: {
-                    trigger: 'axis',
-                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-                    }
+                    trigger: 'item'
+                    // axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                    //     type: 'none', // 默认为直线，可选为：'line' | 'shadow'
+                    //     axis: 'y'
+                    // }
                 },
                 legend: {
                     data: ['无辅导', '远程学习阶段', '入职集训阶段', 'OJT阶段', '正式进入项目']
@@ -112,19 +113,11 @@ export default {
                 },
                 series: [
                     {
-                        name: '无辅导',
+                        name: '',
                         type: 'bar',
-                        color: '#C2CCF2',
                         stack: '总量1',
                         label: {
-                            normal: {
-                                show: true,
-                                color: '#000',
-                                position: 'right',
-                                formatter: function(params) {
-                                    return params.seriesName
-                                }
-                            }
+                            show: false
                         },
                         itemStyle: {
                             normal: {
@@ -132,7 +125,14 @@ export default {
                                 color: 'rgba(0,0,0,0)'
                             }
                         },
-                        data: [0, 0, 0, 0, 0],
+                        barGap: '-100%', // 柱间距
+                        barWidth: '', // 柱子宽度
+                        barMaxWidth: '', // 柱子最大宽度
+                        barCategoryGap: '50%', // 同一系列的柱间距离
+                        tooltip: {
+                            trigger: 'none'
+                        },
+                        data: [30, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -140,26 +140,35 @@ export default {
                         type: 'bar',
                         color: '#C2CCF2',
                         stack: '总量1',
+                        barGap: '-100%',
                         label: {
                             show: true,
                             position: 'insideRight'
                         },
-                        data: [50, 0, 0, 0, 0],
+                        itemStyle: {
+                            normal: {
+                                barBorderColor: 'rgba(0,0,0,0)',
+                                color: '#C2CCF2'
+                            }
+                        },
+                        data: [20, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
-                        name: '远程学习阶段',
+                        name: '',
                         type: 'bar',
                         color: '#45AEFF',
                         stack: '总量2',
+                        barGap: '-100%',
+                        barWidth: '', // 柱子宽度
+                        barMaxWidth: '', // 柱子最大宽度
+                        barCategoryGap: '50%', // 同一系列的柱间距离
+                        tooltip: {
+                            trigger: 'none'
+                        },
                         label: {
-                            normal: {
-                                show: true,
-                                color: '#000',
-                                position: 'right',
-                                formatter: function(params) {
-                                    return params.seriesName
-                                }
+                            label: {
+                                show: false
                             }
                         },
                         itemStyle: {
@@ -176,6 +185,7 @@ export default {
                         type: 'bar',
                         color: '#45AEFF',
                         stack: '总量2',
+                        barGap: '-100%',
                         label: {
                             show: true,
                             position: 'insideRight'
@@ -184,18 +194,20 @@ export default {
                         xAxisIndex: 1
                     },
                     {
-                        name: '入职集训阶段',
+                        name: '',
                         type: 'bar',
                         color: '#61F8DB',
                         stack: '总量3',
+                        barGap: '-100%',
+                        barWidth: '', // 柱子宽度
+                        barMaxWidth: '', // 柱子最大宽度
+                        barCategoryGap: '50%', // 同一系列的柱间距离
+                        tooltip: {
+                            trigger: 'none'
+                        },
                         label: {
-                            normal: {
-                                show: true,
-                                color: '#000',
-                                position: 'right',
-                                formatter: function(params) {
-                                    return params.seriesName
-                                }
+                            label: {
+                                show: false
                             }
                         },
                         itemStyle: {
@@ -212,6 +224,7 @@ export default {
                         type: 'bar',
                         color: '#61F8DB',
                         stack: '总量3',
+                        barGap: '-100%',
                         label: {
                             show: true,
                             position: 'insideRight'
@@ -220,18 +233,20 @@ export default {
                         xAxisIndex: 1
                     },
                     {
-                        name: 'OJT阶段',
+                        name: '',
                         type: 'bar',
                         color: '#FFE021',
                         stack: '总量4',
+                        barGap: '-100%',
+                        barWidth: '', // 柱子宽度
+                        barMaxWidth: '', // 柱子最大宽度
+                        barCategoryGap: '50%', // 同一系列的柱间距离
+                        tooltip: {
+                            trigger: 'none'
+                        },
                         label: {
-                            normal: {
-                                show: true,
-                                color: '#000',
-                                position: 'right',
-                                formatter: function(params) {
-                                    return params.seriesName
-                                }
+                            label: {
+                                show: false
                             }
                         },
                         itemStyle: {
@@ -248,6 +263,7 @@ export default {
                         type: 'bar',
                         color: '#FFE021',
                         stack: '总量4',
+                        barGap: '-100%',
                         label: {
                             show: true,
                             position: 'insideRight'
@@ -256,18 +272,20 @@ export default {
                         xAxisIndex: 1
                     },
                     {
-                        name: 'OJT阶段',
+                        name: '',
                         type: 'bar',
-                        color: '#FFE021',
+                        color: '#D697FF',
                         stack: '总量5',
+                        barGap: '-100%',
+                        barWidth: '', // 柱子宽度
+                        barMaxWidth: '', // 柱子最大宽度
+                        barCategoryGap: '50%', // 同一系列的柱间距离
+                        tooltip: {
+                            trigger: 'none'
+                        },
                         label: {
-                            normal: {
-                                show: true,
-                                color: '#000',
-                                position: 'right',
-                                formatter: function(params) {
-                                    return params.seriesName
-                                }
+                            label: {
+                                show: false
                             }
                         },
                         itemStyle: {
@@ -280,10 +298,11 @@ export default {
                         xAxisIndex: 1
                     },
                     {
-                        name: 'OJT阶段',
+                        name: '正式进入项目',
                         type: 'bar',
-                        color: '#FFE021',
+                        color: '#D697FF',
                         stack: '总量5',
+                        barGap: '-100%',
                         label: {
                             show: true,
                             position: 'insideRight'
