@@ -132,7 +132,7 @@ export default {
                         tooltip: {
                             trigger: 'none'
                         },
-                        data: [30, 0, 0, 0, 0],
+                        data: [0, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
@@ -151,7 +151,7 @@ export default {
                                 color: '#C2CCF2'
                             }
                         },
-                        data: [20, 0, 0, 0, 0],
+                        data: [50, 0, 0, 0, 0],
                         xAxisIndex: 1
                     },
                     {
